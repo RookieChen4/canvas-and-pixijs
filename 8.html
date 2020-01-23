@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.test li:first-child ul{
+			background: yellow;
+			font-size: 20px;
+			color: blue;
+		}
+		.test ul li ul li:first-child ul{
+			color: red;
+		}
+		.test2 > span {
+			color: red;
+		}
+	</style>
+</head>
+<body>
+	<div class="test">
+		<ul>
+			<li>1
+				<ul>
+					<li>4
+						<ul>
+							<li>4</li>
+							<li>5</li>
+							<li>6</li>
+						</ul>
+						<ul>
+							<li>4</li>
+							<li>5</li>
+							<li>6</li>
+						</ul>
+					</li>
+					<li>5</li>
+					<li>6</li>
+				</ul>
+			</li>
+			<li>2
+				<ul>
+					<li>4</li>
+					<li>5</li>
+					<li>6</li>
+				</ul>
+			</li>
+			<li>3
+				<ul>
+					<li>4</li>
+					<li>5</li>
+					<li>6</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<div class="test2">
+		<span>aaa</span>
+		<div>
+			<span>bbb</span>
+		</div>
+	</div>
+</body>
+</html>
