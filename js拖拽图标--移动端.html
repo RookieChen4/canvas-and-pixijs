@@ -1,0 +1,80 @@
+<script type="text/javascript">
+window.onload = function () {
+    var oDiv = document.getElementById('touchMove');
+
+    var disX, moveX, L, T, starX, starY, starXEnd, starYEnd;
+
+    oDiv.addEventListener('touchstart', function (e) {
+        //e.preventDefault();
+        // console.log(e.touches[0].clientX)
+        disX = e.touches[0].clientX - this.offsetLeft;
+        // console.log(disX)
+        disY = e.touches[0].clientY - this.offsetTop;
+        starX = e.touches[0].clientX;
+        starY = e.touches[0].clientY;
+    });
+    oDiv.addEventListener('touchmove', function (e) {
+        L = e.touches[0].clientX - disX;
+        T = e.touches[0].clientY - disY;
+        starXEnd = e.touches[0].clientX - starX;
+        starYEnd = e.touches[0].clientY - starY;
+        //console.log(L);
+        if (L < 0) {
+            L = 0;
+        } else if (L > document.documentElement.clientWidth - this.offsetWidth) {
+            L = document.documentElement.clientWidth - this.offsetWidth;
+        }
+
+        if (T < 0) {
+            T = 0;
+        } else if (T > document.documentElement.clientHeight - this.offsetHeight) {
+            T = document.documentElement.clientHeight - this.offsetHeight;
+        }
+        moveX = L + 'px';
+        moveY = T + 'px';
+        //console.log(moveX);
+        this.style.left = moveX;
+        this.style.top = moveY;
+    });
+    window.addEventListener('touchend', function (e) {
+        // alert(parseInt(moveX))
+        //判断滑动方向
+
+    });
+}
+</script>
+<style type="text/css">
+	.main {
+		position: relative;
+	}
+	#touchMove {
+		position: absolute;
+		width: 100px;
+		height: 100px;
+		background: red;
+		left: 0;
+		top: 0;
+	}
+	#touchMove1 {
+		width: 100px;
+		height: 100px;
+		background: blue;
+		left: 0;
+		top: 0;
+	}
+	#touchMove2 {
+		width: 100px;
+		height: 100px;
+		background: yellow;
+		left: 0;
+		top: 0;
+	}
+</style>
+<body>
+	<div id="touchMove">
+	</div>
+	<div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+	</div>
+</body>
