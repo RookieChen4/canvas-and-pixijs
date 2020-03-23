@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			background-color: #222; 
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+		}
+		h1{
+			color: #333;
+			font-family: Helvetica;
+			margin: 0;
+			padding: 0;
+			font-size: 8rem;
+			letter-spacing: -0.3rem;
+			position: relative;
+		}
+		h1::after{
+			content: 'CodingStartup!';
+			color:transparent;
+			position: absolute;
+			top: 0;
+			left: 0;
+			-webkit-clip-path: ellipse(100px 100px at 0% 50%);
+			clip-path: ellipse(100px 100px at 0% 50%);
+			animation: spotlight 5s infinite;
+			background-image: url('./images/bg.jpg');
+			background-position: center;
+			-webkit-background-clip: text;
+			background-clip: text;
+		}
+		@keyframes spotlight{
+			0%{
+				clip-path: ellipse(100px 100px at 0% 50%);
+			}
+
+			50%{
+				clip-path: ellipse(100px 100px at 100% 50%);
+			}
+
+			100%{
+				clip-path: ellipse(100px 100px at 0% 50%);
+			}
+		}
+	</style>
+</head>
+<body>
+<h1>CodingStartup</h1>
+</body>
+</html>

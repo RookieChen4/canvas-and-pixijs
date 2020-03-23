@@ -1,0 +1,131 @@
+<html>
+<body>
+<input type="file" name="上传" id="file"> 
+<button  type = "submit" onclick="Checkfile()">提交</button> 
+<p>要使用的图像：</p>
+<img id="tulip" src="" alt="The Tulip" />
+
+<p>画布：</p>
+<canvas id="myCanvas" style="border:1px solid #d3d3d3;background:#ffffff;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<script>
+	async function Checkfile() {
+		let file = document.getElementById("file"); // 获取file文件
+		const filename = file.files[0].name
+		let img = await fileToImage(file) // file文件转Base64 并创建image标签 添加src
+		width = img.width;
+		height = img.height;
+		var c = document.createElement('canvas');
+		var ctx= c.getContext("2d");
+		var tCanvas = document.createElement('canvas');
+        var tctx = tCanvas.getContext('2d');
+		var ratio
+        if ((ratio = width * height / 4000000) > 1) {
+		    ratio = Math.sqrt(ratio)
+		    width /= ratio //等比例缩放
+		    height /= ratio
+        } else {
+            ratio = 1
+        }
+		// c.width = 1068;
+		// c.height = 455;
+		c.width = width;
+        c.height = height;
+        // 铺底色
+	    ctx.fillStyle = '#fff'
+	    ctx.fillRect(0, 0, c.width, c.height)
+        // 如果图片像素大于100万则使用瓦片绘制
+		var count
+	      if ((count = width * height / 1000000) > 1) {
+	        // 计算要分成多少块瓦片
+	        count = ~~(Math.sqrt(count) + 1)
+	        var nw = ~~(width / count)
+	        var nh = ~~(height / count)
+
+	        tCanvas.width = nw
+	        tCanvas.height = nh
+
+	        for (var i = 0; i < count; i++) {
+	          for (var j = 0; j < count; j++) {
+	            tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh)
+
+	            ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh)
+	          }
+	        }
+	      } else {
+	        ctx.drawImage(img, 0, 0, width, height)
+	      }
+
+		// ctx.drawImage(img,0,0,width,height);
+		let data = c.toDataURL('image/jpeg', 0.1) // 将画布转成Base64
+		// c.toBlob(callback, 'image/jpeg', 0.1) // 直接转成 Blob 然后下载
+		let uploadFile = dataURLtoFile(data,filename) //Base64转file
+ 	   	// downLoadFile(filename,uploadFile) 下载file文件
+		return uploadFile
+	}
+
+	// file 转 Base64
+	function filetoDataURL(file){
+		return new Promise(resolve=>{
+			var reader = new FileReader();
+			reader.onloadend = function(e){
+			  resolve(e.target.result);
+			};
+			reader.readAsDataURL(file);
+		})
+	};
+
+	function dataURLtoFile (dataurl, filename) {
+	    var arr = dataurl.split(','),
+	        mime = arr[0].match(/:(.*?);/)[1],
+	        bstr = atob(arr[1]),
+	        n = bstr.length,
+	        u8arr = new Uint8Array(n);
+	    while (n--) {
+	        u8arr[n] = bstr.charCodeAt(n);
+	    }
+	    return new File([u8arr], filename, { type: mime });
+	}
+
+	function callback(blob) {
+		downLoadFile('test',blob)
+	}
+
+	function base64ToBlob(code) {
+		let parts = code.split(';base64,');
+        let contentType = parts[0].split(':')[1];
+        let raw = window.atob(parts[1]);
+        let rawLength = raw.length;
+        let uInt8Array = new Uint8Array(rawLength);
+        for(let i = 0; i < rawLength; ++i) {
+            uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {
+            type: contentType
+        });
+	}
+
+	async function fileToImage(file){
+		let imgsrc = await filetoDataURL(file.files[0])
+		return new Promise(resolve=>{
+			let image = new Image();
+			image.onload = function() {
+				resolve(image)
+			}
+			image.src = imgsrc;
+		})
+	}
+
+	function downLoadFile(filename,blob){
+		let aLink = document.createElement('a');
+	 	// let evt = document.createEvent("HTMLEvents");
+	 	// evt.initEvent("click", true, true); //initEvent 不加后两个参数在FF下会报错  事件类型，是否冒泡，是否阻止浏览器的默认行为
+ 	    aLink.download = filename;
+ 	    aLink.href = URL.createObjectURL(blob);
+ 	    aLink.click();
+	}
+</script>
+
+</body>
+</html>
