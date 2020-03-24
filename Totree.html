@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=`, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>toTree</title>
+    </head>
+
+    <body>
+        <script>
+            var source = [{
+                id: 1,
+				createTime: 1581929205000,
+				updateTime: null,
+				delFlag: 0,
+				companyIdDomain: null,
+				name: "泰州市政府",
+				no: null,
+				upCompanyId: null,
+				upCompanyName: ""
+            }, {
+                id: 2,
+				createTime: null,
+				updateTime: null,
+				delFlag: 0,
+				companyIdDomain: null,
+				name: "泰州市民防局",
+				no: null,
+				upCompanyId: 1,
+				upCompanyName: "泰州市政府"
+            }, {
+                id: 3,
+				createTime: null,
+				updateTime: null,
+				delFlag: 0,
+				companyIdDomain: null,
+				name: "泰州市民防局",
+				no: null,
+				upCompanyId: 1,
+				upCompanyName: "泰州市政府"
+            }, {
+                id: 4,
+				createTime: null,
+				updateTime: null,
+				delFlag: 0,
+				companyIdDomain: null,
+				name: "泰州市民防局",
+				no: null,
+				upCompanyId: 1,
+				upCompanyName: "泰州市政府"
+            }, {
+                id: 5,
+				createTime: null,
+				updateTime: null,
+				delFlag: 0,
+				companyIdDomain: null,
+				name: "泰州市民防局",
+				no: null,
+				upCompanyId: 1,
+				upCompanyName: "泰州市政府"
+            }, {
+                id: 6,
+				createTime: null,
+				updateTime: null,
+				delFlag: 0,
+				companyIdDomain: null,
+				name: "泰州市民防局",
+				no: null,
+				upCompanyId: 1,
+				upCompanyName: "泰州市政府"
+            }]
+
+            function toTree(data) {
+                let result = []
+                if(!Array.isArray(data)) {
+                    return result
+                }
+                data.forEach(item => {
+                    delete item.children;
+                });
+                let map = {};
+                data.forEach(item => {
+                    map[item.id] = item;
+                });
+                data.forEach(item => {
+                    let parent = map[item.upCompanyId];
+                    if(parent) {
+                        (parent.children || (parent.children = [])).push(item);
+                    } else {
+                        result.push(item);
+                    }
+                });
+                return result;
+            }
+            console.log(toTree(source))
+        </script>
+    </body>
+
+</html>

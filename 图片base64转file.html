@@ -1,0 +1,42 @@
+<input type="file" id="file1" style="display:none">
+  <button id="btn">按钮</button>
+  <div id="result"></div>
+<script>
+btn.onclick = function() {
+  file1.click();
+}
+file1.onchange = function() {
+  var reader = new FileReader();
+  reader.readAsDataURL(file1.files[0]);
+  reader.onload = function(e){
+     var img =new Image();
+     console.log(e.target.result);
+     img.src = e.target.result;
+     document.body.appendChild(img);
+     var blob = dataURLtoBlob(e.target.result);
+     var file = blobToFile(blob, 'imgName');
+     console.log(file)
+  }
+}
+//将base64转换为blob
+     function dataURLtoBlob (dataurl) { 
+        var arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+    }
+    //将blob转换为file
+     function blobToFile(theBlob, fileName){
+       theBlob.lastModifiedDate = new Date();
+       theBlob.name = fileName;
+       return theBlob;
+    }
+    //调用
+    // var blob = dataURLtoBlob(base64Data);
+    // var file = blobToFile(blob, imgName);
+</script>

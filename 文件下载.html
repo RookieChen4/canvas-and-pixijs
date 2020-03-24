@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<script type="text/javascript">
+	function test() {
+		if(true) {
+			setTimeout(()=>{
+			 	console.log('xx')
+			 },1000)
+		}
+		console.log('yyy')
+	}
+	test()
+	function test2() {
+	var blob = '';
+　　　　　　　　　　// ie 使用
+    if (window.navigator.msSaveBlob) {
+        // for ie 10 and later
+        try {
+            var blobObject = new Blob([blob]);
+            window.navigator.msSaveBlob(blobObject, filename);
+        } catch (e) {
+            console.log(e);
+        }
+    } else {
+　　　　　　　　　　// 其他浏览器 下载方式
+        var reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onload = function(e) {
+            // 转换完成，创建一个a标签用于下载
+            var a = document.createElement('a');
+            a.download = filename;
+            a.href = e.target.result;
+
+            // 兼容触发click
+            var evt = document.createEvent("MouseEvents");
+            evt.initEvent("click", true, true);
+            a.dispatchEvent(evt);
+        }
+    }
+	}
+	test2()
+</script>
+<body>
+</body>
+</html>
