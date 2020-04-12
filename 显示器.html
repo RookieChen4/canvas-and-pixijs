@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <style type="text/css">
+            *{
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background-color: #7f8c8d;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .container {
+                width: 95%;
+                height: 95vh;
+                border-radius: 50px;
+                /* background: radial-gradient(ellipse,#ffffff,#f1f2f6,#dfe4ea,#ced6e0); */
+                background: linear-gradient(#ffffff 0%,#ffffff 25%,#f1f2f6 0%,#f1f2f6 50%,#dfe4ea 0%,#dfe4ea 75%,#ced6e0 0%,#ced6e0 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 70px;
+                letter-spacing: 50px;
+            }
+            .loading {
+                font-family: Impact;
+                text-shadow: 0 0 40px #a4b0be;
+                color: #2ed573;
+                animation: loading .1s infinite;
+            }
+            .loading::selection {
+                color: white;
+            }
+            .wait::selection {
+                color: #70a1ff;
+            }
+            @keyframes loading {
+                0%{
+                    opacity: 100%;
+                }
+                100% {
+                    opacity: 90%;
+                }
+            }
+            .wait {
+                animation: show 1s infinite;
+            }
+            @keyframes show {
+                0%{
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="loading">LOADING<span class="wait">_</span></h1>
+        </div>
+    </body>
+</html>
