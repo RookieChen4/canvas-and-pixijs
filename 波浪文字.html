@@ -25,7 +25,7 @@
                 100%{transform: translateX(0) scaleX(2.5);}
             }
             #path1{animation: move 2s linear infinite;}
-            @keyframes move1 {
+            /* @keyframes move1 {
                 0%{transform: translateX(-500px) scaleX(2.5);}
                 100%{transform: translateX(0) scaleX(2.5);}
             }
@@ -39,7 +39,7 @@
             }
             #wave1{animation: move1 2s linear infinite;}
             #wave2{animation: move2 1.7s linear infinite;}
-            #wave3{animation: move3 2s linear infinite;}
+            #wave3{animation: move3 2s linear infinite;} */
         </style>
     </head>
     <body>
@@ -50,16 +50,18 @@
                         <use xlink:href="#test" fill="#FFF"></use>
                     </mask>
                 </defs>
-                <!-- <path id='path1' d='M-40 10 Q-30 7 -20 10 T0 10 T20 10 T40 10 T60 10 T80 10 T100 10 V20 H-10 Z' fill="orange">
+                <!-- <path d='M-40 10 Q-30 7 -20 10 T0 10 T20 10 T40 10 T60 10 T80 10 T100 10 V20 H-10 Z' fill="orange">
+                </path> -->
+                <!-- <path id='path1' d='M0 10 Q10 5 20 10 T40 10 T60 10 T80 10 T100 10 V20 H-10 Z' style="fill:#c23616" fill-opacity="0.7">
                 </path> -->
                 <g mask="url(#mask)">
-                    <text id="test" x="35" y="15" style="fill:white;">
-                        SVG
+                    <text id="test" x="15" y="15" style="fill:white;" font-weight="550">
+                       CJH SVG
                     </text>
-                    <text x="35" y="15" style="fill:#e74c3c;" fill-opacity="0.5">
-                        SVG
+                    <text x="15" y="15" style="fill:#e74c3c;" fill-opacity="0.5" font-weight="550" stroke='#c23616' stroke-width='0.01'>
+                       CJH SVG
                     </text>
-                    <path id='path1' d='M0 10 Q10 7 20 10 T40 10 T60 10 T80 10 T100 10 V20 H-10 Z' style="fill:#c23616" fill-opacity="0.7">
+                    <path id='path1' d='M0 10 Q10 5 20 10 T40 10 T60 10 T80 10 T100 10 V20 H-10 Z' style="fill:#c23616" fill-opacity="0.7">
                     </path>
                 </g>
            </svg>
