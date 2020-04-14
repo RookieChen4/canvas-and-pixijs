@@ -23,29 +23,32 @@
             font-size: 150px;
             font-weight: bolder;
             color: #2c3e50;
+            /* color: transparent; */
             display: flex;
+            perspective: 200px;
         }
         .text {
             margin: 0 10px;
             position: relative;
         }
-        .text::after{
+        .c::after{
             content: attr(data-line);
             color: #9b59b6;
+            font-size: 200px;
             opacity: 0.5;
             position: absolute;
-            left: 2px;
+            left: 0;
             z-index: -1;
-            transform: rotate(-30deg);
+            transform: rotateX(20deg);
         }
 	</style>
 </head>
 <body>
     <div class="container">
         <div class="title">
-            <div class="text" data-line="C">C</div>
-            <div class="text" data-line="J">J</div>
-            <div class="text" data-line="H">H</div>
+            <div class="text c" data-line="K">K</div>
+            <div class="text j" data-line="J">J</div>
+            <div class="text h" data-line="H">H</div>
         </div>
     </div>
 </body>
