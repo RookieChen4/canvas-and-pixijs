@@ -28,27 +28,84 @@
             perspective: 200px;
         }
         .text {
-            margin: 0 10px;
+            margin: 0 50px;
             position: relative;
         }
-        .c::after{
+        .text::selection {
+            color: yellow;
+        }
+        .k::after{
             content: attr(data-line);
             color: #9b59b6;
-            font-size: 200px;
-            opacity: 0.5;
             position: absolute;
             left: 0;
+            top: 0;
             z-index: -1;
+            transition: .1s;
+        }
+        .o::after{
+            content: attr(data-line);
+            color: #9b59b6;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            transition: .1s;
+        }
+        .b::after{
+            content: attr(data-line);
+            color: #9b59b6;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            transition: .1s;
+        }
+        .e::after{
+            content: attr(data-line);
+            color: #9b59b6;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            transition: 0.1s;
+        }
+        .title:hover .k::after{
+            font-size: 200px;
+            opacity: 0.5;
+            left: -60px;
+            top: -25px;
             transform: rotateX(20deg);
+        }
+        .title:hover .o::after{
+            font-size: 200px;
+            opacity: 0.5;
+            left: -15px;
+            transform: rotateX(45deg);
+        }
+        .title:hover .b::after{
+            font-size: 200px;
+            opacity: 0.5;
+            transform: rotateX(-30deg);
+            left: -45px;
+            top: -85px;
+        }
+        .title:hover .e::after{
+            font-size: 200px;
+            opacity: 0.5;
+            transform: rotateX(20deg);
+            left: -80px;
+            top: -55px;
         }
 	</style>
 </head>
 <body>
     <div class="container">
         <div class="title">
-            <div class="text c" data-line="K">K</div>
-            <div class="text j" data-line="J">J</div>
-            <div class="text h" data-line="H">H</div>
+            <div class="text k" data-line="K">K</div>
+            <div class="text o" data-line="O">O</div>
+            <div class="text b" data-line="B">B</div>
+            <div class="text e" data-line="E">E</div>
         </div>
     </div>
 </body>
