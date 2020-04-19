@@ -1,54 +1,64 @@
 <script type="text/javascript">
 window.onload = function () {
+    console.log(document.body.clientHeight, document.documentElement.clientHeight)
     var oDiv = document.getElementById('touchMove');
 
-    var disX, moveX, L, T, starX, starY, starXEnd, starYEnd;
+    var disX, moveX, L, T;
 
+    // starX, starY, starXEnd, starYEnd // 开始的位置 坐标 目前不需要
     oDiv.addEventListener('touchstart', function (e) {
-        //e.preventDefault();
-        // console.log(e.touches[0].clientX)
-        disX = e.touches[0].clientX - this.offsetLeft;
-        // console.log(disX)
-        disY = e.touches[0].clientY - this.offsetTop;
-        starX = e.touches[0].clientX;
-        starY = e.touches[0].clientY;
-    });
+        // disX = e.touches[0].clientX - this.offsetLeft;  //如果不刷新滚轮用这个方法
+        // disY = e.touches[0].clientY - this.offsetTop;
+        disX = e.touches[0].pageX - this.offsetLeft;   // 可以刷新滚轮
+        disY = e.touches[0].pageY - this.offsetTop;   
+        e.preventDefault(); //阻止
+        // wind.addEventListener("touchmove",defaultEvent,false)
+        // starX = e.touches[0].clientX;
+        // starY = e.touches[0].clientY;
+    }); // starX ,starY起始坐标  disY,disY鼠标在元素内部距离左边框和上边框的距离
     oDiv.addEventListener('touchmove', function (e) {
-        L = e.touches[0].clientX - disX;
-        T = e.touches[0].clientY - disY;
-        starXEnd = e.touches[0].clientX - starX;
-        starYEnd = e.touches[0].clientY - starY;
-        //console.log(L);
+        // L = e.touches[0].clientX - disX; 
+        // T = e.touches[0].clientY - disY;
+        L = e.touches[0].pageX - disX; 
+        T = e.touches[0].pageY - disY;
+        // starXEnd = e.touches[0].clientX - starX;
+        // starYEnd = e.touches[0].clientY - starY;
         if (L < 0) {
-            L = 0;
-        } else if (L > document.documentElement.clientWidth - this.offsetWidth) {
-            L = document.documentElement.clientWidth - this.offsetWidth;
-        }
-
+            L = 0; // l 小于 0  说明 光标超出视窗左边框 left 设置为 0 
+        } 
+        // else if (L > document.documentElement.scrollWidth  - this.offsetWidth) {
+        //     L = document.documentElement.scrollWidth - this.offsetWidth;
+        // } 
+        else if (L > document.body.clientWidth - this.offsetWidth) {
+            L = document.body.clientWidth - this.offsetWidth;
+        } // 这个是移动图标超出右边框的情况 设置 图标 贴住右边框
+        // console.log(T, document.documentElement.clientHeight - this.offsetHeight)
         if (T < 0) {
-            T = 0;
-        } else if (T > document.documentElement.clientHeight - this.offsetHeight) {
-            T = document.documentElement.clientHeight - this.offsetHeight;
-        }
+            T = 0; // T 小于 0  说明 光标超出视窗上边框 top 设置为 0 
+        } 
+        // else if (T > document.documentElement.scrollHeight - this.offsetHeight) {
+        //     T = document.documentElement.scrollHeight - this.offsetHeight;
+        // }
+        else if (T > document.body.clientHeight - this.offsetHeight) {
+            T = document.body.clientHeight - this.offsetHeight;
+        } // 这个是移动图标超出下边框的情况 设置 图标 贴住下边框
         moveX = L + 'px';
         moveY = T + 'px';
-        //console.log(moveX);
         this.style.left = moveX;
         this.style.top = moveY;
     });
     window.addEventListener('touchend', function (e) {
-        // alert(parseInt(moveX))
         //判断滑动方向
-
     });
+    function defaultEvent(e) {
+        console.log('阻止页面默认滚动',e)
+        e.preventDefault();
+    }
 }
 </script>
 <style type="text/css">
-	.main {
-		position: relative;
-	}
 	#touchMove {
-		position: absolute;
+		position: fixed;
 		width: 100px;
 		height: 100px;
 		background: red;
@@ -59,21 +69,53 @@ window.onload = function () {
 		width: 100px;
 		height: 100px;
 		background: blue;
-		left: 0;
-		top: 0;
 	}
 	#touchMove2 {
 		width: 100px;
 		height: 100px;
 		background: yellow;
-		left: 0;
-		top: 0;
 	}
 </style>
 <body>
 	<div id="touchMove">
 	</div>
 	<div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
+	</div>
+	<div id="touchMove2">
+    </div>
+    <div id="touchMove1">
 	</div>
 	<div id="touchMove2">
 	</div>
