@@ -4,8 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background-color: #b2bec3;
+            width: 1200px;
+            height: 1500px;
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        .container .in {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translate(-50%,-50%);
+            width: 0;
+            height: 0;
+            border-radius: 2000px;
+            background-color: #81ecec;
+            animation: in 0.5s ease-out forwards;
+        }
+        .container .out {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translate(-50%,-50%);
+            width: 4000px;
+            height: 4000px;
+            border-radius: 2000px;
+            background-color: #81ecec;
+            animation: out 0.5s ease-in forwards;
+        }
+        @keyframes in {
+            0% {
+                width: 0;
+                height: 0;
+            }
+            100% {
+                width: 4000px;
+                height: 4000px;
+            }
+        }
+        @keyframes out {
+            0% {
+                width: 4000px;
+                height: 4000px;
+            }
+            100% {
+                width: 0;
+                height: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="container"></div>
 </body>
+<script>
+    let container = document.querySelector('.container')
+    let span,isIn = true,isOut = false;
+    container.addEventListener('mouseenter',function(e){
+        if(isIn) {
+            let inX = e.clientX - this.offsetLeft
+            let inY = e.clientY - this.offsetTop
+
+            let el = document.createElement('span')
+            el.style.left = inX + 'px'
+            el.style.top = inY + 'px'
+            container.appendChild(el)
+            document.querySelector('.container span').classList.remove('out')
+            document.querySelector('.container span').classList.add('in')
+            span = document.querySelector('.container span')
+            isIn = false
+            isOut = true
+        }
+    })
+    container.addEventListener('mouseleave',function(e){
+        if(isOut) {
+            let inX = e.clientX - this.offsetLeft
+            let inY = e.clientY - this.offsetTop
+            document.querySelector('.container span').classList.remove('in')
+            document.querySelector('.container span').classList.add('out')
+            document.querySelector('.out').style.left = inX + 'px'
+            document.querySelector('.out').style.top = inY + 'px'
+            isOut = false
+            setTimeout(()=>{
+                container.removeChild(span)
+                isIn = true
+            },500)
+        }
+    })
+</script>
 </html>
