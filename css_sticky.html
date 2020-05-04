@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: #000;
+            color: #fff;
+        }
+        .sticky-container {
+            position: relative;
+            display: flex;
+            background: #000;
+        }
+        .sticky-container span {
+            position: sticky;
+            top: 0;
+            width: 10%;
+            height: 100vh;
+            background: white;
+            margin-top: calc(100vh*var(--i));
+            background: linear-gradient(0deg,#1abc9c,#2ecc71,#1abc9c);
+        }
+        .sticky-container span:nth-child(2n) {
+			background: linear-gradient(0deg,#3498db,#9b59b6,#e67e22);
+		}
+        h2 {
+            position: relative;
+            background: linear-gradient(0deg,#1abc9c,#2ecc71,#3498db,#9b59b6,#e67e22,#1abc9c);
+            display: flex;
+            justify-content: center;
+        }
+        h2 span {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            line-height: 100vh;
+            color: #fff;
+            font-size: 6em;
+            margin-top: calc(100vh*var(--i));
+        }
+    </style>
+</head>
+<body>
+    <section>Scroll down</section>
+    <div class="sticky-container">
+        <span style="--i:0;"></span>
+        <span style="--i:1;"></span>
+        <span style="--i:2;"></span>
+        <span style="--i:3;"></span>
+        <span style="--i:4;"></span>
+        <span style="--i:5;"></span>
+        <span style="--i:6;"></span>
+        <span style="--i:7;"></span>
+        <span style="--i:8;"></span>
+        <span style="--i:9;"></span>
+    </div>
+    <h2>
+        <span style="--i:0;">1</span>
+        <span style="--i:1;">2</span>
+        <span style="--i:2;">3</span>
+        <span style="--i:3;">4</span>
+        <span style="--i:4;">5</span>
+        <span style="--i:5;">6</span>
+        <span style="--i:6;">7</span>
+        <span style="--i:7;">8</span>
+        <span style="--i:8;">9</span>
+        <span style="--i:9;">10</span>
+    </h2>
+</body>
+</html>
