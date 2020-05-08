@@ -9,21 +9,21 @@
             height: 100vh;
             overflow: hidden;
         }
+        #test::-webkit-scrollbar { width: 0 !important }
     </style>
 </head>
 <body>
-    <div  id="test" style="height:150px;overflow: auto;">
-        <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-        </ul>
+    <div id="test" style="height:150px;overflow: auto;">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>9</div>
+        <div>9</div>
     </div>
 </body>
 <script>
@@ -37,10 +37,6 @@
     stopScroll();
 
     function startScroll() { // 开始滚动
-        // setInterval(function () {
-        //     listBox.scrollTop = listBox.scrollTop + 1.5
-        //     console.log(listBox.scrollTop)
-        // },10)
         stopScroll();
         if (listBox.offsetHeight < listBox.scrollHeight) {
             intervalScroll = setInterval(function () {
@@ -49,8 +45,13 @@
                 } else {
                     clearInterval(intervalScroll);
                     setTime1 = setTimeout(function () {
-                        // $(listBox).animate({scrollTop: 0}, 'fast');
                         listBox.scrollTop = 0;
+                        listBox.animate([
+                            { scrollTop: -150 }, 
+                            { scrollTop: -10 }
+                        ], {
+                            duration: 1000
+                        });
                     }, 3000);
                     setTime2 = setTimeout(startScroll, 5000);
                 }
@@ -63,6 +64,14 @@
         clearTimeout(setTime1);
         clearTimeout(setTime2);
     }
+    
+    listBox.addEventListener('mouseover', function() {
+        stopScroll()
+    })
+
+    listBox.addEventListener('mouseout', function() {
+        startScroll()
+    })
 
     startScroll();
     }
