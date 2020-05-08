@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div  id="test" style="height:150px;overflow: auto;">
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+            <li>9</li>
+        </ul>
+    </div>
+</body>
+<script>
+    function AutoScrollList(id) {
+
+    let listBox = document.getElementById(id);
+    let intervalScroll;
+    let setTime1;
+    let setTime2;
+
+    stopScroll();
+
+    function startScroll() { // 开始滚动
+        // setInterval(function () {
+        //     listBox.scrollTop = listBox.scrollTop + 1.5
+        //     console.log(listBox.scrollTop)
+        // },10)
+        stopScroll();
+        if (listBox.offsetHeight < listBox.scrollHeight) {
+            intervalScroll = setInterval(function () {
+                if ((listBox.scrollTop + listBox.offsetHeight) < listBox.scrollHeight) {
+                    listBox.scrollTop ++
+                } else {
+                    clearInterval(intervalScroll);
+                    setTime1 = setTimeout(function () {
+                        // $(listBox).animate({scrollTop: 0}, 'fast');
+                        listBox.scrollTop = 0;
+                    }, 3000);
+                    setTime2 = setTimeout(startScroll, 5000);
+                }
+            }, 30);
+        }
+    }
+
+    function stopScroll() { // 停止滚动
+        clearInterval(intervalScroll);
+        clearTimeout(setTime1);
+        clearTimeout(setTime2);
+    }
+
+    startScroll();
+    }
+    AutoScrollList('test')
+</script>
+</html>
