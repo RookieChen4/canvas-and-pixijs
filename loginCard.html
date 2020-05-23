@@ -71,39 +71,45 @@
 <body>
     <div class="container"></div>
 </body>
+<script src="./js/debounce.js"></script>
+<script src="./js/throttle.js"></script>
 <script>
     let container = document.querySelector('.container')
     let span,isIn = true,isOut = false;
-    container.addEventListener('mouseenter',function(e){
-        if(isIn) {
-            let inX = e.clientX - this.offsetLeft
-            let inY = e.clientY - this.offsetTop
+    container.addEventListener('mouseenter',throttle(function(e){
+        setTimeout(()=>{
+            if(isIn) {
+                let inX = e.clientX - this.offsetLeft
+                let inY = e.clientY - this.offsetTop
 
-            let el = document.createElement('span')
-            el.style.left = inX + 'px'
-            el.style.top = inY + 'px'
-            container.appendChild(el)
-            document.querySelector('.container span').classList.remove('out')
-            document.querySelector('.container span').classList.add('in')
-            span = document.querySelector('.container span')
-            isIn = false
-            isOut = true
-        }
-    })
-    container.addEventListener('mouseleave',function(e){
-        if(isOut) {
-            let inX = e.clientX - this.offsetLeft
-            let inY = e.clientY - this.offsetTop
-            document.querySelector('.container span').classList.remove('in')
-            document.querySelector('.container span').classList.add('out')
-            document.querySelector('.out').style.left = inX + 'px'
-            document.querySelector('.out').style.top = inY + 'px'
-            isOut = false
-            setTimeout(()=>{
-                container.removeChild(span)
-                isIn = true
-            },500)
-        }
-    })
+                let el = document.createElement('span')
+                el.style.left = inX + 'px'
+                el.style.top = inY + 'px'
+                container.appendChild(el)
+                document.querySelector('.container span').classList.remove('out')
+                document.querySelector('.container span').classList.add('in')
+                span = document.querySelector('.container span')
+                isIn = false
+                isOut = true
+            }
+        }, 100)
+    }, 500))
+    container.addEventListener('mouseleave',throttle(function(e){
+        setTimeout(()=>{
+            if(isOut) {
+                let inX = e.clientX - this.offsetLeft
+                let inY = e.clientY - this.offsetTop
+                document.querySelector('.container span').classList.remove('in')
+                document.querySelector('.container span').classList.add('out')
+                document.querySelector('.out').style.left = inX + 'px'
+                document.querySelector('.out').style.top = inY + 'px'
+                isOut = false
+                setTimeout(()=>{
+                    container.removeChild(span)
+                    isIn = true
+                },500)
+            }
+        }, 300)
+    }, 500))
 </script>
 </html>
