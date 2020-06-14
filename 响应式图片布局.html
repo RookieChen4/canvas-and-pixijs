@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        html {
+            font-size: 14px;
+            --main-color: blue;
+            font-family: Roboto,Arial,sans-serif;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        .main-wrap {
+            width: 1170px;
+            margin: 0 auto;
+        }
+        .container {
+            margin: 0 -15px; 
+            /* 
+                加上item的padding:0 15px 正好抵消, 如果item不加上padding页面宽度变小后,width采用百分比所以item之间的间距会越来越小直到重合
+                为了避免重合必须加上padding,就要通过margin抵消
+            */
+        }
+        .container .container-header {
+            font-size: 27px;
+            display: flex;
+            padding-left: 40px;
+            margin-bottom: 35px;
+        }
+        .container .container-main {
+            display: flex;
+            flex-flow: row wrap;
+        }
+        .container .container-main .item {
+            font-family: Roboto,Arial,sans-serif;
+            padding: 0 15px;
+            width: 33.333333333333336%;
+            margin-bottom: 30px;
+        }
+        .container .container-main .item a{
+            display: block;
+        }
+        .container .container-main .item img {
+            width: 100%;
+            max-width: 370px;
+            height: auto;
+            transition: all .3s ease;
+        }
+        .container .container-main .item img:hover {
+            box-shadow: 0 15px 45px -5px rgba(7,10,25,.25);
+            -webkit-filter: brightness(1.07);
+            filter: brightness(1.07);
+            transform: translate(0,-2px);
+        }
+        .container .container-main .item .item-des {
+            font-size: 12px;
+            padding: 20px
+        }
+        .container .container-main .item .item-des .getmore {
+            font-weight: 500;
+            color: #2d53fe;
+        }
+        .container .container-main .item .item-des .read-info {
+            font-weight: 500;
+            letter-spacing: .1em;
+            color: #989898;
+        }
+        .container .container-main .item .item-des h2 a{
+            text-decoration: none;
+            font-size: 22px;
+            margin: 15px 0;
+            transition: all .3s ease-in;
+        }
+        .container .container-main .item .item-des h2 ::selection{
+            background: rgba(45,83,254,.95);
+            color: #fff;
+            text-shadow: none;
+        }
+        .container .container-main .item .item-des h2 a:hover {
+            opacity: 1;
+            text-shadow: 2px 2px #fff, 2px -2px #fff, -2px 2px #fff, -2px -2px #fff;
+            box-shadow: 0 -1px 0 0 #fff inset,0 -2px 0 0 var(--main-color,#000) inset;
+        }
+        .container .container-main .item .item-des .des {
+            margin-top: 15px;
+            line-height: 1.6875;
+            color: #505050;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            font-size: 16px;
+        }
+        @media (max-width: 1200px){
+        .main-wrap {
+                width: 100%;
+                padding: 0 35px;
+            }
+        }
+        @media (max-width: 940px){
+            .main-wrap {
+                max-width: 740px;
+            }
+            .container .container-main .item{
+                width: 100%;
+            }
+        }
+        @media (max-width: 767px) {
+            .container .container-main .item img {
+                max-width: initial;
+                /* will-change: initial; */
+            }
+        }
+        @media (max-width: 540px){
+            .main-wrap {
+                padding: 0 22px;
+            }
+        }
+        @media (max-width: 940px) and (min-width: 767px) {
+            .container .container-main .item {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrap">
+        <div class="home-widgets">
+            <section class="container">
+                <div class="container-header">
+                    <h4>响应式图片布局</h4>
+                </div>
+                <div class="container-main">
+                    <article class="item">
+                        <a class="item-img">
+                            <img src="./images/1.jpg"/>
+                        </a>
+                        <div class="item-des">
+                            <div class="getmore"><span>GADGETS</span></div>
+                            <h2><a>Tupac tribute murals and graffiti from around the world</a></h2>
+                            <div class="read-info">MAY 15 2018 - 5 MINS READ</div>
+                            <div class="des">More off this less hello salamander lied porpoise much over tightly circa…</div>
+                        </div>
+                    </article>
+                    <article class="item">
+                        <a class="item-img">
+                            <img src="./images/2.jpg"/>
+                        </a>
+                        <div class="item-des">
+                            <div class="getmore"><span>GADGETS</span></div>
+                            <h2><a>Tupac tribute murals and graffiti from around the world</a></h2>
+                            <div class="read-info">MAY 15 2018 - 5 MINS READ</div>
+                            <div class="des">More off this less hello salamander lied porpoise much over tightly circa…</div>
+                        </div>
+                    </article>
+                    <article class="item">
+                        <a class="item-img">
+                            <img src="./images/3.jpg"/>
+                        </a>
+                        <div class="item-des">
+                            <div class="getmore"><span>GADGETS</span></div>
+                            <h2><a>Tupac tribute murals and graffiti from around the world</a></h2>
+                            <div class="read-info">MAY 15 2018 - 5 MINS READ</div>
+                            <div class="des">More off this less hello salamander lied porpoise much over tightly circa…</div>
+                        </div>
+                    </article>
+                    <article class="item">
+                        <a class="item-img">
+                            <img src="./images/4.jpg"/>
+                        </a>
+                        <div class="item-des">
+                            <div class="getmore"><span>GADGETS</span></div>
+                            <h2><a>Tupac tribute murals and graffiti from around the world</a></h2>
+                            <div class="read-info">MAY 15 2018 - 5 MINS READ</div>
+                            <div class="des">More off this less hello salamander lied porpoise much over tightly circa…</div>
+                        </div>
+                    </article>
+                    <article class="item">
+                        <a class="item-img">
+                            <img src="./images/5.jpg"/>
+                        </a>
+                        <div class="item-des">
+                            <div class="getmore"><span>GADGETS</span></div>
+                            <h2><a>Tupac tribute murals and graffiti from around the world</a></h2>
+                            <div class="read-info">MAY 15 2018 - 5 MINS READ</div>
+                            <div class="des">More off this less hello salamander lied porpoise much over tightly circa…</div>
+                        </div>
+                    </article>
+                    <article class="item">
+                        <a class="item-img">
+                            <img src="./images/6.jpg"/>
+                        </a>
+                        <div class="item-des">
+                            <div class="getmore"><span>GADGETS</span></div>
+                            <h2><a>Tupac tribute murals and graffiti from around the world</a></h2>
+                            <div class="read-info">MAY 15 2018 - 5 MINS READ</div>
+                            <div class="des">More off this less hello salamander lied porpoise much over tightly circa…</div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
