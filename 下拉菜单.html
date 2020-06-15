@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title></title>
 	<style type="text/css">
@@ -7,20 +8,24 @@
 			margin: 0;
 			padding: 0;
 		}
+
 		body {
 			margin: 0;
 			padding: 0;
 			background: #ecf0f1;
 		}
+
 		.navbar {
 			width: 100%;
 			height: 50px;
 			background: #333;
 			box-shadow: 0 -2px 2px #000;
 		}
+
 		.navbar ul {
 			list-style: none;
 		}
+
 		.navbar ul li {
 			float: left;
 			width: 150px;
@@ -28,17 +33,28 @@
 			background: #222;
 			margin-right: 1px;
 		}
+
 		.navbar ul li:hover {
 			color: #fff;
-			background: rgba(238,82,83,1);
+			background: rgba(238, 82, 83, 1);
 			animation: changeColor 2s infinite;
 			animation-delay: 1.5s;
 		}
+
 		@keyframes changeColor {
-			0% {background: #1d84b5;}
-			50% {background: #00cecb;}
-			100% {background: #1d84b5;}
+			0% {
+				background: #1d84b5;
+			}
+
+			50% {
+				background: #00cecb;
+			}
+
+			100% {
+				background: #1d84b5;
+			}
 		}
+
 		.navbar ul li a {
 			text-decoration: none;
 			/*color: #fff;*/
@@ -48,6 +64,7 @@
 			font-weight: bold;
 			text-transform: uppercase;
 		}
+
 		.navbar ul li ul li {
 			/*display: none;*/
 			/*visibility:hidden;
@@ -56,18 +73,20 @@
 			height: 0px;
 			overflow: hidden;
 			float: initial;
-			background: rgba(1,163,164,1);
+			background: rgba(1, 163, 164, 1);
 		}
+
 		.navbar ul li:hover ul li {
 			/*display: block;*/
 			/*visibility:visible;
 			opacity:1;*/
 			height: 50px;
-			border-top: 1px solid rgba(72,219,251,0.5);
+			border-top: 1px solid rgba(72, 219, 251, 0.5);
 			transition: 1s;
 		}
 	</style>
 </head>
+
 <body>
 	<div class="navbar">
 		<ul>
@@ -107,16 +126,18 @@
 				</ul>
 		</ul>
 	</div>
+	<div>sadsadsadsaddsadsadsa</div>
 </body>
 <script type="text/javascript">
 	let ulli = document.querySelector('ul')
 	let t = ulli.querySelectorAll('ul>li')
 	// let x = t[0].querySelectorAll('li')
 	// console.log(x)
-	ulli.onclick = function() {
+	ulli.onclick = function () {
 		console.log(this)
 		let u = this.querySelector('li')
 		u.style.display = 'block'
 	}
 </script>
+
 </html>
