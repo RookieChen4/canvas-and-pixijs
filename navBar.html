@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/89f85b1c93.js" crossorigin="anonymous"></script>
     <title>Document</title>
     <style>
@@ -42,10 +43,13 @@
             align-items: center;
             margin-right: 30px;
         }
-
+        .logo a {
+            display: block;
+        }
         .logo a img {
             max-width: 100px;
             height: auto;
+            vertical-align: middle;
         }
 
         .nav-wrap .menu {
@@ -76,8 +80,8 @@
         }
 
         .nav-wrap .menu ul li a::after {
-            content: '展开';
-            font-size: 5px;
+            /* content: '展开';
+            font-size: 5px; */
         }
 
         .nav-wrap .menu ul li:hover .menu-wrap-list-item {
@@ -105,6 +109,21 @@
         .nav-wrap .rightContent {
             margin-left: auto;
         }
+        .nav-wrap .rightContent .contact-list{
+        }
+        .nav-wrap .rightContent a{
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .nav-wrap .rightContent i{
+            color: #555;
+        }
+        .nav-wrap .rightContent .search::before{
+            content: '';
+            height: 16px;
+            border-left: 1px solid #ddd;
+            padding-left: 20px;
+        }
     </style>
 </head>
 
@@ -120,7 +139,7 @@
                                 <img src="./images/logo.png" />
                             </a>
                         </div>
-                        <div class="title">I'm Cjh</div>
+                        <div class="title">I'm CJH</div>
                     </div>
                     <div class="menu">
                         <div class="menu-wrap">
@@ -165,12 +184,16 @@
                         </div>
                         </ul>
                     </div>
+                    <div class="rightContent">
+                            <a href=""><i class="fab fa-facebook-f"></i></a>
+                            <a href=""><i class="fab fa-twitter"></i></a>
+                            <a href=""><i class="fab fa-instagram"></i></a>
+                        <a class="search" href=""><i class="fa fa-search"></i></a>
+                    </div>
                 </div>
-                <div class="rightContent">concat</div>
             </div>
     </div>
     </header>
-    <div>asdsadsadsadasdsadsadsadsadsada</div>
     </div>
 </body>
 
