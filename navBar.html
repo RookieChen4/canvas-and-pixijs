@@ -5,16 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;500&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/89f85b1c93.js" crossorigin="anonymous"></script>
     <title>Document</title>
     <style>
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-family: Roboto, Arial, sans-serif;
         }
 
         body {
             /* background-color: black; */
+            height: 200vh;
         }
 
         .nav-bar {
@@ -43,9 +50,11 @@
             align-items: center;
             margin-right: 30px;
         }
+
         .logo a {
             display: block;
         }
+
         .logo a img {
             max-width: 100px;
             height: auto;
@@ -75,16 +84,32 @@
         }
 
         .nav-wrap .menu ul li a {
+            line-height: 70px;
             position: relative;
             padding: 0 20px;
         }
 
-        .nav-wrap .menu ul li a::after {
-            /* content: '展开';
-            font-size: 5px; */
+        .nav-wrap .menu ul li .menu-title::before {
+            content: " ";
+            position: absolute;
+            top: calc(100% - 13px);
+            left: calc(50% - 13px);
+            z-index: 111;
+            border-style: solid;
+            border-width: 0 8px 11px;
+            border-color: transparent transparent #fff;
+            -webkit-filter: drop-shadow(0px -2px 2px rgba(0, 0, 0, .09));
+            filter: drop-shadow(0px -2px 2px rgba(0, 0, 0, .09));
+            opacity: 0;
+            transition: opacity .3s ease-in;
         }
 
         .nav-wrap .menu ul li:hover .menu-wrap-list-item {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-wrap .menu ul li:hover .menu-title::before {
             opacity: 1;
             visibility: visible;
         }
@@ -108,17 +133,25 @@
 
         .nav-wrap .rightContent {
             margin-left: auto;
+            display: flex;
         }
-        .nav-wrap .rightContent .contact-list{
-        }
-        .nav-wrap .rightContent a{
+
+        .nav-wrap .rightContent .contact-list {}
+
+        .nav-wrap .rightContent a {
             text-decoration: none;
             margin-right: 15px;
         }
-        .nav-wrap .rightContent i{
+
+        .nav-wrap .rightContent .contact-list a :hover {
+            color: blue;
+        }
+
+        .nav-wrap .rightContent i {
             color: #555;
         }
-        .nav-wrap .rightContent .search::before{
+
+        .nav-wrap .rightContent .search::before {
             content: '';
             height: 16px;
             border-left: 1px solid #ddd;
@@ -145,7 +178,7 @@
                         <div class="menu-wrap">
                             <ul class="menu-wrap-list">
                                 <li>
-                                    <a><span>Home</span></a>
+                                    <a class="menu-title"><span>Home</span></a>
                                     <ul class="menu-wrap-list-item">
                                         <li><a>default Home</a></li>
                                         <li><a>default Home</a></li>
@@ -153,7 +186,7 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><span>Features</span></a>
+                                    <a class="menu-title"><span>Features</span></a>
                                     <ul class="menu-wrap-list-item">
                                         <li><a>default Home</a></li>
                                         <li><a>default Home</a></li>
@@ -161,7 +194,7 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><span>Marketing</span></a>
+                                    <a class="menu-title"><span>Marketing</span></a>
                                     <ul class="menu-wrap-list-item">
                                         <li><a>default Home</a></li>
                                         <li><a>default Home</a></li>
@@ -169,7 +202,7 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><span>Gadgets</span></a>
+                                    <a class="menu-title"><span>Gadgets</span></a>
                                     <ul class="menu-wrap-list-item">
                                         <li><a>default Home</a></li>
                                         <li><a>default Home</a></li>
@@ -177,17 +210,19 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a><span>Buy Theme</span></a>
+                                    <a class="menu-title"><span>Buy Theme</span></a>
                                     <div class="menu-wrap-list-item" style="width: 1170px; left: 0;">
-                                        sadsadsadas
+                                        default Home default Home default Home default Home default Home default Home
                                     </div>
                         </div>
                         </ul>
                     </div>
                     <div class="rightContent">
+                        <div class="contact-list">
                             <a href=""><i class="fab fa-facebook-f"></i></a>
                             <a href=""><i class="fab fa-twitter"></i></a>
                             <a href=""><i class="fab fa-instagram"></i></a>
+                        </div>
                         <a class="search" href=""><i class="fa fa-search"></i></a>
                     </div>
                 </div>
