@@ -98,8 +98,8 @@
             border-style: solid;
             border-width: 0 8px 11px;
             border-color: transparent transparent #fff;
-            -webkit-filter: drop-shadow(0px -2px 2px rgba(0, 0, 0, .09));
-            filter: drop-shadow(0px -2px 2px rgba(0, 0, 0, .09));
+            -webkit-filter: drop-shadow(0px -2px 2px rgba(0,0,0,.06));
+            filter: drop-shadow(0px -2px 2px rgba(0,0,0,.06));
             opacity: 0;
             transition: opacity .3s ease-in;
         }
@@ -117,7 +117,7 @@
         .nav-wrap .menu ul li .menu-wrap-list-item {
             line-height: 1.8666;
             margin-top: -20px;
-            z-index: 1000;
+            z-index: 110;
             position: absolute;
             top: 100%;
             padding: 16px 0;
@@ -157,6 +157,35 @@
             border-left: 1px solid #ddd;
             padding-left: 20px;
         }
+        .submenu {
+            position: relative;
+        }
+        .nav-wrap .menu ul li .menu-wrap-list-item .submenu .submenu-item {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            visibility: hidden;
+            opacity: 0;
+            line-height: 1.8666;
+            margin-top: -20px;
+            z-index: 110;
+            padding: 16px 0;
+            padding-top: 14px;
+            border: 0;
+            box-shadow: 0 2px 4px -2px rgba(0, 0, 0, .15), 0px 4px 18px -2px rgba(0, 0, 0, .15);
+            border-radius: 2px;
+            background: #fff;
+            transition: .5s ease-in-out;
+            
+        }
+        .nav-wrap .menu ul li .menu-wrap-list-item .submenu :hover {
+            color: hotpink;
+        }
+        .nav-wrap .menu ul li .menu-wrap-list-item .submenu :hover .submenu-item {
+            color: hotpink;
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 
@@ -182,7 +211,13 @@
                                     <ul class="menu-wrap-list-item">
                                         <li><a>default Home</a></li>
                                         <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
+                                        <li class="submenu">
+                                            <a>default Home</a>
+                                            <ul class="submenu-item">
+                                                <li><a>default Home</a></li>
+                                                <li><a>default Home</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li>
