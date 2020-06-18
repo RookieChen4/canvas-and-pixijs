@@ -98,8 +98,8 @@
             border-style: solid;
             border-width: 0 8px 11px;
             border-color: transparent transparent #fff;
-            -webkit-filter: drop-shadow(0px -2px 2px rgba(0,0,0,.06));
-            filter: drop-shadow(0px -2px 2px rgba(0,0,0,.06));
+            -webkit-filter: drop-shadow(0px -2px 2px rgba(0, 0, 0, .06));
+            filter: drop-shadow(0px -2px 2px rgba(0, 0, 0, .06));
             opacity: 0;
             transition: opacity .3s ease-in;
         }
@@ -157,9 +157,11 @@
             border-left: 1px solid #ddd;
             padding-left: 20px;
         }
+
         .submenu {
             position: relative;
         }
+
         .nav-wrap .menu ul li .menu-wrap-list-item .submenu .submenu-item {
             position: absolute;
             left: 100%;
@@ -176,15 +178,30 @@
             border-radius: 2px;
             background: #fff;
             transition: .5s ease-in-out;
-            
+
         }
-        .nav-wrap .menu ul li .menu-wrap-list-item .submenu :hover {
+
+        .nav-wrap .menu ul li .menu-wrap-list-item .submenu:hover {
             color: hotpink;
         }
-        .nav-wrap .menu ul li .menu-wrap-list-item .submenu :hover .submenu-item {
-            color: hotpink;
+
+        ul li:hover ul li {
             opacity: 1;
             visibility: visible;
+        }
+
+        .nav-wrap .menu ul li .menu-wrap-list-item .submenu:hover .submenu-item {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .nav-wrap .menu ul li .menu-wrap-list-item .submenu ul li:hover a {
+            color: blueviolet;
+        }
+
+        .submenu-item li {
+            min-width: 240px;
+            max-width: 350px;
         }
     </style>
 </head>
@@ -209,8 +226,8 @@
                                 <li>
                                     <a class="menu-title"><span>Home</span></a>
                                     <ul class="menu-wrap-list-item">
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
                                         <li class="submenu">
                                             <a>default Home</a>
                                             <ul class="submenu-item">
@@ -223,25 +240,25 @@
                                 <li>
                                     <a class="menu-title"><span>Features</span></a>
                                     <ul class="menu-wrap-list-item">
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a class="menu-title"><span>Marketing</span></a>
                                     <ul class="menu-wrap-list-item">
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a class="menu-title"><span>Gadgets</span></a>
                                     <ul class="menu-wrap-list-item">
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
-                                        <li><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
+                                        <li class="submenu"><a>default Home</a></li>
                                     </ul>
                                 </li>
                                 <li>
