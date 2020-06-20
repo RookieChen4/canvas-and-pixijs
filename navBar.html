@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            list-style: none;
         }
 
         html {
@@ -114,6 +115,19 @@
             opacity: 1;
             visibility: visible;
         }
+        .nav-wrap .menu ul li .menu-title::after {
+            font-size: 15px;
+            display: inline-block;
+            content: "\f107";
+            margin-left: 8px;
+            font-family: "FontAwesome";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: .9;
+            color: #a0a0a0;
+            -webkit-font-smoothing: antialiased;
+        }
 
         .nav-wrap .menu ul li .menu-wrap-list-item {
             line-height: 1.8666;
@@ -136,8 +150,6 @@
             margin-left: auto;
             display: flex;
         }
-
-        .nav-wrap .rightContent .contact-list {}
 
         .nav-wrap .rightContent a {
             text-decoration: none;
@@ -273,6 +285,61 @@
             position: relative;
             width: 100%;
             height: 100%;
+            padding: 25px;
+        }
+        
+
+        .mobile-wrap .logo {
+            text-align: center;
+        }
+
+        .mobile-wrap .logo img {
+            max-width: 55%;
+        }
+        .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-wrap-list-item{
+           max-height: 0;
+           opacity: 0;
+           visibility: hidden;
+           transition: opacity .6s ease,max-height .8s ease;
+        }
+        .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-wrap-list-item.active {
+            max-height: 3000px;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity .4s ease-in,max-height 1s ease-in;
+        }
+        .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-title {
+            display: block;
+            padding: 15px 0;
+            padding-right: 50px;
+            border-bottom: 1px solid rgba(0,0,0,.07);
+            line-height: 1.4;
+            letter-spacing: .02em;
+            color: inherit;
+        }
+        .mobile-menu-title-wrap {
+            position: relative;
+        }
+        .chevron {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 15px 25px;
+            margin-right: -15px;
+            border: 0;
+            color: #aaa;
+            text-align: center;
+            font-size: 15px;
+            -webkit-text-stroke: 1.2px #fff;
+            line-height: 1.8;
+            cursor: pointer;
+        }
+        .chevron .fa {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
         }
 
         .mobile-wrap .close {
@@ -380,8 +447,8 @@
                                     <div class="menu-wrap-list-item" style="width: 1170px; left: 0;">
                                         default Home default Home default Home default Home default Home default Home
                                     </div>
+                            </ul>
                         </div>
-                        </ul>
                     </div>
                     <div class="rightContent">
                         <div class="contact-list">
@@ -400,6 +467,98 @@
             <a href="javascript:void(0);" class="close" onclick="_close()">
                 <li class="fa fa-times"></li>
             </a>
+            <div class="logo">
+                <img src="./images/logo.png" alt="">
+            </div>
+            <div class="mobile-menu">
+                <ul class="mobile-menu-wrap-list">
+                    <li class="mobile-menu-title-wrap">
+                        <a class="mobile-menu-title"><span>Home</span></a>
+                        <span class="chevron">
+                            <i class="fa fa-chevron-down"></i>
+                        </span>
+                        <ul class="mobile-menu-wrap-list-item">
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu">
+                                <a>default Home</a>
+                                <ul class="mobile-submenu-item">
+                                    <li><a>default Home</a></li>
+                                    <li><a>default Home</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mobile-menu-title-wrap">
+                        <a class="mobile-menu-title"><span>Features</span></a>
+                        <span class="chevron">
+                            <i class="fa fa-chevron-down"></i>
+                        </span>
+                        <ul class="mobile-menu-wrap-list-item">
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu">
+                                <a>default Home</a>
+                                <ul class="mobile-submenu-item">
+                                    <li><a>default Home</a></li>
+                                    <li><a>default Home</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mobile-menu-title-wrap">
+                        <a class="mobile-menu-title"><span>Marketing</span></a>
+                        <span class="chevron">
+                            <i class="fa fa-chevron-down"></i>
+                        </span>
+                        <ul class="mobile-menu-wrap-list-item">
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu">
+                                <a>default Home</a>
+                                <ul class="mobile-submenu-item">
+                                    <li><a>default Home</a></li>
+                                    <li><a>default Home</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mobile-menu-title-wrap">
+                        <a class="mobile-menu-title"><span>Gadgets</span></a>
+                        <span class="chevron">
+                            <i class="fa fa-chevron-down"></i>
+                        </span>
+                        <ul class="mobile-menu-wrap-list-item">
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu">
+                                <a>default Home</a>
+                                <ul class="mobile-submenu-item">
+                                    <li><a>default Home</a></li>
+                                    <li><a>default Home</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="mobile-menu-title-wrap">
+                        <a class="mobile-menu-title"><span>Buy Theme</span></a>
+                        <span class="chevron">
+                            <i class="fa fa-chevron-down"></i>
+                        </span>
+                        <ul class="mobile-menu-wrap-list-item">
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu">
+                                <a>default Home</a>
+                                <ul class="mobile-submenu-item">
+                                    <li><a>default Home</a></li>
+                                    <li><a>default Home</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>
@@ -423,6 +582,16 @@
     })
     document.querySelector('.burger').addEventListener('click', () => {
         document.querySelector('.mobile-nav').classList.add('active-nav')
+    })
+    document.querySelectorAll('.chevron').forEach((it,index) => {
+        it.addEventListener('click',(e) => {
+            if(it.nextSibling.nextSibling.classList.contains('active')) 
+            {
+                it.nextSibling.nextSibling.classList.remove('active')
+            } else {
+                it.nextSibling.nextSibling.classList.add('active')
+            }
+        })
     })
 </script>
 
