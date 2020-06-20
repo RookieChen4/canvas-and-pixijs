@@ -22,26 +22,26 @@
         body {
             /* background-color: black; */
             height: 200vh;
+            overflow-x: hidden;
         }
 
         .nav-bar {
             width: 100%;
-            min-height: 106px;
         }
 
         .navbar {
             background-color: #fff;
             min-height: 106px;
+            line-height: 106px;
         }
 
         .nav-wrap {
             display: flex;
             width: 1170px;
-            min-height: 106px;
             margin: 0 auto;
             position: relative;
-            line-height: 106px;
-            min-height: 106px;
+            /* line-height: 106px;
+            min-height: 106px; */
         }
 
         .nav-wrap .leftContent {
@@ -49,6 +49,11 @@
             display: flex;
             align-items: center;
             margin-right: 30px;
+        }
+
+        .nav-wrap .leftContent .burger {
+            display: none;
+            margin-right: 20px;
         }
 
         .logo a {
@@ -66,11 +71,7 @@
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            /* position: relative; */
-        }
-
-        .nav-wrap .menu .menu-wrap {
-            /* margin: 18px 0; */
+            line-height: 70px;
         }
 
         .nav-wrap .menu .menu-wrap-list {
@@ -203,6 +204,117 @@
             min-width: 240px;
             max-width: 350px;
         }
+
+        .nav-bar .navbar.sticky-bar {
+            line-height: 55px !important;
+            min-height: 55px !important;
+            border-bottom: 1px solid #efefef !important;
+            box-shadow: 0 0 20px rgba(0, 0, 0, .05) !important;
+            animation: .55s fade-in-up-lg ease-out !important;
+            animation-fill-mode: both !important;
+        }
+
+        @keyframes fade-in-up-lg {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, 8px, 0);
+            }
+
+            100% {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        .sticky-bar {
+            position: fixed !important;
+            top: 0;
+            width: 100%;
+            z-index: 1000 !important;
+        }
+
+        .sticky-bar img {
+            max-width: 54px !important;
+        }
+
+        .sticky-bar .nav-wrap .menu ul li a {
+            line-height: 55px !important;
+        }
+
+        .sticky-bar .nav-wrap .menu ul li .menu-wrap-list-item {
+            margin-top: 0;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+            height: 100%;
+            width: 45vw;
+            min-width: 200px;
+            /* padding: 25px;
+            padding-top: 60px; */
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: #fff;
+            z-index: 1000;
+            transform: translate3d(-100%, 0, 0);
+            transition: transform .4s ease-in-out;
+        }
+
+        .active-nav {
+            transform: translate3d(0, 0, 0);
+            box-shadow: 4px 0px 8px 0 rgba(0, 0, 0, .2);
+        }
+
+        .mobile-wrap {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mobile-wrap .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0 9px;
+            background: #161616;
+            color: #fff;
+            line-height: 26px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1200px) {
+            .nav-wrap {
+                max-width: 100%;
+                padding: 0 35px;
+            }
+
+            .menu-wrap-list-item {
+                max-width: 100vw !important;
+            }
+
+            .nav-wrap .menu ul li a {
+                font-size: 14px;
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 940px) {
+            .menu {
+                display: none !important;
+            }
+
+            .burger {
+                display: block !important;
+            }
+
+            .mobile-nav {
+                display: block;
+            }
+        }
     </style>
 </head>
 
@@ -212,7 +324,9 @@
             <div class="navbar">
                 <div class="nav-wrap">
                     <div class="leftContent">
-                        <div class="burger"></div>
+                        <div class="burger">
+                            <li class="fa fa-bars"></li>
+                        </div>
                         <div class="logo">
                             <a>
                                 <img src="./images/logo.png" />
@@ -279,9 +393,37 @@
                     </div>
                 </div>
             </div>
+        </header>
     </div>
-    </header>
+    <div class="mobile-nav">
+        <div class="mobile-wrap">
+            <a href="javascript:void(0);" class="close" onclick="_close()">
+                <li class="fa fa-times"></li>
+            </a>
+        </div>
     </div>
 </body>
+<script>
+    function _close() {
+        console.log('sad')
+        document.querySelector('.mobile-nav').classList.remove('active-nav')
+    }
+    let beforeScrollTop = document.documentElement.scrollTop
+    window.addEventListener('scroll', (e) => {
+        let afterScrollTop = document.documentElement.scrollTop;
+        if (afterScrollTop - beforeScrollTop > 0) {
+            document.querySelector('.navbar').classList.remove('sticky-bar')
+        } else {
+            document.querySelector('.navbar').classList.add('sticky-bar')
+        }
+        if (afterScrollTop <= 50) {
+            document.querySelector('.navbar').classList.remove('sticky-bar')
+        }
+        beforeScrollTop = afterScrollTop;
+    })
+    document.querySelector('.burger').addEventListener('click', () => {
+        document.querySelector('.mobile-nav').classList.add('active-nav')
+    })
+</script>
 
 </html>
