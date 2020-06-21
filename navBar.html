@@ -106,15 +106,20 @@
             transition: opacity .3s ease-in;
         }
 
-        .nav-wrap .menu ul li:hover .menu-wrap-list-item {
-            opacity: 1;
-            visibility: visible;
+        .menu li:hover > ul {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        .menu li:hover > .menu-wrap-list-item {
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .nav-wrap .menu ul li:hover .menu-title::before {
             opacity: 1;
             visibility: visible;
         }
+
         .nav-wrap .menu ul li .menu-title::after {
             font-size: 15px;
             display: inline-block;
@@ -287,7 +292,11 @@
             height: 100%;
             padding: 25px;
         }
-        
+
+        .item-content {
+           width: 1170px; 
+           left: 0;
+        }
 
         .mobile-wrap .logo {
             text-align: center;
@@ -296,30 +305,40 @@
         .mobile-wrap .logo img {
             max-width: 55%;
         }
-        .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-wrap-list-item{
-           max-height: 0;
-           opacity: 0;
-           visibility: hidden;
-           transition: opacity .6s ease,max-height .8s ease;
+
+        .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-wrap-list-item {
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .6s ease, max-height 1s ease;
         }
+
         .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-wrap-list-item.active {
             max-height: 3000px;
             opacity: 1;
             visibility: visible;
-            transition: opacity .4s ease-in,max-height 1s ease-in;
+            transition: opacity .6s ease-in, max-height 1s ease-in;
         }
+
         .mobile-wrap .mobile-menu .mobile-menu-wrap-list .mobile-menu-title {
             display: block;
             padding: 15px 0;
             padding-right: 50px;
-            border-bottom: 1px solid rgba(0,0,0,.07);
+            border-bottom: 1px solid rgba(0, 0, 0, .07);
             line-height: 1.4;
             letter-spacing: .02em;
             color: inherit;
         }
+
         .mobile-menu-title-wrap {
             position: relative;
         }
+
+        .mobile-submenu {
+            position: relative;
+            padding-left: 20px;
+        }
+
         .chevron {
             position: absolute;
             right: 0;
@@ -334,6 +353,7 @@
             line-height: 1.8;
             cursor: pointer;
         }
+
         .chevron .fa {
             display: inline-block;
             font: normal normal normal 14px/1 FontAwesome;
@@ -353,6 +373,16 @@
             font-size: 14px;
         }
 
+        .mobile-submenu a {
+            display: block;
+            padding: 15px 0;
+            padding-right: 50px;
+            border-bottom: 1px solid rgba(0, 0, 0, .07);
+            line-height: 1.4;
+            letter-spacing: .02em;
+            color: inherit;
+        }
+
         @media (max-width: 1200px) {
             .nav-wrap {
                 max-width: 100%;
@@ -362,8 +392,10 @@
             .menu-wrap-list-item {
                 max-width: 100vw !important;
             }
-
-            .nav-wrap .menu ul li a {
+            .item-content {
+                width: 100vw !important;
+            }
+            .nav-wrap .menu .menu-title {
                 font-size: 14px;
                 padding: 0 15px;
             }
@@ -380,6 +412,12 @@
 
             .mobile-nav {
                 display: block;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .mobile-nav {
+                width: 75vw;
             }
         }
     </style>
@@ -401,7 +439,7 @@
                         </div>
                         <div class="title">I'm CJH</div>
                     </div>
-                    <div class="menu">
+                    <nav class="menu">
                         <div class="menu-wrap">
                             <ul class="menu-wrap-list">
                                 <li>
@@ -411,7 +449,7 @@
                                         <li class="submenu"><a>default Home</a></li>
                                         <li class="submenu">
                                             <a>default Home</a>
-                                            <ul class="submenu-item">
+                                            <ul class="menu-wrap-list-item submenu-item">
                                                 <li><a>default Home</a></li>
                                                 <li><a>default Home</a></li>
                                             </ul>
@@ -444,12 +482,12 @@
                                 </li>
                                 <li>
                                     <a class="menu-title"><span>Buy Theme</span></a>
-                                    <div class="menu-wrap-list-item" style="width: 1170px; left: 0;">
+                                    <div class="menu-wrap-list-item item-content">
                                         default Home default Home default Home default Home default Home default Home
                                     </div>
                             </ul>
                         </div>
-                    </div>
+                    </nav>
                     <div class="rightContent">
                         <div class="contact-list">
                             <a href=""><i class="fab fa-facebook-f"></i></a>
@@ -480,11 +518,20 @@
                         <ul class="mobile-menu-wrap-list-item">
                             <li class="mobile-submenu"><a>default Home</a></li>
                             <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
+                            <li class="mobile-submenu"><a>default Home</a></li>
                             <li class="mobile-submenu">
                                 <a>default Home</a>
-                                <ul class="mobile-submenu-item">
-                                    <li><a>default Home</a></li>
-                                    <li><a>default Home</a></li>
+                                <span class="chevron">
+                                    <i class="fa fa-chevron-down"></i>
+                                </span>
+                                <ul class="mobile-menu-wrap-list-item">
+                                    <li class="mobile-submenu"><a>default Home</a></li>
+                                    <li class="mobile-submenu"><a>default Home</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -499,9 +546,12 @@
                             <li class="mobile-submenu"><a>default Home</a></li>
                             <li class="mobile-submenu">
                                 <a>default Home</a>
-                                <ul class="mobile-submenu-item">
-                                    <li><a>default Home</a></li>
-                                    <li><a>default Home</a></li>
+                                <span class="chevron">
+                                    <i class="fa fa-chevron-down"></i>
+                                </span>
+                                <ul class="mobile-menu-wrap-list-item">
+                                    <li class="mobile-submenu"><a>default Home</a></li>
+                                    <li class="mobile-submenu"><a>default Home</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -516,9 +566,12 @@
                             <li class="mobile-submenu"><a>default Home</a></li>
                             <li class="mobile-submenu">
                                 <a>default Home</a>
-                                <ul class="mobile-submenu-item">
-                                    <li><a>default Home</a></li>
-                                    <li><a>default Home</a></li>
+                                <span class="chevron">
+                                    <i class="fa fa-chevron-down"></i>
+                                </span>
+                                <ul class="mobile-menu-wrap-list-item">
+                                    <li class="mobile-submenu"><a>default Home</a></li>
+                                    <li class="mobile-submenu"><a>default Home</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -533,9 +586,12 @@
                             <li class="mobile-submenu"><a>default Home</a></li>
                             <li class="mobile-submenu">
                                 <a>default Home</a>
-                                <ul class="mobile-submenu-item">
-                                    <li><a>default Home</a></li>
-                                    <li><a>default Home</a></li>
+                                <span class="chevron">
+                                    <i class="fa fa-chevron-down"></i>
+                                </span>
+                                <ul class="mobile-menu-wrap-list-item">
+                                    <li class="mobile-submenu"><a>default Home</a></li>
+                                    <li class="mobile-submenu"><a>default Home</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -550,9 +606,9 @@
                             <li class="mobile-submenu"><a>default Home</a></li>
                             <li class="mobile-submenu">
                                 <a>default Home</a>
-                                <ul class="mobile-submenu-item">
-                                    <li><a>default Home</a></li>
-                                    <li><a>default Home</a></li>
+                                <ul class="mobile-menu-wrap-list-item">
+                                    <li class="mobile-submenu"><a>default Home</a></li>
+                                    <li class="mobile-submenu"><a>default Home</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -583,10 +639,9 @@
     document.querySelector('.burger').addEventListener('click', () => {
         document.querySelector('.mobile-nav').classList.add('active-nav')
     })
-    document.querySelectorAll('.chevron').forEach((it,index) => {
-        it.addEventListener('click',(e) => {
-            if(it.nextSibling.nextSibling.classList.contains('active')) 
-            {
+    document.querySelectorAll('.chevron').forEach((it, index) => {
+        it.addEventListener('click', (e) => {
+            if (it.nextSibling.nextSibling.classList.contains('active')) {
                 it.nextSibling.nextSibling.classList.remove('active')
             } else {
                 it.nextSibling.nextSibling.classList.add('active')

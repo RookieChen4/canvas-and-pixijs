@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width='device-width', initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        display: flex;
+        background-color: black;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+    }
+    .progress-container {
+        background-color: #fff;
+        width: 500px;
+        height: 5px;
+        border-radius: 10px;
+    }
+    .progress {
+        background-color:chartreuse;
+        width: 0%;
+        height: 5px;
+        border-radius: 10px;
+    }
+</style>
+<body>
+    <audio src="mp3/WORLD ORDER - HAVE A NICE DAY.mp3" id="audio"></audio>
+    <div class="progress-container" id="progress-container">
+        <div class="progress" id="progress"></div>
+    </div>
+    <button id="playBtn" onclick="playSong()">播放</button>
+    <canvas id="canvas"></canvas>
+</body>
+<script>
+    const audio = document.getElementById('audio');
+    const progressContainer = document.getElementById('progress-container');
+    const playBtn = document.getElementById('playBtn');
+    function playSong() {
+        playBtn.innerHTML = '暂停'
+        audio.play();
+    }
+    function updateProgress(e) {
+        const { duration, currentTime } = e.srcElement;
+        const progressPercent = (currentTime / duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+    }
+    function setProgress(e) {
+        const width = this.clientWidth;
+        const clickX = e.offsetX;
+        const duration = audio.duration;
+        audio.currentTime = (clickX / width) * duration;
+    }
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', () => {
+        audio.play()
+    });
+    progressContainer.addEventListener('click', setProgress);
+    let canvas = document.getElementById('canvas')
+    canvas.width = canvas.height = 400
+    var context = canvas.getContext('2d')
+    var img = new Image();   // Create new img element
+    img.addEventListener('load', function() {
+        console.log(img)
+        context.drawImage(img, 0, 0);
+    }, false);
+    img.src = './images/logo.png'; // Set source path
+    // function canvasDraw() {
+    //         let canvas = document.getElementById('canvas')
+	// 		canvas.width = canvas.height = 400
+	// 		var context = canvas.getContext('2d')
+	// 		context.fillStyle = 'rgb(0,100,255)' //填充颜色
+	// 		context.strokeStyle = 'white' // 边框颜色
+	// 		context.globalAlpha = 1 //透明度相关
+	// 		context.lineWidth = 2 //边框宽度
+	// 		var radious = 90
+	// 		let draw = function() {
+	// 			context.clearRect(0, 0, 400, 400)
+    //             // context.globalAlpha = (context.globalAlpha - 0.01 + 1) % 1 // 从 0 到 0.99 循环
+    //             // radious = (radious + 1) % 100 // 从 0 到 99 循环
+    //             radious = Math.ceil(Math.random()*20) + 90 
+	// 			context.beginPath()
+    //             // context.arc(200, 200, radious, 0, 2 * Math.PI) // 前两个参数位置 半径 sAngle eAngle
+    //             context.ellipse(200, 200, radious, radious, 0, 0,  2 * Math.PI) 
+	// 			context.fill()
+    //             context.stroke()
+    //             context.beginPath()
+    //             context.globalAlpha = 0.5
+    //             // context.arc(100, 100, radious/2, 0, 2 * Math.PI) // 前两个参数位置 半径 sAngle eAngle
+    //             context.ellipse(200, 200, radious*1.7, radious/2, 0, 0,  2 * Math.PI)
+    //             context.fill()
+    //             context.stroke()
+	// 			requestAnimationFrame(draw)
+	// 		}
+	// 		draw()
+    // }
+    // canvasDraw()
+</script>
+</html>
