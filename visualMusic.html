@@ -32,7 +32,7 @@
         <input type="file" style="color:red;" name="" value="" id="musicFile"><input type="button" name="startStop" value="暂停" id="startStop">
      	<p id="tip" style="color:red;"></p>
         <div class="container">
-            <div class="img"></div>
+            <div class="img" style="display: none;"></div>
             <canvas id="canvas"></canvas>
         </div>
         <script>
@@ -74,7 +74,7 @@
                         audioBufferSourceNode.start();
                         var bufferLength = analyser.frequencyBinCount;
                         var dataArray = new Uint8Array(bufferLength)
-                        console.log('bufferLength', bufferLength, dataArray)
+                        // console.log('bufferLength', bufferLength, dataArray)
                         //播放暂停音频
                         startStop.onclick = function() {
                             if(audioContext.state === 'running') {
@@ -97,10 +97,6 @@
                         context.strokeStyle = 'transparent' // 边框颜色
                         context.globalAlpha = 1 //透明度相关
                         context.lineWidth = 2 //边框宽度
-                        // let gradient = context.createRadialGradient(200,200,100, 200,200,80);
-                        // Add three color stops
-                        // gradient.addColorStop(0, 'white');
-                        // gradient.addColorStop(1, 'blue');
                         var radious = 0
                         let draw = function() {
                             analyser.getByteFrequencyData(dataArray);
@@ -109,19 +105,19 @@
                                 return pre + cur
                             }, 0) / bufferLength
                             radious = average * (20/255) + 80 // 区间映射
-                            let gradient2 = context.createRadialGradient(200,200,radious*1.2, 200,200,50);
-                            gradient2.addColorStop(0, 'white');
-                            gradient2.addColorStop(1, 'blue');
+                            let gradient2 = context.createRadialGradient(200,200,radious, 200,200,50);
+                            gradient2.addColorStop(0, '#00cec9');
+                            gradient2.addColorStop(1, '#81ecec');
                             context.beginPath()
                             context.ellipse(200, 200, radious*1.2, 30, 0, 0,  2 * Math.PI)
                             context.fillStyle = gradient2;
                             context.fill()
                             context.stroke()
-            
-                            // context.globalAlpha = 0.5
-                            let gradient = context.createRadialGradient(200,200,radious*1.1, 200,200,radious - 20);
-                            gradient.addColorStop(0, 'white');
-                            gradient.addColorStop(1, 'green');
+
+                            context.globalAlpha = 0.5
+                            let gradient = context.createRadialGradient(200,200,radious, 200,200,50);
+                            gradient.addColorStop(0, '#2ecc71');
+                            gradient.addColorStop(1, '#55efc4');
                             context.beginPath()
                             context.ellipse(200, 200, radious*1.1, 40, 0, 0,  2 * Math.PI)
                             context.fillStyle = gradient;
