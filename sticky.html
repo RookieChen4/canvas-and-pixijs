@@ -12,40 +12,146 @@
             box-sizing: border-box;
         }
 
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         body {
             height: 200vh;
         }
 
         .container {
             position: relative;
-            height: 60vh;
+            width: 1170px;
+            margin: 0 auto;
+        }
+        .container-wrap {
+            width: 100%;
+        }
+        .content {
+            width: 100%;
             display: flex;
+            position: relative;
         }
-
-        .left {
-            flex: 1;
-            height: 100%;
-            background-color: blueviolet
+        .col-8 {
+            width: 66.66666666666667%;
         }
-
-        .right {
+        .col-4 {
             position: sticky;
             top: 0;
             right: 0;
-            flex: 1;
-            height: 49%;
-            background-color: brown;
+            width: 33.33333333333336%;
+            height: 100%;
+        }
+        .col-4 .wrap {
+            padding-left: 45px;
+        }
+        .col-4 .aside-content .widget-title {
+            border-bottom: 1px solid #e1e1e1;
+        }
+        @media (max-width: 1200px) {
+            .container {
+                width: 100%;
+                padding: 0 35px;
+            }
+        }
+        @media (max-width: 940px) {
+            .container {
+                max-width: 740px;
+                padding: 0 35px;
+            }
+            .content {
+                display: inline;
+            }
+            .col-8 {
+                width: 100%;
+            }
+            .col-4 {
+                position: relative;
+                width: 100%;
+            }
+            .col-4 .wrap {
+                padding-left: 0px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="left">
-
-        </div>
-        <div class="right">
-
+        <div class="container-wrap">
+            <section class="content">
+                <div class="col-8">
+                    <article class="">
+                        <header>
+                            <div>
+                                <a href="">
+                                    <img src="./images/blog.jpg" />
+                                </a>
+                            </div>
+                            <div>
+                                <span>MARKETING</span>
+                                <h2>Why every startup should adopt Amazon’s Hot Air Baloon Race</h2>
+                                <div class="blow"><a>Jul 14 2018</a></div>
+                            </div>
+                        </header>
+                        <div>
+                            <p>More off this less hello salamander lied porpoise much over tightly circa horse taped so innocuously outside crud mightily rigorous…</p>
+                            <div class="read-more">
+                                <a><span>read more</span></a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-4">
+                    <aside class="wrap">
+                        <div class="aside-content">
+                            <ul>
+                                <li>
+                                    <h5 class="widget-title">
+                                        <span>More Featured</span>
+                                    </h5>
+                                    <ul>
+                                        <li>
+                                            <article>
+                                                <span>Business</span>
+                                                <h3>How to hack your Virtual Reality Life for Max Efficiency!</h3>
+                                                <div>Jul 14 2018</div>
+                                            </article>
+                                        </li>
+                                        <li>
+                                            <article>
+                                                <span>Business</span>
+                                                <h3>How to hack your Virtual Reality Life for Max Efficiency!</h3>
+                                                <div>Jul 14 2018</div>
+                                            </article>
+                                        </li>
+                                        <li>
+                                            <article>
+                                                <span>Business</span>
+                                                <h3>How to hack your Virtual Reality Life for Max Efficiency!</h3>
+                                                <div>Jul 14 2018</div>
+                                            </article>
+                                        </li>
+                                        <li>
+                                            <article>
+                                                <span>Business</span>
+                                                <h3>How to hack your Virtual Reality Life for Max Efficiency!</h3>
+                                                <div>Jul 14 2018</div>
+                                            </article>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </section>
         </div>
     </div>
 </body>
