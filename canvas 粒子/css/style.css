@@ -8,3 +8,7 @@ html, body {
   background: linear-gradient(to bottom, rgb(10, 10, 50) 0%,rgb(60, 10, 60) 100%);
   vertical-align: middle;
 }
+
+#musicFile {
+  position: absolute;
+}
