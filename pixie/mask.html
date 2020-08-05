@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        .cloud-img {
+            display: flex;
+            background-color: black;
+            width: 100%;
+            height: 100vh;
+            perspective: 1000px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cloud-img img {
+            height: auto;
+            bottom: 0;
+            position: absolute;
+            opacity: 0;
+            animation: cloud 5s linear infinite;
+        }
+        #img1 {
+            width: 80%;
+            left: 0;
+            animation-delay:1s;
+        }
+        #img2 {
+            width: 80%;
+            right: 0;
+            animation-delay:2s;
+        }
+        #img3 {
+            width: 80%;
+            left: 0;
+            animation-delay:3s;
+        }
+        #img4 {
+            width: 80%;
+            right: 0;
+            animation-delay:4s;
+        }
+        #img5 {
+            width: 80%;
+            left: 0;
+            animation-delay:5s;
+        }
+        @keyframes cloud {
+            0% {
+                opacity: 0;
+                transform: translateZ(100px)
+            }
+            25% {
+                opacity: 0.5;
+                transform: translateZ(150px)
+            }
+            50% {
+                opacity: 1;
+                transform: translateZ(200px)
+            }
+            75% {
+                opacity: 0.5;
+                transform: translateZ(250px)
+            }
+            100% {
+                opacity: 0;
+                transform: translateZ(300px)
+            }
+        }
+    </style>
+    <script src="pixi.min.js"></script>
+</head>
+<body>
+    <div class="cloud-img">
+        <img id="img1" src="./cloud1.png" />
+        <img id="img2" src="./cloud2.png" />
+        <img id="img3" src="./cloud3.png" />
+        <img id="img4" src="./cloud4.png" />
+        <img id="img5" src="./cloud5.png" />
+    </div>
+</body>
+</html>
