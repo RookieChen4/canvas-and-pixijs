@@ -23,6 +23,7 @@
         resources = PIXI.loader.resources,
         Sprite = PIXI.Sprite,
         Graphics = PIXI.Graphics,
+        TextureCache = PIXI.utils.TextureCache,
         Text = PIXI.Text,
         TextStyle = PIXI.TextStyle;
     let app = new Application({
@@ -105,7 +106,15 @@
                 cat.vy = 0;
             }
         };
-
+        
+        let style = new TextStyle({
+            fontFamily: "sans-serif",
+            fontSize: 18,
+            fill: "white",
+        }); 
+        message = new Text("No collision...", style);
+        message.position.set(20, 20);
+        app.stage.addChild(message);
         state = play;
 
         app.ticker.add(delta => gameLoop(delta));
@@ -117,14 +126,7 @@
         //Use the cat's velocity to make it move
         cat.x += cat.vx;
         cat.y += cat.vy;
-        let style = new TextStyle({
-            fontFamily: "sans-serif",
-            fontSize: 18,
-            fill: "white",
-        }); 
-        message = new Text("No collision...", style);
-        message.position.set(20, 20);
-        app.stage.addChild(message);
+
         if (hitTestRectangle(cat, box)) {
 
             //if there's a collision, change the message text
