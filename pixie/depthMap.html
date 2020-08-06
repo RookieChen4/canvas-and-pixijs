@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="pixi.min.js"></script>
+</head>
+<body>
+</body>
+<script>
+    let Application = PIXI.Application,
+        Sprite = PIXI.Sprite;
+    
+    let app = new Application({
+        width: 600,
+        height: 400
+    })
+
+    document.body.appendChild(app.view);
+
+    let img = new Sprite.from('joker.png')
+    img.width = 600
+    img.height = 400
+    app.stage.addChild(img)
+
+    let depthMap = new Sprite.from('joker-map.png')
+    app.stage.addChild(depthMap)
+
+    displacementFilter = new PIXI.filters.DisplacementFilter(depthMap)
+    app.stage.filters = [displacementFilter]
+
+    window.onmousemove = function(e) {
+        displacementFilter.scale.x = (600 / 2 - e.clientX) / 90
+        displacementFilter.scale.y = (400 / 2 - e.clientY) / 90
+    }
+</script>
+</html>

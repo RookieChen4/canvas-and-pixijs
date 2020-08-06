@@ -39,7 +39,7 @@
         .add("./cat.png")
         .load(setup)
     
-    let cat,x,y;
+    let cat,x,y,bullets=[];
 
     function setup() {
         cat = new Sprite(loader.resources["./cat.png"].texture);
@@ -49,21 +49,27 @@
         cat.x = app.screen.width / 2 - cat.x/2;
         cat.y = app.screen.height / 2 - cat.y/2;
 
-        let circle = new Graphics();
-        circle.beginFill(0x9966FF);
-        circle.drawCircle(0, 0, 32);
-        circle.endFill();
-        circle.x = 64;
-        circle.y = 130;
-        app.stage.addChild(circle);
+
+        box = new Graphics();
+        box.beginFill(0x66CCFF);
+        box.drawRect(0, 0, 512, 512);
+        box.endFill();
+        box.x = 0;
+        box.y = 0;
+        app.stage.addChild(box);
+
+
         app.stage.addChild(cat);
         app.stage.interactive = true;
         app.stage.on('mousemove', rotation);
-        
-        app.stage.on("click", shoot);
+        app.stage.on('mousedown', shoot);
+          
         app.ticker.add((delta) => {
-            // cat.rotation += 0.1 * delta;
             cat.rotation = rotateToPoint(x, y, cat.position.x, cat.position.y);
+            bullets.forEach(circle => {
+                circle.x += circle.vx
+                circle.y += circle.vy
+            })
         });
     }
 
@@ -73,7 +79,17 @@
     }
 
     function shoot(e) {
-        console.log(e)
+        let circle = new Graphics();
+        circle.beginFill(0x9966FF);
+        circle.drawCircle(0, 0, 10);
+        circle.endFill();
+        circle.x = cat.position.x;
+        circle.y = cat.position.y;
+        // 分析 子弹移动方向可以根据 cat 的旋转角度计算
+        circle.vx = 2 * Math.cos(cat.rotation);
+        circle.vy = 2 * Math.sin(cat.rotation);
+        bullets.push(circle)
+        app.stage.addChild(circle);
     }
 
     function rotateToPoint(mx, my, px, py){  
@@ -81,7 +97,7 @@
         var dist_Y = my - py;
         var dist_X = mx - px;
         var angle = Math.atan2(dist_Y,dist_X);
-        //var degrees = angle * 180/ Math.PI;
+        // var degrees = angle * 180/ Math.PI;
         return angle;   
     }
 </script>
