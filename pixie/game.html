@@ -39,6 +39,9 @@
     loader
         .add("./game.json")
         .load(setup)
+
+
+    let bullets = [],x, y, bulletSpeed = 10;
     function setup() {
 
         gameScene = new Container();
@@ -56,6 +59,8 @@
         explorer = new Sprite(id["explorer.png"]);
         explorer.x = 68;
         explorer.y = gameScene.height / 2 - explorer.height / 2;
+        explorer.pivot.x = explorer.width / 2;
+        explorer.pivot.y = explorer.height / 2;
         explorer.vx = 0;
         explorer.vy = 0;
         gameScene.addChild(explorer);
@@ -196,6 +201,12 @@
             }
         };
 
+
+        app.stage.interactive = true;
+        app.stage.on('mousemove', rotation);
+        app.stage.on('mousedown', shoot);
+
+
         state = play;
 
         app.ticker.add(delta => gameLoop(delta));
@@ -207,12 +218,13 @@
     }
 
     function play(delta) {
+        explorer.rotation = rotateToPoint(x, y, explorer.position.x, explorer.position.y);
         explorer.x += explorer.vx;
         explorer.y += explorer.vy;
         contain(explorer, {x: 28, y: 10, width: 488, height: 480})
         let explorerHit = false
 
-        blobs.forEach(function(blob) {
+        blobs.forEach(function(blob,index) {
             blob.y += blob.vy
             let blobHitsWall = contain(blob, {x: 28, y: 10, width: 488, height: 480})
 
@@ -222,6 +234,27 @@
 
             if(hitTestRectangle(explorer,blob)) {
                 explorerHit = true
+            }
+
+            bullets.forEach((circle, i) => {
+                if(hitTestRectangle(blob,circle)) {
+                    // console.log('hit')
+                    blobs.splice(index,1)
+                    bullets.splice(i,1)
+                    gameScene.removeChild(blob)
+                    gameScene.removeChild(circle)
+                }
+            })
+
+        })
+
+        bullets.forEach((circle, index) => {
+            circle.x += circle.vx
+            circle.y += circle.vy
+            let bulletHitsWall = contain(circle, {x: 0, y: 0, width: 512, height: 512})
+            if(bulletHitsWall) {
+                bullets.splice(index,1)
+                gameScene.removeChild(circle)
             }
         })
 
@@ -391,5 +424,35 @@
         //`hit` will be either `true` or `false`
         return hit;
     };
+
+
+    function rotation(event) {
+        x = event.data.global.x;
+        y = event.data.global.y;
+    }
+
+    function rotateToPoint(mx, my, px, py){
+        var self = this;
+        var dist_Y = my - py;
+        var dist_X = mx - px;
+        var angle = Math.atan2(dist_Y,dist_X);
+        // var degrees = angle * 180/ Math.PI;
+        return angle;   
+    }
+
+    function shoot(e) {
+        let circle = new Graphics();
+        circle.beginFill(0x9966FF);
+        circle.drawCircle(0, 0, 5);
+        circle.endFill();
+        circle.x = explorer.position.x + 10 * Math.cos(explorer.rotation);
+        circle.y = explorer.position.y + 10 * Math.sin(explorer.rotation);
+        // 分析 子弹移动方向可以根据 cat 的旋转角度计算
+        circle.vx = bulletSpeed * Math.cos(explorer.rotation);
+        circle.vy = bulletSpeed * Math.sin(explorer.rotation);
+        bullets.push(circle)
+        gameScene.addChild(circle);
+    }
+
 </script>
 </html>

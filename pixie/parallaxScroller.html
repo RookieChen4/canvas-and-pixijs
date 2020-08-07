@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script src="pixi.min.js"></script>
+</head>
+<body>
+    <script>
+        let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        Graphics = PIXI.Graphics,
+        Text = PIXI.Text,
+        TextStyle = PIXI.TextStyle,
+        Container = PIXI.Container;
+
+        let app = new Application({
+            width: 512,
+            height: 384,                       
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        })
+
+        document.body.appendChild(app.view)
+
+        loader
+            .load(setup)
+
+        function setup() {
+            const farTexture = PIXI.Texture.from('./bg-far.png');
+            const midTexture = PIXI.Texture.from('./bg-mid.png');
+            // console.log(farTexture.baseTexture.width)
+            let far = new PIXI.TilingSprite(farTexture, 512, 256);
+            let mid = new PIXI.TilingSprite(midTexture, 512, 256);
+            mid.position.x = 0;
+            mid.position.y = 128
+            mid.tilePosition.x = 0;
+            mid.tilePosition.y = 0;
+            app.stage.addChild(far);
+            app.stage.addChild(mid);
+
+            app.ticker.add((delta) => {
+                far.tilePosition.x -= 0.128;
+                mid.tilePosition.x -= 0.64;
+            })
+        }
+    </script>
+</body>
+</html>

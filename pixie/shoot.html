@@ -39,7 +39,7 @@
         .add("./cat.png")
         .load(setup)
     
-    let cat,x,y,bullets=[];
+    let cat,x,y,bullets=[],bulletSpeed = 3,seed = 0;
 
     function setup() {
         cat = new Sprite(loader.resources["./cat.png"].texture);
@@ -66,9 +66,14 @@
           
         app.ticker.add((delta) => {
             cat.rotation = rotateToPoint(x, y, cat.position.x, cat.position.y);
-            bullets.forEach(circle => {
+            bullets.forEach((circle, index) => {
                 circle.x += circle.vx
                 circle.y += circle.vy
+                let bulletHitsWall = contain(circle, {x: 0, y: 0, width: 512, height: 512})
+                if(bulletHitsWall) {
+                    bullets.splice(index,1)
+                    app.stage.removeChild(circle)
+                }
             })
         });
     }
@@ -83,11 +88,13 @@
         circle.beginFill(0x9966FF);
         circle.drawCircle(0, 0, 10);
         circle.endFill();
-        circle.x = cat.position.x;
-        circle.y = cat.position.y;
+        circle.seed = seed;
+        seed ++;
+        circle.x = cat.position.x + 40 * Math.cos(cat.rotation);
+        circle.y = cat.position.y + 40 * Math.sin(cat.rotation);
         // 分析 子弹移动方向可以根据 cat 的旋转角度计算
-        circle.vx = 2 * Math.cos(cat.rotation);
-        circle.vy = 2 * Math.sin(cat.rotation);
+        circle.vx = bulletSpeed * Math.cos(cat.rotation);
+        circle.vy = bulletSpeed * Math.sin(cat.rotation);
         bullets.push(circle)
         app.stage.addChild(circle);
     }
@@ -99,6 +106,38 @@
         var angle = Math.atan2(dist_Y,dist_X);
         // var degrees = angle * 180/ Math.PI;
         return angle;   
+    }
+
+    function contain(sprite, container) {
+
+        let collision = undefined;
+
+            //Left
+        if (sprite.x < container.x) {
+            // sprite.x = container.x;
+            collision = "left";
+        }
+
+            //Top
+        if (sprite.y < container.y) {
+            // sprite.y = container.y;
+            collision = "top";
+        }
+
+            //Right
+        if (sprite.x + sprite.width > container.width) {
+            // sprite.x = container.width - sprite.width;
+            collision = "right";
+        }
+
+            //Bottom
+        if (sprite.y + sprite.height > container.height) {
+            // sprite.y = container.height - sprite.height;
+            collision = "bottom";
+        }
+
+            //Return the `collision` value
+            return collision;
     }
 </script>
 </html>
