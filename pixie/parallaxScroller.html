@@ -16,6 +16,9 @@
         }
     </style>
     <script src="pixi.min.js"></script>
+    <script src="Far.js"></script>
+    <script src="Mid.js"></script>
+    <script src="Scroller.js"></script>
 </head>
 <body>
     <script>
@@ -38,26 +41,22 @@
 
         document.body.appendChild(app.view)
 
+        let state = null
         loader
             .load(setup)
-
         function setup() {
-            const farTexture = PIXI.Texture.from('./bg-far.png');
-            const midTexture = PIXI.Texture.from('./bg-mid.png');
-            // console.log(farTexture.baseTexture.width)
-            let far = new PIXI.TilingSprite(farTexture, 512, 256);
-            let mid = new PIXI.TilingSprite(midTexture, 512, 256);
-            mid.position.x = 0;
-            mid.position.y = 128
-            mid.tilePosition.x = 0;
-            mid.tilePosition.y = 0;
-            app.stage.addChild(far);
-            app.stage.addChild(mid);
+            scroller = new Scroller(app.stage);
+            state = play
+            app.ticker.add(delta => gameLoop(delta));
+        }
 
-            app.ticker.add((delta) => {
-                far.tilePosition.x -= 0.128;
-                mid.tilePosition.x -= 0.64;
-            })
+        function gameLoop(delta) {
+            state(delta)
+        }
+        function play() {
+            // scroller.update()
+            var newViewportX = scroller.getViewportX() + 5;
+            scroller.setViewportX(newViewportX);
         }
     </script>
 </body>
