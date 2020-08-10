@@ -15,7 +15,7 @@
             align-items: center;
         }
     </style>
-    <script src="pixi.min.js"></script>
+    <script src="../utils/pixi.min.js"></script>
     <script src="Far.js"></script>
     <script src="Mid.js"></script>
     <script src="Scroller.js"></script>
@@ -55,8 +55,9 @@
         }
         function play() {
             // scroller.update()
-            var newViewportX = scroller.getViewportX() + 5;
-            scroller.setViewportX(newViewportX);
+            // var newViewportX = scroller.getViewportX() + 1;
+            // scroller.setViewportX(newViewportX);
+            scroller.moveViewportXBy(1)
         }
     </script>
 </body>

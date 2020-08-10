@@ -4,7 +4,7 @@ function Scroller(stage) {
     stage.addChild(this.far)
     stage.addChild(this.mid)
 
-    this.viewportX = 0;
+    this.viewportX = 0;  //初始化viewportX
 }
 
 // Scroller.prototype.update = function() {
@@ -20,4 +20,9 @@ Scroller.prototype.setViewportX = function(viewportX) {
 
 Scroller.prototype.getViewportX = function() {
     return this.viewportX;
+};
+
+Scroller.prototype.moveViewportXBy = function(units) {
+    let newViewportX = this.viewportX + units;
+    this.setViewportX(newViewportX);
 };
