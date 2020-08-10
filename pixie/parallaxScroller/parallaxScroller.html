@@ -19,6 +19,7 @@
     <script src="Far.js"></script>
     <script src="Mid.js"></script>
     <script src="Scroller.js"></script>
+    <script src="WallSpritesPool.js"></script>
 </head>
 <body>
     <script>
@@ -42,10 +43,17 @@
         document.body.appendChild(app.view)
 
         let state = null
+        const SCROLL_SPEED = 1;
+        let pool,wallSlices
         loader
+            .add(["./wall.json","./bg-far.png","./bg-mid.png"])
             .load(setup)
         function setup() {
             scroller = new Scroller(app.stage);
+
+            pool = new WallSpritesPool();
+            wallSlices = [];
+
             state = play
             app.ticker.add(delta => gameLoop(delta));
         }
@@ -54,11 +62,32 @@
             state(delta)
         }
         function play() {
-            // scroller.update()
-            // var newViewportX = scroller.getViewportX() + 1;
-            // scroller.setViewportX(newViewportX);
-            scroller.moveViewportXBy(1)
+            scroller.moveViewportXBy(SCROLL_SPEED)
         }
+
+        function borrowWallSprites(num) {
+            for (var i = 0; i < num; i++)
+            {
+                var sprite = pool.borrowWindow();
+                sprite.position.x = -32 + (i * 64);
+                sprite.position.y = 128;
+
+                wallSlices.push(sprite);
+
+                app.stage.addChild(sprite);
+            }
+        };
+
+        function returnWallSprites() {
+            for (var i = 0; i < wallSlices.length; i++)
+            {
+                var sprite = wallSlices[i];
+                app.stage.removeChild(sprite);
+                pool.returnWindow(sprite);
+            }
+
+            wallSlices = [];
+        };
     </script>
 </body>
 </html>
