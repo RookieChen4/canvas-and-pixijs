@@ -68,7 +68,11 @@
         function borrowWallSprites(num) {
             for (var i = 0; i < num; i++)
             {
-                var sprite = pool.borrowWindow();
+                if (i % 2 == 0) {
+                    var sprite = pool.borrowWindow();
+                } else {
+                    var sprite = pool.borrowDecoration();
+                }
                 sprite.position.x = -32 + (i * 64);
                 sprite.position.y = 128;
 
@@ -83,7 +87,11 @@
             {
                 var sprite = wallSlices[i];
                 app.stage.removeChild(sprite);
-                pool.returnWindow(sprite);
+                if (i % 2 == 0) {
+                    pool.returnWindow(sprite);
+                } else {
+                    pool.returnDecoration(sprite);
+                }
             }
 
             wallSlices = [];
