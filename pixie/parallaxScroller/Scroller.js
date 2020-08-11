@@ -1,8 +1,10 @@
 function Scroller(stage) {
     this.far = new Far()
     this.mid = new Mid()
+    this.front = new Walls()
     stage.addChild(this.far)
     stage.addChild(this.mid)
+    stage.addChild(this.front);
 
     this.viewportX = 0;  //初始化viewportX
 }
