@@ -23,6 +23,7 @@
     <script src="SliceType.js"></script>
     <script src="WallSlice.js"></script>
     <script src="Walls.js"></script>
+    <script src="MapBuilder.js"></script>
 </head>
 <body>
     <script>
@@ -46,17 +47,13 @@
         document.body.appendChild(app.view)
 
         let state = null
-        const SCROLL_SPEED = 1;
-        let pool,wallSlices;
+        let SCROLL_SPEED = 1,MIN_SCROLL_SPEED = 1,
+        MAX_SCROLL_SPEED = 15,SCROLL_ACCELERATION = 0.0005;
         loader
             .add(["./wall.json","./bg-far.png","./bg-mid.png"])
             .load(setup)
         function setup() {
             scroller = new Scroller(app.stage);
-
-            pool = new WallSpritesPool();
-            wallSlices = [];
-
             state = play
             app.ticker.add(delta => gameLoop(delta));
         }
@@ -65,94 +62,13 @@
             state(delta)
         }
         function play() {
+            SCROLL_SPEED += SCROLL_ACCELERATION;
+            if (SCROLL_SPEED > MAX_SCROLL_SPEED)
+            {
+                SCROLL_SPEED = MAX_SCROLL_SPEED;
+            }
             scroller.moveViewportXBy(SCROLL_SPEED)
         }
-
-        function generateTestWallSpan() {
-            var lookupTable = [
-                pool.borrowFrontEdge,  // 1st slice
-                pool.borrowWindow,     // 2nd slice
-                pool.borrowDecoration, // 3rd slice
-                pool.borrowStep,       // 4th slice
-                pool.borrowWindow,     // 5th slice
-                pool.borrowBackEdge    // 6th slice
-            ]
-            var yPos = [
-                128, // 1st slice
-                128, // 2nd slice
-                128, // 3rd slice
-                192, // 4th slice
-                192, // 5th slice
-                192  // 6th slice
-            ];
-
-            for (var i = 0; i < lookupTable.length; i++)
-            {
-                var func = lookupTable[i];
-
-                var sprite = func.call(pool);
-                sprite.position.x = 64 + (i * 64);
-                sprite.position.y = yPos[i];
-
-                wallSlices.push(sprite);
-
-                app.stage.addChild(sprite);
-            }
-        }
-
-        clearTestWallSpan = function() {
-            var lookupTable = [
-                pool.returnFrontEdge,  // 1st slice
-                pool.returnWindow,     // 2nd slice
-                pool.returnDecoration, // 3rd slice
-                pool.returnStep,       // 4th slice
-                pool.returnWindow,     // 5th slice
-                pool.returnBackEdge    // 6th slice
-            ];
-
-            for (var i = 0; i < lookupTable.length; i++)
-            {
-                var func = lookupTable[i];
-                var sprite = wallSlices[i];
-
-                app.stage.removeChild(sprite);
-                func.call(pool, sprite);
-            }
-
-            wallSlices = [];
-        };
-
-        // function borrowWallSprites(num) {
-        //     for (var i = 0; i < num; i++)
-        //     {
-        //         if (i % 2 == 0) {
-        //             var sprite = pool.borrowWindow();
-        //         } else {
-        //             var sprite = pool.borrowDecoration();
-        //         }
-        //         sprite.position.x = -32 + (i * 64);
-        //         sprite.position.y = 128;
-
-        //         wallSlices.push(sprite);
-
-        //         app.stage.addChild(sprite);
-        //     }
-        // };
-
-        // function returnWallSprites() {
-        //     for (var i = 0; i < wallSlices.length; i++)
-        //     {
-        //         var sprite = wallSlices[i];
-        //         app.stage.removeChild(sprite);
-        //         if (i % 2 == 0) {
-        //             pool.returnWindow(sprite);
-        //         } else {
-        //             pool.returnDecoration(sprite);
-        //         }
-        //     }
-
-        //     wallSlices = [];
-        // };
     </script>
 </body>
 </html>

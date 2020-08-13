@@ -5,6 +5,7 @@ function Scroller(stage) {
     stage.addChild(this.far)
     stage.addChild(this.mid)
     stage.addChild(this.front);
+    this.mapBuilder = new MapBuilder(this.front);
 
     this.viewportX = 0;  //初始化viewportX
 }

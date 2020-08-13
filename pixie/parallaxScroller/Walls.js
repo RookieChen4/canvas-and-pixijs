@@ -4,7 +4,7 @@ function Walls() {
     this.createLookupTables();
 
     this.slices = [];
-    this.createTestMap();
+    // this.createTestMap();
     this.viewportX = 0;
     this.viewportSliceX = 0;
 }
