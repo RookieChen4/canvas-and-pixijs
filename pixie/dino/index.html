@@ -36,7 +36,7 @@
         .add(["./DinoSpriteSheet.json"])
         .load(setup)
 
-    let dino = null,dino2 = null,i = 4
+    let dino = null,dino2 = null,dino3 = null,dino4 = null,i = 4
     function setup() {
         state = play
         let delta = 1000000000
@@ -51,10 +51,22 @@
         i ++;
         id = resources["./DinoSpriteSheet.json"].textures;
         app.stage.removeChild(dino);
-        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`, `DinoSpriteSheet ${parseInt(i/10) + 14}.png`]);
-        console.log(dino)
-        // dino[1].position.x = 24
+        app.stage.removeChild(dino2);
+        app.stage.removeChild(dino3);
+        app.stage.removeChild(dino4);
+        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`]);
+        dino2 = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10) + 14}.png`]);
+        dino3 = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10) + 28}.png`]);
+        dino4 = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10) + 42}.png`]);
+        dino.width = 240
+        dino.height = 240
+        dino2.position.x = 24
+        dino3.position.x = 48
+        dino4.position.x = 72
         app.stage.addChild(dino);
+        app.stage.addChild(dino2);
+        app.stage.addChild(dino3);
+        app.stage.addChild(dino4);
     }
 </script>
 </html>
