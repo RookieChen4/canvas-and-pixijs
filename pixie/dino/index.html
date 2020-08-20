@@ -33,7 +33,7 @@
     document.body.appendChild(app.view);
 
     loader
-        .add(["./DinoSpriteSheet.json"])
+        .add(["./DinoSpriteSheet.json", "./bg.png"])
         .load(setup)
 
     let dino = null,dino2 = null,dino3 = null,dino4 = null,i = 4
@@ -46,27 +46,27 @@
     function gameLoop(delta) {
         state(delta)
     }
+
+    let x = 0, isflip = false
     function play(delta) {
         if(i > 100) i = 40;
-        i ++;
+        i += 5;
         id = resources["./DinoSpriteSheet.json"].textures;
         app.stage.removeChild(dino);
-        app.stage.removeChild(dino2);
-        app.stage.removeChild(dino3);
-        app.stage.removeChild(dino4);
         dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`]);
-        dino2 = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10) + 14}.png`]);
-        dino3 = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10) + 28}.png`]);
-        dino4 = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10) + 42}.png`]);
-        dino.width = 240
-        dino.height = 240
-        dino2.position.x = 24
-        dino3.position.x = 48
-        dino4.position.x = 72
+        dino.width = 24
+        dino.height = 24
+        dino.pivot.x = dino.width / 2;
+        dino.pivot.y = dino.height / 2;
+        dino.position.y = app.screen.height / 2 - dino.y/2;
+        if(x >= 600) {
+            isflip = true
+        } else if (x == 0) {
+            isflip = false
+        }
+        isflip ? (x--,dino.scale.x = -1) : x++;
+        dino.position.x = x
         app.stage.addChild(dino);
-        app.stage.addChild(dino2);
-        app.stage.addChild(dino3);
-        app.stage.addChild(dino4);
     }
 </script>
 </html>
