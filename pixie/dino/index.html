@@ -54,13 +54,12 @@
     }
 
     function keycontrol() {
-        let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40);
+        let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40), space = keyboard(32);
 
         left.press = () => {
             Dino.changeDirection('left')
             state = Dino.move
             Dino.vx = -3;
-            Dino.vy = 0;
         };
 
         left.release = () => {
@@ -75,13 +74,23 @@
             Dino.changeDirection('right')
             state = Dino.move
             Dino.vx = 3;
-            Dino.vy = 0;
         };
         right.release = () => {
             if (!left.isDown) {
                 Dino.vx = 0;
                 state = Dino.idle
             }
+        };
+
+        space.press = () => {
+            // state = Dino.move
+            // Dino.Jump(true);
+            state = Dino.Jump
+        };
+        space.release = () => {
+            // Dino.Jump(false);
+            // state = Dino.idle
+            state = Dino.Jump
         };
 
         //Up
