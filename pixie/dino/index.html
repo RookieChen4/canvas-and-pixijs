@@ -36,11 +36,19 @@
         .add(["./DinoSpriteSheet.json", "./bg.png"])
         .load(setup)
 
-    let dino = null,dino2 = null,dino3 = null,dino4 = null,i = 4
+    let dino = null, i = 40, id = null, vx = 0, vy = 0, xx = 0,t = 0
     function setup() {
-        state = play
-        let delta = 1000000000
-        app.ticker.add(delta => gameLoop(delta));
+        state = idle
+        id = resources["./DinoSpriteSheet.json"].textures;
+        dino = new Sprite(id[`DinoSpriteSheet 0.png`]);
+        vx = 0;
+        vy = 0;
+        keycontrol()
+        app.stage.addChild(dino);
+        let ticker = PIXI.Ticker.shared;
+        ticker.minFPS  = 30
+        ticker.maxFPS  = 60
+        ticker.add(delta => gameLoop(delta));
     }
 
     function gameLoop(delta) {
@@ -50,8 +58,7 @@
     let x = 0, isflip = false
     function play(delta) {
         if(i > 100) i = 40;
-        i += 5;
-        id = resources["./DinoSpriteSheet.json"].textures;
+        i += 2;
         app.stage.removeChild(dino);
         dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`]);
         dino.width = 24
@@ -67,6 +74,118 @@
         isflip ? (x--,dino.scale.x = -1) : x++;
         dino.position.x = x
         app.stage.addChild(dino);
+    }
+
+    function idle() {
+        t+= 0.1
+        app.stage.removeChild(dino);
+        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(t%3)}.png`]);
+        app.stage.addChild(dino);
+        dino.x = xx;
+        dino.y += vy;
+    }
+    function move() {
+        if(i > 100) i = 40;
+        i += 2;
+        app.stage.removeChild(dino);
+        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`]);
+        app.stage.addChild(dino);
+        xx += vx;
+        dino.x = xx;
+        dino.y += vy;
+    }
+
+
+    function keycontrol() {
+        let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40);
+        left.press = () => {
+            state = move
+            vx = -5;
+            vy = 0;
+        };
+
+        //Left arrow key `release` method
+        left.release = () => {
+            //If the left arrow has been released, and the right arrow isn't down,
+            //and the dino isn't moving vertically:
+            //Stop the dino
+            if (!right.isDown) {
+                state = idle
+                vx = 0;
+            }
+        };
+
+        //Up
+        up.press = () => {
+            vy = -5;
+            vx = 0;
+        };
+        up.release = () => {
+            if (!down.isDown) {
+                vy = 0;
+            }
+        };
+
+        //Right
+        right.press = () => {
+            vx = 5;
+            vy = 0;
+            state = move
+        };
+        right.release = () => {
+            if (!left.isDown) {
+                vx = 0;
+                state = idle
+            }
+        };
+
+        //Down
+        down.press = () => {
+            vy = 5;
+            vx = 0;
+        };
+        down.release = () => {
+            if (!up.isDown) {
+                vy = 0;
+            }
+        };
+    }
+
+    function keyboard(keyCode) {
+        var key = {};
+        key.code = keyCode;
+        key.isDown = false;
+        key.isUp = true;
+        key.press = undefined;
+        key.release = undefined;
+        //The `downHandler`
+        key.downHandler = event => {
+            if (event.keyCode === key.code) {
+                if (key.isUp && key.press) key.press();
+                key.isDown = true;
+                key.isUp = false;
+            }
+            event.preventDefault();
+        };
+
+        //The `upHandler`
+        key.upHandler = event => {
+            if (event.keyCode === key.code) {
+                if (key.isDown && key.release) key.release();
+                key.isDown = false;
+                key.isUp = true;
+            }
+            event.preventDefault();
+        };
+
+        //Attach event listeners
+        window.addEventListener(
+            "keydown", key.downHandler.bind(key), false
+        );
+        window.addEventListener(
+            "keyup", key.upHandler.bind(key), false
+        );
+        return key;
     }
 </script>
 </html>
