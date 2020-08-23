@@ -12,6 +12,7 @@
         }
     </style>
     <script src="../utils/pixi.min.js"></script>
+    <script src="./dino.js"></script>
 </head>
 <body>
 </body>
@@ -36,119 +37,74 @@
         .add(["./DinoSpriteSheet.json", "./bg.png"])
         .load(setup)
 
-    let dino = null, i = 40, id = null, vx = 0, vy = 0, xx = 0,t = 0
+    let Dino = null
     function setup() {
-        state = idle
-        id = resources["./DinoSpriteSheet.json"].textures;
-        dino = new Sprite(id[`DinoSpriteSheet 0.png`]);
-        vx = 0;
-        vy = 0;
+        Dino = new dino()
+        // state = Dino.idle
         keycontrol()
-        app.stage.addChild(dino);
         let ticker = PIXI.Ticker.shared;
         ticker.minFPS  = 30
         ticker.maxFPS  = 60
+        state = Dino.loop
         ticker.add(delta => gameLoop(delta));
     }
 
     function gameLoop(delta) {
-        state(delta)
+        state.call(Dino)
     }
-
-    let x = 0, isflip = false
-    function play(delta) {
-        if(i > 100) i = 40;
-        i += 2;
-        app.stage.removeChild(dino);
-        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`]);
-        dino.width = 24
-        dino.height = 24
-        dino.pivot.x = dino.width / 2;
-        dino.pivot.y = dino.height / 2;
-        dino.position.y = app.screen.height / 2 - dino.y/2;
-        if(x >= 600) {
-            isflip = true
-        } else if (x == 0) {
-            isflip = false
-        }
-        isflip ? (x--,dino.scale.x = -1) : x++;
-        dino.position.x = x
-        app.stage.addChild(dino);
-    }
-
-    function idle() {
-        t+= 0.1
-        app.stage.removeChild(dino);
-        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(t%3)}.png`]);
-        app.stage.addChild(dino);
-        dino.x = xx;
-        dino.y += vy;
-    }
-    function move() {
-        if(i > 100) i = 40;
-        i += 2;
-        app.stage.removeChild(dino);
-        dino = new Sprite(id[`DinoSpriteSheet ${parseInt(i/10)}.png`]);
-        app.stage.addChild(dino);
-        xx += vx;
-        dino.x = xx;
-        dino.y += vy;
-    }
-
 
     function keycontrol() {
         let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40);
+
         left.press = () => {
-            state = move
-            vx = -5;
-            vy = 0;
+            Dino.changeDirection('left')
+            state = Dino.move
+            Dino.vx = -3;
+            Dino.vy = 0;
         };
 
-        //Left arrow key `release` method
         left.release = () => {
-            //If the left arrow has been released, and the right arrow isn't down,
-            //and the dino isn't moving vertically:
-            //Stop the dino
             if (!right.isDown) {
-                state = idle
-                vx = 0;
-            }
-        };
-
-        //Up
-        up.press = () => {
-            vy = -5;
-            vx = 0;
-        };
-        up.release = () => {
-            if (!down.isDown) {
-                vy = 0;
+                state = Dino.idle
+                Dino.vx = 0;
             }
         };
 
         //Right
         right.press = () => {
-            vx = 5;
-            vy = 0;
-            state = move
+            Dino.changeDirection('right')
+            state = Dino.move
+            Dino.vx = 3;
+            Dino.vy = 0;
         };
         right.release = () => {
             if (!left.isDown) {
-                vx = 0;
-                state = idle
+                Dino.vx = 0;
+                state = Dino.idle
             }
         };
 
+        //Up
+        // up.press = () => {
+        //     vy = -5;
+        //     vx = 0;
+        // };
+        // up.release = () => {
+        //     if (!down.isDown) {
+        //         vy = 0;
+        //     }
+        // };
+
         //Down
-        down.press = () => {
-            vy = 5;
-            vx = 0;
-        };
-        down.release = () => {
-            if (!up.isDown) {
-                vy = 0;
-            }
-        };
+        // down.press = () => {
+        //     vy = 5;
+        //     vx = 0;
+        // };
+        // down.release = () => {
+        //     if (!up.isDown) {
+        //         vy = 0;
+        //     }
+        // };
     }
 
     function keyboard(keyCode) {
