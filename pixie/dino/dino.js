@@ -21,9 +21,9 @@ dino.prototype.changeDirection = function(direction) {
     this.direction = direction
 }
 
-// dino.prototype.Jump = function(FLAG) {
-//     this.isJump = FLAG
-// }
+dino.prototype.changeJump = function(FLAG) {
+    this.isJump = FLAG
+}
 
 dino.prototype.idle = function() {
     this.idleIndex += dino.IDLEDELTA
@@ -46,7 +46,7 @@ dino.prototype.idle = function() {
     //     this.isJump = false
     // }
     // this.isJump ? this.y -= (dino.JUMPSPEED-=dino.JUMPDELTA) : this.y += (dino.JUMPSPEED-=dino.JUMPDELTA)
-    // this.dinoSprite.y = this.y;
+    this.dinoSprite.y = this.y;
     app.stage.addChild(this.dinoSprite);
 }
 
@@ -73,6 +73,12 @@ dino.prototype.move = function() {
     //     this.isJump = false
     // }
     // this.isJump ? this.y -= (dino.JUMPSPEED-=dino.JUMPDELTA) : this.y += (dino.JUMPSPEED-=dino.JUMPDELTA)
+    if(this.isJump) this.y -= (dino.JUMPSPEED -= 0.25);
+    if (this.y >= app.screen.height / 2) {
+        this.y = app.screen.height / 2
+        dino.JUMPSPEED = 6
+        this.isJump = false
+    }
     this.dinoSprite.y = this.y;
     app.stage.addChild(this.dinoSprite);
 }
@@ -87,15 +93,26 @@ dino.prototype.Jump = function() {
     this.dinoSprite.pivot.x = this.dinoSprite.width / 2;
     this.direction == 'left' ? this.dinoSprite.scale.x = -1 : '';
     this.dinoSprite.x = this.viewportX;
-    console.log(this.y)
-    if(this.y < 150) {
+    // if(this.y <= 150) {
+    //     this.isJump = false
+    // } else if(this.y >= app.screen.height / 2) {
+    //     dino.JUMPDELTA = 0.95
+    //     dino.JUMPSPEED = 3
+    //     this.isJump = true
+    // }
+    // if(dino.JUMPSPEED == 0) {
+    //     this.isJump = false
+    // } else if (this.y >= app.screen.height / 2) {
+    //     this.isJump = true
+    // }
+    // console.log(dino.JUMPSPEED)
+    // this.isJump ? this.y -= (dino.JUMPSPEED += -1) : this.y += (dino.JUMPSPEED += 1)
+    if(this.isJump) this.y -= (dino.JUMPSPEED -= 0.1);
+    if (this.y >= app.screen.height / 2) {
+        this.y = app.screen.height / 2
+        dino.JUMPSPEED = 6
         this.isJump = false
-    } else if(this.y >= app.screen.height / 2) {
-        dino.JUMPDELTA = 0.95
-        dino.JUMPSPEED = 3
-        this.isJump = true
     }
-    this.isJump ? this.y -= (dino.JUMPSPEED*=dino.JUMPDELTA) : this.y += (dino.JUMPSPEED+=0.08)
     this.dinoSprite.y = this.y;
     app.stage.addChild(this.dinoSprite);
 }
@@ -115,5 +132,6 @@ dino.prototype.loop = function() {
     }
     this.isflip ? (this.viewportX-=3,this.dinoSprite.scale.x = -1) : this.viewportX+=3;
     this.dinoSprite.x = this.viewportX
+    this.dinoSprite.y = this.y;
     app.stage.addChild(this.dinoSprite);
 }
