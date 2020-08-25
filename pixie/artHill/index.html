@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script src="../utils/pixi.min.js"></script>
+    <script src="./hills01.js"></script>
+</head>
+<body>
+    <script>
+        let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        Graphics = PIXI.Graphics,
+        Text = PIXI.Text,
+        TextStyle = PIXI.TextStyle,
+        Container = PIXI.Container;
+
+        let app = new Application({
+            width: 512,
+            height: 256,                       
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        })
+
+        document.body.appendChild(app.view)
+
+        let state = null,x = 0
+        loader
+            .add(["./Hills Layer 01.png","./Hills Layer 02.png","./Hills Layer 03.png","./Hills Layer 04.png","./Hills Layer 05.png","./Hills Layer 06.png"])
+            .load(setup)
+        function setup() {
+            hills01 = new hills01();
+            app.stage.addChild(hills01);
+            state = play
+            app.ticker.add(delta => gameLoop(delta));
+        }
+
+        function gameLoop(delta) {
+            state(delta)
+        }
+        function play() {
+            x++
+            hills01.setViewportX(0)
+        }
+    </script>
+</body>
+</html>
