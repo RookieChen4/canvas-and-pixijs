@@ -57,12 +57,14 @@
     }
 
     function gameLoop(delta) {
-        console.log(state)
+        if(!right.isDown&&!left.isDown && !space.isDown && Dino.y == app.screen.height / 2) state = Dino.idle;
         state.call(Dino)
     }
 
+    let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40), space = keyboard(32);
+
     function keycontrol() {
-        let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40), space = keyboard(32);
+        // let left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40), space = keyboard(32);
 
         left.press = () => {
             Dino.changeDirection('left')
@@ -72,7 +74,7 @@
 
         left.release = () => {
             if (!right.isDown) {
-                state = Dino.idle
+                // state = Dino.idle
                 Dino.vx = 0;
             }
         };
@@ -86,7 +88,7 @@
         right.release = () => {
             if (!left.isDown) {
                 Dino.vx = 0;
-                state = Dino.idle
+                // state = Dino.idle
             }
         };
 
