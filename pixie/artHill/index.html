@@ -16,7 +16,9 @@
         }
     </style>
     <script src="../utils/pixi.min.js"></script>
-    <script src="./hills01.js"></script>
+    <script src="./Hills.js"></script>
+    <script src="./Scence.js"></script>
+    <script src="./dino.js"></script>
 </head>
 <body>
     <script>
@@ -39,13 +41,12 @@
 
         document.body.appendChild(app.view)
 
-        let state = null,x = 0
+        let state = null, scence = null, Dino = null;
         loader
-            .add(["./Hills Layer 01.png","./Hills Layer 02.png","./Hills Layer 03.png","./Hills Layer 04.png","./Hills Layer 05.png","./Hills Layer 06.png"])
+            .add(["./DinoSpriteSheet.json","./Hills Layer 01.png","./Hills Layer 02.png","./Hills Layer 03.png","./Hills Layer 04.png","./Hills Layer 05.png","./Hills Layer 06.png"])
             .load(setup)
         function setup() {
-            hills01 = new hills01();
-            app.stage.addChild(hills01);
+            scence = new Scence(app.stage)
             state = play
             app.ticker.add(delta => gameLoop(delta));
         }
@@ -53,9 +54,42 @@
         function gameLoop(delta) {
             state(delta)
         }
+        
         function play() {
-            x++
-            hills01.setViewportX(0)
+            // contain(Dino.dinoSprite, {x: 0, y: 0, width: 512, height: 256})
+            scence.moveViewportXBy(1)
+        }
+
+        function contain(sprite, container) {
+
+            let collision = undefined;
+
+                //Left
+            if (sprite.x < container.x) {
+                sprite.x = container.x;
+                collision = "left";
+            }
+
+                //Top
+            if (sprite.y < container.y) {
+                sprite.y = container.y;
+                collision = "top";
+            }
+
+                //Right
+            if (sprite.x + sprite.width > container.width) {
+                sprite.x = container.width - sprite.width;
+                collision = "right";
+            }
+
+                //Bottom
+            if (sprite.y + sprite.height > container.height) {
+                sprite.y = container.height - sprite.height;
+                collision = "bottom";
+            }
+
+                //Return the `collision` value
+                return collision;
         }
     </script>
 </body>
