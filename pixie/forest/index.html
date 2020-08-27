@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script src="../utils/pixi.min.js"></script>
+    <script src="./Forest.js"></script>
+    <script src="./Scence.js"></script>
+</head>
+<body>
+    <script>
+        let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        Graphics = PIXI.Graphics,
+        Text = PIXI.Text,
+        TextStyle = PIXI.TextStyle,
+        Container = PIXI.Container;
+
+        let app = new Application({
+            width: 928,
+            height: 763,                       
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        })
+
+        document.body.appendChild(app.view)
+
+        let state = null, scence = null;
+        loader.load(setup)
+        function setup() {
+            scence = new Scence(app.stage)
+            state = play
+            let ticker = PIXI.Ticker.shared;
+            ticker.minFPS  = 30
+            ticker.maxFPS  = 60
+            ticker.add(delta => gameLoop(delta));
+        }
+
+        function gameLoop(delta) {
+            state(delta)
+        }
+        
+        function play() {
+            scence.moveViewportXBy(1)
+        }
+    </script>
+</body>
+</html>
