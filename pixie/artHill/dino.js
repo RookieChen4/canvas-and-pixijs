@@ -9,6 +9,8 @@ function dino() {
   this.vy = 0;
   this.direction = 'right'
   this.isJump = false
+  this.isHit = false
+  this.collision = ''
 }
 
 dino.prototype = Object.create(PIXI.Container.prototype);
@@ -40,13 +42,16 @@ dino.prototype.Moveloop = function() {
 
 dino.prototype.move = function() {
   this.Moveloop()
+  if(this.collision == 'left'||this.collision == 'right') this.vx = 0;
+  if(this.collision == 'top'||this.collision == 'bottom') this.vy = 0;
   this.x += this.vx;
-  if(this.isJump) this.y -= (dino.JUMPSPEED -= dino.GRAVITY);
-  if (this.y >= 241) {
-      this.y = 241
-      dino.JUMPSPEED = 6
-      this.isJump = false
-  }
+  // if(this.isJump) this.y -= (dino.JUMPSPEED -= dino.GRAVITY);
+  // if (this.y >= 241) {
+  //     this.y = 241
+  //     dino.JUMPSPEED = 6
+  //     this.isJump = false
+  // }
+  (this.isHit) ? '' : this.y -= (this.vy -= dino.GRAVITY);
 }
 
 dino.prototype.autoMove = function() {
@@ -55,6 +60,10 @@ dino.prototype.autoMove = function() {
 
 dino.prototype.setVX = function(vx) {
   this.vx = vx;
+}
+
+dino.prototype.setVY = function(vy) {
+  this.vy = vy;
 }
 
 dino.prototype.changeDirection = function(direction) {

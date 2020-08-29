@@ -16,6 +16,7 @@
         }
     </style>
     <script src="../utils/pixi.min.js"></script>
+    <script src="../utils/bump.js"></script>
     <script src="./Hills.js"></script>
     <script src="./Scence.js"></script>
     <script src="./dino.js"></script>
@@ -30,6 +31,7 @@
         Text = PIXI.Text,
         TextStyle = PIXI.TextStyle,
         Container = PIXI.Container;
+        let bump = new Bump(PIXI);
 
         let app = new Application({
             width: 512,
@@ -87,9 +89,10 @@
                 }
             };
             space.press = () => {
-                scence.controlDinoJump(true)
+                scence.controlDinoJump(true,6)
             };
             space.release = () => {
+                scence.controlDinoJump(false,6)
             };
         }
 
