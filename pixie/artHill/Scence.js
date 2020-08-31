@@ -4,6 +4,7 @@ function Scence(stage) {
   this.width = 512;
   this.height = 241;
   this.viewportX = 0;
+  this.vx = 0;
   this.hills = [];
   this.Dino = null;
   this.rect = null;
@@ -29,6 +30,10 @@ Scence.prototype.createHills = function(stage) {
   }
 }
 
+Scence.prototype.setVX = function(vx) {
+  this.vx = vx
+}
+
 Scence.prototype.setViewportX = function(viewportX) {
   this.viewportX = viewportX;
   let delta = 0.1
@@ -37,14 +42,22 @@ Scence.prototype.setViewportX = function(viewportX) {
   }
 };
 
+Scence.prototype.initDino = function() {
+  this.Dino.move()
+  this.contain()
+  let {hit,collision} = this.hitTestRectangle(this.Dino, this.rect)
+  this.Dino.isHit = hit
+  this.Dino.collision = collision
+}
+
+Scence.prototype.init = function() {
+  this.initDino()
+  this.moveViewportXBy(this.vx)
+}
+
 Scence.prototype.moveViewportXBy = function(units) {
-    this.Dino.move()
-    this.contain()
-    let {hit,collision} = this.hitTestRectangle(this.Dino, this.rect)
-    this.Dino.isHit = hit
-    this.Dino.collision = collision
-    let newViewportX = this.viewportX + units;
-    this.setViewportX(newViewportX);
+  let newViewportX = this.viewportX + units;
+  this.setViewportX(newViewportX);
 };
 
 Scence.prototype.controlDino = function(vx,direction,flag) {
@@ -58,7 +71,7 @@ Scence.prototype.controlDino = function(vx,direction,flag) {
 Scence.prototype.controlDinoJump = function(flag, vy) {
   flag = flag || false;
   this.Dino.changeJump(flag)
-  this.Dino.setVY(vy)
+  if(vy){this.Dino.setVY(vy)}
 }
 
 Scence.prototype.contain = function() {
@@ -80,6 +93,7 @@ Scence.prototype.contain = function() {
   if (this.Dino.y > this.height) {
     this.Dino.y = this.height;
     collision = "bottom";
+    this.Dino.isgrounded = true
   }
 }
 

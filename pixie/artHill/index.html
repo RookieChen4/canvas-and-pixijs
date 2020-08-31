@@ -62,7 +62,7 @@
         }
         
         function play() {
-            scence.moveViewportXBy(1)
+            scence.init()
         }
 
 
@@ -71,28 +71,32 @@
 
             left.press = () => {
                 scence.controlDino(-3,'left')
+                scence.setVX(-3)
             };
 
             left.release = () => {
                 if (!right.isDown) {
                     scence.controlDino(0,'left')
+                    scence.setVX(0)
                 }
             };
 
             //Right
             right.press = () => {
                 scence.controlDino(3)
+                scence.setVX(3)
             };
             right.release = () => {
                 if (!left.isDown) {
                     scence.controlDino(0)
+                    scence.setVX(0)
                 }
             };
             space.press = () => {
-                scence.controlDinoJump(true,6)
+                scence.controlDinoJump(true,8)
             };
             space.release = () => {
-                scence.controlDinoJump(false,6)
+                scence.controlDinoJump(false)
             };
         }
 
