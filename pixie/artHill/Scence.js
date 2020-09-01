@@ -44,6 +44,7 @@ Scence.prototype.setViewportX = function(viewportX) {
 
 Scence.prototype.initDino = function() {
   this.Dino.move()
+  this.Dino.isgrounded = false
   this.contain()
   let {hit,collision} = this.hitTestRectangle(this.Dino, this.rect)
   this.Dino.isHit = hit
@@ -71,17 +72,18 @@ Scence.prototype.controlDino = function(vx,direction,flag) {
 Scence.prototype.controlDinoJump = function(flag, vy) {
   flag = flag || false;
   this.Dino.changeJump(flag)
-  if(vy){this.Dino.setVY(vy)}
 }
 
 Scence.prototype.contain = function() {
+  let collision;
   if (this.Dino.x < this.x + this.Dino.width/2) {
     this.Dino.x = this.x + this.Dino.width/2;
     collision = "left";
   }
   //Top
-  if (this.Dino.y < this.y) {
-    this.Dino.y = this.y;
+  if (this.Dino.y <= this.y) {
+    this.Dino.vy = 0
+    this.Dino.y = 24;
     collision = "top";
   }
   //Right
@@ -90,7 +92,7 @@ Scence.prototype.contain = function() {
     collision = "right";
   }
   //Bottom
-  if (this.Dino.y > this.height) {
+  if (this.Dino.y >= this.height) {
     this.Dino.y = this.height;
     collision = "bottom";
     this.Dino.isgrounded = true
@@ -153,6 +155,7 @@ Scence.prototype.hitTestRectangle = function(r1, r2) {
             collision = "bottom";
             //Move the rectangle out of the collision
             r1.y = r1.y - overlapY;
+            this.Dino.isgrounded = true
           }
         } else {
           //The collision is happening on the Y axis

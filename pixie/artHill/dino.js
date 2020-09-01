@@ -7,7 +7,7 @@ function dino() {
   this.x = 20;
   this.y = 241;
   this.vx = 0;
-  this.vy = 8;
+  this.vy = 0;
   this.direction = 'right'
   this.isJump = false
   this.isgrounded = true
@@ -57,17 +57,14 @@ dino.prototype.Moveloop = function() {
 
 dino.prototype.move = function() {
   this.vx ? this.Moveloop() : this.Idleloop()
-  // if(this.collision == 'left' || this.collision == 'right') this.vx = 0;
-  if(!this.isJump) {
-    if(this.collision == 'top' || this.collision == 'bottom') {this.vy = 0;}
+  if(this.collision == 'top') {this.vy = 0;}
+  if(!this.isJump&&this.collision == 'bottom') {
+    this.vy = 0;
   }
   this.x += this.vx;
-  // if(this.isgrounded) {
-  //   this.isJump = false
-  // }
-  // if(this.isJump) {
-  //   this.y -= (this.vy -= dino.GRAVITY)
-  // }
+  if(this.isJump&&this.isgrounded) {
+    this.vy = 8;
+  }
   this.y -= (this.vy -= dino.GRAVITY)
 }
 
