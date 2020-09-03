@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+            --start-color: #007CF0;
+            --end-color: #00DFD8;
+        }
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .animated-gradient-text {
+            position: relative;
+            font-size: 10rem;
+            font-weight: 800;
+            letter-spacing: -.08em;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg,var(--start-color),var(--end-color));
+            animation: show 3s ease-in-out infinite;
+        }
+        @keyframes show{
+			0%{
+				opacity: 0;
+			}
+			50%{
+				opacity: 0.75;
+			}
+			75% {
+                opacity: 1;
+            }
+            100%{
+				opacity: 0;
+			}
+		}
+        .animated-gradient-text::before {
+            content: 'text';
+            position: absolute;
+            display: block;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+        }
+	</style>
+</head>
+<body>
+    <div class="container">
+        <span class="text">
+            <span class="animated-gradient-text">text</span>
+        </span>
+    </div>
+</body>
+</html>
