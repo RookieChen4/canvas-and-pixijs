@@ -6,8 +6,6 @@
         *{
             padding: 0;
             margin: 0;
-            --start-color: #007CF0;
-            --end-color: #00DFD8;
         }
         .container {
             width: 100%;
@@ -16,34 +14,44 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
+        }
+        .text1 {
+            --start-color: #007CF0;
+            --end-color: #00DFD8;
+        }
+        .text2 {
+            --start-color: #7928CA;
+            --end-color: #FF0080;
         }
         .animated-gradient-text {
+            color: #333;
             position: relative;
             font-size: 10rem;
             font-weight: 800;
             letter-spacing: -.08em;
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(90deg,var(--start-color),var(--end-color));
-            animation: show 3s ease-in-out infinite;
+            padding: 0 0.05em;
         }
         @keyframes show{
 			0%{
-				opacity: 0;
+				opacity: 1;
 			}
-			50%{
-				opacity: 0.75;
-			}
-			75% {
+			25% {
                 opacity: 1;
             }
+            50% {
+                opacity: 0;
+            }
+            75% {
+                opacity: 0;
+            }
             100%{
-				opacity: 0;
+				opacity: 1;
 			}
 		}
         .animated-gradient-text::before {
-            content: 'text';
+            padding: 0 0.05em;  /* 加padding解决文字超出范围 */
+            content: var(--content);
             position: absolute;
             display: block;
             width: 100%;
@@ -51,14 +59,27 @@
             bottom: 0;
             left: 0;
             z-index: 1;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg,var(--start-color),var(--end-color));
+            opacity: 0;
+            animation: show 4s ease infinite;
+            animation-play-state: running;
+        }
+        .text2 .animated-gradient-text::before {
+            animation-delay: 2s;
         }
 	</style>
 </head>
 <body>
     <div class="container">
-        <span class="text">
-            <span class="animated-gradient-text">text</span>
-        </span>
+        <div class="text1">
+            <span class="animated-gradient-text" style="--content:'Develop.';">Develop.</span>
+        </div>
+        <div class="text2">
+            <span class="animated-gradient-text" style="--content:'Preview.';">Preview.</span>
+        </div>
     </div>
 </body>
 </html>
