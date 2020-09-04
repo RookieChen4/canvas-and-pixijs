@@ -24,32 +24,69 @@
             --start-color: #7928CA;
             --end-color: #FF0080;
         }
+        .text3 {
+            --start-color: #FF4D4D;
+            --end-color: #F9CB28;
+        }
         .animated-gradient-text {
-            color: #333;
             position: relative;
             font-size: 10rem;
             font-weight: 800;
             letter-spacing: -.08em;
             padding: 0 0.05em;
+            -webkit-text-fill-color: transparent;
         }
-        @keyframes show{
-			0%{
-				opacity: 1;
-			}
-			25% {
+        @keyframes show1{
+			0%, 16.667%, 100% {
                 opacity: 1;
             }
-            50% {
+            33.333%, 83.333% {
                 opacity: 0;
             }
-            75% {
+		}
+        @keyframes show2{
+			0%, 100% {
                 opacity: 0;
             }
-            100%{
-				opacity: 1;
-			}
+            33.333%, 50% {
+                opacity: 1;
+            }
+            16.667%, 66.667% {
+                opacity: 0;
+            }
+		}
+        @keyframes show3{
+			0%, 50%, 100% {
+                opacity: 0;
+            }
+            66.667%, 83.333% {
+                opacity: 1;
+            }
 		}
         .animated-gradient-text::before {
+            padding: 0 0.05em;  /* 加padding解决文字超出范围 */
+            content: var(--content);
+            position: absolute;
+            display: block;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+            background-clip: text;
+            -webkit-background-clip: text;
+            /* -webkit-text-fill-color: transparent; */
+            background-image: linear-gradient(90deg,var(--start-color),var(--end-color));
+            animation: show1 8s ease infinite;
+        }
+        .text2 .animated-gradient-text::before {
+            animation: show2 8s ease infinite;
+        }
+        .text3 .animated-gradient-text::before {
+            animation: show3 8s ease infinite;
+        }
+
+        .animated-gradient-text::after {
             padding: 0 0.05em;  /* 加padding解决文字超出范围 */
             content: var(--content);
             position: absolute;
@@ -61,14 +98,24 @@
             z-index: 1;
             background-clip: text;
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(90deg,var(--start-color),var(--end-color));
-            opacity: 0;
-            animation: show 4s ease infinite;
-            animation-play-state: running;
+            background-image: linear-gradient(90deg,black,black);
+            animation: textshow1 8s ease infinite;
         }
-        .text2 .animated-gradient-text::before {
-            animation-delay: 2s;
+        .text2 .animated-gradient-text::after {
+            animation: textshow2 8s ease infinite;
+        }
+        .text3 .animated-gradient-text::after {
+            animation: textshow3 8s ease infinite;
+        }
+        @keyframes textshow1 {
+            0%,16.667%,to{opacity:0}
+            25%,91.667%{opacity:1}
+        }
+        @keyframes textshow2 {
+            0%,to{opacity:1}33.333%,50%{opacity:0}25%,58.333%{opacity:1}
+        }
+        @keyframes textshow3 {
+            0%,58.333%,91.667%,to{opacity:1}66.667%,83.333%{opacity:0}
         }
 	</style>
 </head>
@@ -79,6 +126,9 @@
         </div>
         <div class="text2">
             <span class="animated-gradient-text" style="--content:'Preview.';">Preview.</span>
+        </div>
+        <div class="text3">
+            <span class="animated-gradient-text" style="--content:'Ship.';">Ship.</span>
         </div>
     </div>
 </body>
