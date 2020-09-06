@@ -20,6 +20,7 @@
     <script src="./Hills.js"></script>
     <script src="./Scence.js"></script>
     <script src="./dino.js"></script>
+    <script src="./coin.js"></script>
 </head>
 <body>
     <script>
@@ -45,7 +46,8 @@
 
         let state = null, scence = null, Dino = null;
         loader
-            .add(["./DinoSpriteSheet.json","./Hills Layer 01.png","./Hills Layer 02.png","./Hills Layer 03.png","./Hills Layer 04.png","./Hills Layer 05.png","./Hills Layer 06.png"])
+            .add(["./DinoSpriteSheet.json","./Hills Layer 01.png","./Hills Layer 02.png","./Hills Layer 03.png",
+            "./Hills Layer 04.png","./Hills Layer 05.png","./Hills Layer 06.png","./MonedaD.png"])
             .load(setup)
         function setup() {
             scence = new Scence(app.stage)

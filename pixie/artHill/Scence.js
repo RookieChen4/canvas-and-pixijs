@@ -8,6 +8,7 @@ function Scence(stage) {
   this.hills = [];
   this.Dino = null;
   this.rect = null;
+  this.Coin = null;
   this.createHills(stage)
 }
 
@@ -23,6 +24,8 @@ Scence.prototype.createHills = function(stage) {
       this.rect.x = 200;
       this.rect.y = 156;
       app.stage.addChild(this.rect);
+      this.Coin = new Coin()
+      stage.addChild(this.Coin);
     }
     hill = new Hills('0' + i)
     this.hills.push(hill)
@@ -44,6 +47,7 @@ Scence.prototype.setViewportX = function(viewportX) {
 
 Scence.prototype.initDino = function() {
   this.Dino.move()
+  this.Coin.createCoin()
   this.Dino.isgrounded = false
   this.contain()
   let {hit,collision} = this.hitTestRectangle(this.Dino, this.rect)
