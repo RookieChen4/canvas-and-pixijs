@@ -16,5 +16,5 @@ Hills.prototype = Object.create(PIXI.TilingSprite.prototype);
 Hills.prototype.setViewportX = function(newViewportX, delta) {
   var distanceTravelled = newViewportX - this.viewportX;
   this.viewportX = newViewportX;
-  this.tilePosition.x -= (distanceTravelled * delta);
+  this.tilePosition.x -= (distanceTravelled);
 };
