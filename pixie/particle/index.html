@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    * {
+        padding: 0;
+        margin: 0
+    }
+    #app {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+    </style>
+    <script src="../utils/pixi.min.js"></script>
+    <script src="./Particle.js"></script>
+    <script src="./ParticlePool.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    //Aliases
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        Graphics = PIXI.Graphics,
+        TextureCache = PIXI.utils.TextureCache,
+        Text = PIXI.Text,
+        TextStyle = PIXI.TextStyle;
+    let app = new Application({
+        width: window.innerWidth,
+        height: window.innerHeight,                       
+        antialias: true,
+        transparent: false,
+        resolution: 1
+    });
+    document.querySelector('#app').appendChild(app.view);
+
+    loader.load(setup);
+    function setup() {
+        let particlePool = new ParticlePool();
+        // const canvas = document.createElement('canvas');
+        // canvas.width = 1920;
+        // canvas.height = 1080;
+        // const ctx = canvas.getContext('2d');
+
+        // var grd = ctx.createLinearGradient(0, 0, 200, 0);
+        // grd.addColorStop(0, "red");
+        // grd.addColorStop(1, "white");
+
+        // // Fill with gradient
+        // ctx.fillStyle = grd;
+        // ctx.fillRect(10, 10, 150, 80);
+
+        // const gradTexture = PIXI.Texture.from(canvas)
+        // console.log(gradTexture)
+        // const sprite = new PIXI.Sprite(gradTexture);
+        // sprite.position.set(100, 100);
+      
+        // app.stage.addChild(sprite);
+        particlePool.Particles.forEach(element => {
+            let circle = new Graphics();
+            circle.beginFill(0xFF00BB,0.5);
+            circle.drawCircle(0, 0, 32);
+            circle.endFill();
+            circle.x = 64;
+            circle.y = 130;
+            app.stage.addChild(circle);
+        });
+        state = play;
+
+        app.ticker.add(delta => gameLoop(delta));
+    }
+    function gameLoop(delta){
+        state(delta)
+    }
+    function play(delta) {
+
+    }
+</script>
+</html>
