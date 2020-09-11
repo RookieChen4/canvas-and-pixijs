@@ -39,6 +39,7 @@
         height: window.innerHeight,                       
         antialias: true,
         transparent: false,
+        backgroundColor: 0x1099bb,
         resolution: 1
     });
     document.querySelector('#app').appendChild(app.view);
@@ -46,34 +47,32 @@
     loader.load(setup);
     function setup() {
         let particlePool = new ParticlePool();
-        // const canvas = document.createElement('canvas');
-        // canvas.width = 1920;
-        // canvas.height = 1080;
-        // const ctx = canvas.getContext('2d');
+        const canvas = document.createElement('canvas');
+        canvas.width = 1920;
+        canvas.height = 1080;
+        const ctx = canvas.getContext('2d');
 
-        // var grd = ctx.createLinearGradient(0, 0, 200, 0);
-        // grd.addColorStop(0, "red");
-        // grd.addColorStop(1, "white");
+        var grd = ctx.createLinearGradient(0, 0, 1920, 0);
+        grd.addColorStop(0, 'rgb(10, 10, 50)');
+        grd.addColorStop(1, 'rgb(60, 10, 60)');
 
-        // // Fill with gradient
-        // ctx.fillStyle = grd;
-        // ctx.fillRect(10, 10, 150, 80);
-
-        // const gradTexture = PIXI.Texture.from(canvas)
-        // console.log(gradTexture)
-        // const sprite = new PIXI.Sprite(gradTexture);
-        // sprite.position.set(100, 100);
-      
-        // app.stage.addChild(sprite);
-        particlePool.Particles.forEach(element => {
-            let circle = new Graphics();
-            circle.beginFill(0xFF00BB,0.5);
-            circle.drawCircle(0, 0, 32);
-            circle.endFill();
-            circle.x = 64;
-            circle.y = 130;
-            app.stage.addChild(circle);
+        // Fill with gradient
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 1920, 1080);
+        
+        particlePool.Particles.forEach((element,index) => {
+            ctx.fillStyle = element.fillcolor;
+            ctx.beginPath();
+            ctx.arc(95 + 10*index, 50 + 10*index, 40, 0, 2 * Math.PI);
+            ctx.fill();
         });
+
+        const gradTexture = PIXI.Texture.from(canvas)
+        console.log(gradTexture)
+        const sprite = new PIXI.Sprite(gradTexture);
+        app.stage.addChild(sprite);
+
+
         state = play;
 
         app.ticker.add(delta => gameLoop(delta));

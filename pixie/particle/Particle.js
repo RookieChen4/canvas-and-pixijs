@@ -2,9 +2,12 @@ function Particle() {
     this.x = 0;
     this.y = 0;
     this.color = {}
+    this.fillcolor = ''
     this.initColor()
     this.initPosition()
 }
+
+Particle.PARTICLE_SIZE = 0.5; // View heights
 
 Particle.prototype.initColor = function() {
     this.color = {
@@ -13,6 +16,7 @@ Particle.prototype.initColor = function() {
         b: 50,
         a: this.rand(0, 1)
     }
+    this.fillcolor = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.color.a})`
 }
 
 Particle.prototype.initPosition = function() {
