@@ -39,18 +39,21 @@
         height: window.innerHeight,                       
         antialias: true,
         transparent: false,
-        backgroundColor: 0x1099bb,
         resolution: 1
     });
     document.querySelector('#app').appendChild(app.view);
 
     loader.load(setup);
+
+
+    let particlePool = new ParticlePool();
+    var canvas, ctx, vh, gradTexture;
     function setup() {
-        let particlePool = new ParticlePool();
-        const canvas = document.createElement('canvas');
-        canvas.width = 1920;
-        canvas.height = 1080;
-        const ctx = canvas.getContext('2d');
+        canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx = canvas.getContext('2d');
+        vh = canvas.height / 100;
 
         var grd = ctx.createLinearGradient(0, 0, 1920, 0);
         grd.addColorStop(0, 'rgb(10, 10, 50)');
@@ -59,29 +62,39 @@
         // Fill with gradient
         ctx.fillStyle = grd;
         ctx.fillRect(0, 0, 1920, 1080);
-        
-        particlePool.Particles.forEach((element,index) => {
-            ctx.fillStyle = element.fillcolor;
-            ctx.beginPath();
-            ctx.arc(95 + 10*index, 50 + 10*index, 40, 0, 2 * Math.PI);
-            ctx.fill();
-        });
 
-        const gradTexture = PIXI.Texture.from(canvas)
-        console.log(gradTexture)
+        gradTexture = PIXI.Texture.from(canvas)
         const sprite = new PIXI.Sprite(gradTexture);
         app.stage.addChild(sprite);
 
-
         state = play;
-
-        app.ticker.add(delta => gameLoop(delta));
+        app.ticker.add(() => gameLoop(performance.now()));
     }
-    function gameLoop(delta){
-        state(delta)
+    function gameLoop(time){
+        state(time)
     }
-    function play(delta) {
 
+    function play(time) {
+        particlePool.Particles.forEach((element,index) => {
+            particlePool.Particles[index] = moveParticle(element,time)
+        });
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlePool.Particles.forEach((element,index) => {
+            ctx.fillStyle = element.fillcolor;
+            ctx.beginPath();
+            ctx.arc(element.x * canvas.width, element.y * vh + (canvas.height / 2), element.diameter * vh, 0, 2 * Math.PI);
+            ctx.fill();
+        })
+        gradTexture.update()
+    }
+
+    function moveParticle(particle, time) {
+        const progress = ((time - particle.startTime) % particle.duration) / particle.duration;
+            return {
+                ...particle,
+                x: progress,
+                y: ((Math.sin(progress * particle.arc) * particle.amplitude) + particle.offsetY),
+            }; 
     }
 </script>
 </html>

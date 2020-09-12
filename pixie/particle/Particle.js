@@ -1,13 +1,25 @@
 function Particle() {
-    this.x = 0;
-    this.y = 0;
-    this.color = {}
+    this.x = -2;
+    this.y = -2;
+    this.diameter;
+    this.duration;
+    this.amplitude;
+    this.offsetY;
+    this.arc;
+    this.startTime;
+    this.color;
     this.fillcolor = ''
-    this.initColor()
-    this.initPosition()
+    this.initParticle()
 }
 
 Particle.PARTICLE_SIZE = 0.5; // View heights
+Particle.SPEED = 20000; // Milliseconds
+
+Particle.prototype.initParticle = function() {
+    this.diameter =  Math.max(0, this.randomNormal({ mean: Particle.PARTICLE_SIZE, dev: Particle.PARTICLE_SIZE / 2 }))//直径
+    this.initColor()
+    this.initPosition()
+}
 
 Particle.prototype.initColor = function() {
     this.color = {
@@ -20,8 +32,11 @@ Particle.prototype.initColor = function() {
 }
 
 Particle.prototype.initPosition = function() {
-    this.x = this.randomNormal({ mean: 810, dev: 20 });
-    this.y = this.randomNormal({ mean: 590, dev: 20 });
+    this.duration = this.randomNormal({ mean: Particle.SPEED, dev: Particle.SPEED * 0.1 })
+    this.amplitude = this.randomNormal({ mean: 16, dev: 2 }) //振幅
+    this.offsetY = this.randomNormal({ mean: 0, dev: 10 })
+    this.arc = Math.PI * 2 // 移动路径相关
+    this.startTime = performance.now() - this.rand(0, Particle.SPEED)
 }
 
 Particle.prototype.randomNormal = function(o) {
@@ -32,7 +47,6 @@ Particle.prototype.randomNormal = function(o) {
     } while (r >= 1);
     return e = a * Math.sqrt(-2 * Math.log(r) / r), t * e + l
 }
-
 
 Particle.prototype.rand = function(low, high) {
     return Math.random() * (high - low) + low;

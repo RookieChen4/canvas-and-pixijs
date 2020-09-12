@@ -114,7 +114,6 @@ function initializeCanvas() {
   canvas.width = canvas.offsetWidth * window.devicePixelRatio;
   canvas.height = canvas.offsetHeight * window.devicePixelRatio;
   let ctx = canvas.getContext("2d");
-
   window.addEventListener('resize', () => {
     canvas.width = canvas.offsetWidth * window.devicePixelRatio;
     canvas.height = canvas.offsetHeight * window.devicePixelRatio;
