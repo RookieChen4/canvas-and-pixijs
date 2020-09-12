@@ -43,25 +43,32 @@
     });
     document.querySelector('#app').appendChild(app.view);
 
-    loader.load(setup);
+    loader
+        .add("./bg.jpg")
+        .load(setup);
 
 
     let particlePool = new ParticlePool();
     var canvas, ctx, vh, gradTexture;
     function setup() {
+        bg = new Sprite(loader.resources["./bg.jpg"].texture);
+        bg.width = app.screen.width
+        bg.height = app.screen.height
+        app.stage.addChild(bg);
+
         canvas = document.createElement('canvas');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         ctx = canvas.getContext('2d');
         vh = canvas.height / 100;
 
-        var grd = ctx.createLinearGradient(0, 0, 1920, 0);
-        grd.addColorStop(0, 'rgb(10, 10, 50)');
-        grd.addColorStop(1, 'rgb(60, 10, 60)');
+        // var grd = ctx.createLinearGradient(0, 0, 1920, 0);
+        // grd.addColorStop(0, 'rgb(10, 10, 50)');
+        // grd.addColorStop(1, 'rgb(60, 10, 60)');
 
         // Fill with gradient
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, 1920, 1080);
+        // ctx.fillStyle = grd;
+        // ctx.fillRect(0, 0, 1920, 1080);
 
         gradTexture = PIXI.Texture.from(canvas)
         const sprite = new PIXI.Sprite(gradTexture);
