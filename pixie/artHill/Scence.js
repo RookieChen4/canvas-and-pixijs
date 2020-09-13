@@ -10,6 +10,7 @@ function Scence(stage) {
   this.rect = null;
   this.Coins = [];
   this.score = 0;
+  this.Score = null;
   this.stage = stage;
   this.createHills(stage)
 }
@@ -32,6 +33,9 @@ Scence.prototype.createHills = function(stage) {
         this.Coins.push(coin)
         stage.addChild(coin);
       }
+      this.Score = new Score();
+      stage.addChild(this.Score);
+      this.Score.setText(0);
     }
     hill = new Hills('0' + i)
     this.hills.push(hill)
@@ -55,7 +59,7 @@ Scence.prototype.initDino = function() {
   this.Dino.move()
   this.Coins.forEach((it,index) => {
     it.createCoin()
-    if(this.hitCoin(this.Dino, it)) this.score++, this.Coins.splice(index,1),it.destoryCoin();
+    if(this.hitCoin(this.Dino, it)) this.score++, this.Coins.splice(index,1),it.destoryCoin(),this.Score.setText(this.score);;
   })
   this.Dino.isgrounded = false
   this.contain()

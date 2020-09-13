@@ -40,7 +40,6 @@ Particle.prototype.initPosition = function() {
 }
 
 Particle.prototype.randomNormal = function(o) {
-    if (o = Object.assign({mean: 0, dev: 1, pool: []}, o), Array.isArray(o.pool) && o.pool.length > 0) return normalPool(o);
     let r, a, n, e, l = o.mean,t = o.dev;
     do {
         r = (a = 2 * Math.random() - 1) * a + (n = 2 * Math.random() - 1) * n
