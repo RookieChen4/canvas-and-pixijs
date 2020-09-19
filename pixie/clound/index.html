@@ -30,6 +30,7 @@
             height: 10px;
             border-radius: 50%;
             background-color: #fff;
+            transition: .5s transform ease-in-out;
         }
         .active {
             transform: scale(2);
@@ -68,9 +69,9 @@
 <body>
     <div class="container">
        <div class="widget" style="transform: translateX(0);">
-        <div class="scence item1"></div>
-        <div class="scence item2"></div>
-        <div class="scence item3"></div>
+        <div class="scence item1">A</div>
+        <div class="scence item2">B</div>
+        <div class="scence item3">C</div>
        </div>
        <div class="navigate">
            <div class="timeline">
@@ -113,16 +114,19 @@
         }
     }
     let widget = document.querySelector('.widget')
-    let x = 0
+    let x = 0;
+    let count = 0;
     document.querySelectorAll('.circle')[0].classList.add('active')
     function scrollFunc(e) {
         if(e.deltaY > 0) {
-            if(x > -200) {
+            count++;
+            if(count%2 == 0 && x > -200) {
                 x -= 100
                 widget.style.transform = 'translateX(' + x + 'vw)'
             }
-        } else {  
-            if(x < 0) {
+        } else {
+            count++;  
+            if(count%2 == 0 && x < 0) {
                 x += 100
                 widget.style.transform = 'translateX(' + x + 'vw)'
             }
