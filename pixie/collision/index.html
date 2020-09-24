@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    * {
+        padding: 0;
+        margin: 0
+    }
+    #app {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+    </style>
+    <script src="../utils/pixi.min.js"></script>
+    <script src="./particle.js"></script>
+    <script src="./particlePool.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    </div>
+</body>
+<script>
+    //Aliases
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite,
+        Graphics = PIXI.Graphics,
+        TextureCache = PIXI.utils.TextureCache,
+        Text = PIXI.Text,
+        TextStyle = PIXI.TextStyle;
+    let app = new Application({
+        width: window.innerWidth,
+        height: window.innerHeight,                       
+        antialias: true,
+        transparent: false,
+        resolution: 1
+    });
+    document.querySelector('#app').appendChild(app.view);
+
+    loader
+        // .add("./bg.jpg")
+        .load(setup);
+
+
+    let particlePool = new ParticlePool();
+    var canvas, ctx, vh, gradTexture;
+    function setup() {
+        // bg = new Sprite(loader.resources["./bg.jpg"].texture);
+        // bg.width = app.screen.width
+        // bg.height = app.screen.height
+        // app.stage.addChild(bg);
+
+        canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx = canvas.getContext('2d');
+        vh = canvas.height / 10;
+
+        var grd = ctx.createLinearGradient(0, 0, 1920, 0);
+        grd.addColorStop(0, 'rgb(10, 10, 50)');
+        grd.addColorStop(1, 'rgb(60, 10, 60)');
+
+        // Fill with gradient
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 1920, 1080);
+
+        gradTexture = PIXI.Texture.from(canvas)
+        const sprite = new PIXI.Sprite(gradTexture);
+        app.stage.addChild(sprite);
+
+        state = play;
+        app.ticker.add(() => gameLoop(performance.now()));
+    }
+    function gameLoop(time){
+        state(time)
+    }
+
+    function play(time) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particlePool.Particles.forEach((element,index) => {
+            ctx.fillStyle = element.fillcolor;
+            ctx.beginPath();
+            particlePool.Particles.forEach((e,i) => {
+              if(index!=i) { 
+                // collision(element,e)
+              }
+            })
+            ctx.arc(element.x += element.vx, element.y += element.vy, element.diameter * vh, 0, 2 * Math.PI);
+            contain(element,{x: 0, y: 0, width: canvas.width, height: canvas.height})
+            ctx.fill();
+        })
+        gradTexture.update()
+    }
+    function contain(particle, container) {
+      let collision = undefined;
+      //Left
+      if (particle.x - particle.diameter * vh/2 < container.x) {
+        particle.x = container.x + particle.diameter * vh/2;
+        collision = "left";
+        particle.vx = -particle.vx
+      }
+
+      //Top
+      if (particle.y - particle.diameter * vh/2 < container.y) {
+        particle.y = container.y + particle.diameter * vh/2;
+        collision = "top";
+        particle.vy = -particle.vy
+      }
+
+      //Right
+      if (particle.x + particle.diameter * vh/2 > container.width) {
+        particle.x = container.width - particle.diameter * vh/2;
+        collision = "right";
+        particle.vx = -particle.vx
+      }
+
+      //Bottom
+      if (particle.y + particle.diameter * vh/2 > container.height) {
+        particle.y = container.height - particle.diameter * vh/2;
+        collision = "bottom";
+        particle.vy = -particle.vy
+      }
+    }
+
+    function collision (r1, r2) {
+      //Define the variables we'll need to calculate
+      let hit, combinedHalfWidths, combinedHalfHeights, vx, vy,collision;
+
+      //hit will determine whether there's a collision
+      hit = false;
+
+      //Find the center points of each sprite
+      r1.centerX = r1.x;
+      r1.centerY = r1.y;
+      r2.centerX = r2.x;
+      r2.centerY = r2.y;
+
+      //Find the half-widths and half-heights of each sprite
+      r1.halfWidth = r1.diameter * vh / 2;
+      r1.halfHeight = r1.diameter * vh / 2;
+      r2.halfWidth = r2.diameter * vh / 2;
+      r2.halfHeight = r2.diameter * vh / 2;
+
+      //Calculate the distance vector between the sprites
+      vx = r1.centerX - r2.centerX;
+      vy = r1.centerY - r2.centerY;
+
+      //Figure out the combined half-widths and half-heights
+      combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+      combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+      //Check for a collision on the x axis
+      if (Math.abs(vx) < combinedHalfWidths) {
+
+        //A collision might be occurring. Check for a collision on the y axis
+        if (Math.abs(vy) < combinedHalfHeights) {
+            //There's definitely a collision happening
+            hit = true;
+            r1.vx = -r1.vx
+            r1.vy = -r1.vy
+        } else {
+            //There's no collision on the y axis
+            hit = false;
+        }
+      } else {
+        //There's no collision on the x axis
+        hit = false;
+      }
+      //`hit` will be either `true` or `false`
+      return {hit,collision};
+  }
+</script>
+</html>
