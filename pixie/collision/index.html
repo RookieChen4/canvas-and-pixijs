@@ -62,14 +62,6 @@
         ctx = canvas.getContext('2d');
         vh = canvas.height / 10;
 
-        var grd = ctx.createLinearGradient(0, 0, 1920, 0);
-        grd.addColorStop(0, 'rgb(10, 10, 50)');
-        grd.addColorStop(1, 'rgb(60, 10, 60)');
-
-        // Fill with gradient
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, 1920, 1080);
-
         gradTexture = PIXI.Texture.from(canvas)
         const sprite = new PIXI.Sprite(gradTexture);
         app.stage.addChild(sprite);
@@ -88,11 +80,11 @@
             ctx.beginPath();
             particlePool.Particles.forEach((e,i) => {
               if(index!=i) { 
-                // collision(element,e)
+                collision(element,e)
               }
             })
-            ctx.arc(element.x += element.vx, element.y += element.vy, element.diameter * vh, 0, 2 * Math.PI);
             contain(element,{x: 0, y: 0, width: canvas.width, height: canvas.height})
+            ctx.arc(element.x += element.vx, element.y += element.vy, element.diameter * vh, 0, 2 * Math.PI);
             ctx.fill();
         })
         gradTexture.update()
@@ -100,29 +92,29 @@
     function contain(particle, container) {
       let collision = undefined;
       //Left
-      if (particle.x - particle.diameter * vh/2 < container.x) {
-        particle.x = container.x + particle.diameter * vh/2;
+      if (particle.x - particle.diameter * vh <= container.x) {
+        particle.x = container.x + particle.diameter * vh;
         collision = "left";
         particle.vx = -particle.vx
       }
 
       //Top
-      if (particle.y - particle.diameter * vh/2 < container.y) {
-        particle.y = container.y + particle.diameter * vh/2;
+      if (particle.y - particle.diameter * vh <= container.y) {
+        particle.y = container.y + particle.diameter * vh;
         collision = "top";
         particle.vy = -particle.vy
       }
 
       //Right
-      if (particle.x + particle.diameter * vh/2 > container.width) {
-        particle.x = container.width - particle.diameter * vh/2;
+      if (particle.x + particle.diameter * vh >= container.width) {
+        particle.x = container.width - particle.diameter * vh;
         collision = "right";
         particle.vx = -particle.vx
       }
 
       //Bottom
-      if (particle.y + particle.diameter * vh/2 > container.height) {
-        particle.y = container.height - particle.diameter * vh/2;
+      if (particle.y + particle.diameter * vh >= container.height) {
+        particle.y = container.height - particle.diameter * vh;
         collision = "bottom";
         particle.vy = -particle.vy
       }
@@ -142,10 +134,10 @@
       r2.centerY = r2.y;
 
       //Find the half-widths and half-heights of each sprite
-      r1.halfWidth = r1.diameter * vh / 2;
-      r1.halfHeight = r1.diameter * vh / 2;
-      r2.halfWidth = r2.diameter * vh / 2;
-      r2.halfHeight = r2.diameter * vh / 2;
+      r1.halfWidth = r1.diameter * vh;
+      r1.halfHeight = r1.diameter * vh;
+      r2.halfWidth = r2.diameter * vh;
+      r2.halfHeight = r2.diameter * vh ;
 
       //Calculate the distance vector between the sprites
       vx = r1.centerX - r2.centerX;
@@ -156,14 +148,45 @@
       combinedHalfHeights = r1.halfHeight + r2.halfHeight;
 
       //Check for a collision on the x axis
-      if (Math.abs(vx) < combinedHalfWidths) {
-
+      if (Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2)) < r1.halfWidth + r2.halfWidth) {
         //A collision might be occurring. Check for a collision on the y axis
         if (Math.abs(vy) < combinedHalfHeights) {
             //There's definitely a collision happening
-            hit = true;
-            r1.vx = -r1.vx
-            r1.vy = -r1.vy
+
+            overlapX = combinedHalfWidths - Math.abs(vx);
+            overlapY = combinedHalfHeights - Math.abs(vy);
+
+            if (overlapX >= overlapY) {
+            //The collision is happening on the X axis
+            //But on which side? vy can tell us
+
+            if (vy > 0) {
+              collision = "top";
+              //Move the rectangle out of the collision
+              r1.y = r1.y + overlapY;
+              r1.vy = - r1.vy
+            } else {
+              collision = "bottom";
+              //Move the rectangle out of the collision
+              r1.y = r1.y - overlapY;
+              r1.vy = - r1.vy
+            }
+          } else {
+            //The collision is happening on the Y axis
+            //But on which side? vx can tell us
+
+            if (vx > 0) {
+              collision = "left";
+              //Move the rectangle out of the collision
+              r1.x = r1.x + overlapX;
+              r1.vx = - r1.vx
+            } else {
+              collision = "right";
+              //Move the rectangle out of the collision
+              r1.x = r1.x - overlapX;
+              r1.vx = - r1.vx
+            }
+          }
         } else {
             //There's no collision on the y axis
             hit = false;

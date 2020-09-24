@@ -16,7 +16,7 @@ Particle.PARTICLE_SIZE = 0.5; // View heights
 Particle.SPEED = 20000; // Milliseconds
 
 Particle.prototype.initParticle = function() {
-    this.diameter =  Math.max(0, this.randomNormal({ mean: Particle.PARTICLE_SIZE, dev: Particle.PARTICLE_SIZE / 2 }))//直径
+    this.diameter =  Math.max(0, this.randomNormal({ mean: Particle.PARTICLE_SIZE, dev: Particle.PARTICLE_SIZE / 2 }))//半径
     this.initColor()
     this.initPosition()
 }
