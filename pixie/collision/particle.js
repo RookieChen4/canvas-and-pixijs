@@ -19,7 +19,6 @@ Particle.SPEED = 20000; // Milliseconds
 
 Particle.prototype.initParticle = function() {
   this.diameter =  Math.max(0, this.randomNormal({ mean: Particle.PARTICLE_SIZE, dev: 0 }))//半径
-  this.mass = this.diameter/2
   this.initColor()
   this.initPosition()
 }
@@ -39,8 +38,10 @@ Particle.prototype.initPosition = function() {
   this.amplitude = this.randomNormal({ mean: 16, dev: 2 }) //振幅
   this.offsetY = this.randomNormal({ mean: 0, dev: 10 })
   this.arc = Math.PI * 2 // 移动路径相关
-  this.x = 30 + (Math.random() * (window.innerWidth - 40));
-  this.y = 30 + (Math.random() * (window.innerHeight - 40));
+  this.x = this.randomNormal({ mean: window.innerWidth/2, dev: 100 })
+  this.y = this.randomNormal({ mean: window.innerHeight/2, dev: 100 })
+  // this.x = 30 + (Math.random() * (window.innerWidth - 40));
+  // this.y = 30 + (Math.random() * (window.innerHeight - 40));
   this.vx = this.rand(-2,2)
   this.vy = this.rand(-2,2)
 }

@@ -214,9 +214,9 @@
           hit = false;
 
       //Apply mass, if the circles have mass properties
-      c1.mass = c1.mass || 10;
-      c2.mass = c2.mass || 10;
-
+      c1.mass = c1.mass || 1;
+      c2.mass = c2.mass || 1;
+      
       c1.radius = c1.diameter * vh
       c2.radius = c2.diameter * vh
       c1.xAnchorOffset = 0
@@ -329,5 +329,7 @@
       }
       return hit;
     }
+
+    // 拆分成 垂直切面 和 切面的 点积 在 分成 X 和 Y 轴 垂直切面的点积不相互影响  切面的 点积互相影响
 </script>
 </html>
