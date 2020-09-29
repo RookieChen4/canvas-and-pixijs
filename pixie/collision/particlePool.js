@@ -3,7 +3,7 @@ function ParticlePool() {
   this.creatParticle()
 }
 
-ParticlePool.NUM_PARTICLES = 30
+ParticlePool.NUM_PARTICLES = 100
 
 ParticlePool.prototype.creatParticle = function(){
   for (let i = 0; i < ParticlePool.NUM_PARTICLES; i++) {

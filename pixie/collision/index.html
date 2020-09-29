@@ -49,18 +49,16 @@
 
 
     let particlePool = new ParticlePool();
-    var canvas, ctx, vh, gradTexture;
+    var canvas, ctx, vh, gradTexture,mouseposition,mouseparticle = {};
+    const historyX = [];
+    const historyY = [];
     function setup() {
-        // bg = new Sprite(loader.resources["./bg.jpg"].texture);
-        // bg.width = app.screen.width
-        // bg.height = app.screen.height
-        // app.stage.addChild(bg);
-
+        mouseposition = app.renderer.plugins.interaction.mouse.global
         canvas = document.createElement('canvas');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         ctx = canvas.getContext('2d');
-        vh = canvas.height / 10;
+        vh = canvas.height / 50;
 
         gradTexture = PIXI.Texture.from(canvas)
         const sprite = new PIXI.Sprite(gradTexture);
@@ -74,6 +72,11 @@
     }
 
     function play(time) {
+        mouseparticle.x = mouseposition.x
+        mouseparticle.y = mouseposition.y
+        mouseparticle.vx = 2
+        mouseparticle.vy = -2
+        mouseparticle.diameter = 0.5
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particlePool.Particles.forEach((element,index) => {
             ctx.fillStyle = element.fillcolor;
@@ -81,8 +84,13 @@
             for(let i = index + 1; i < particlePool.Particles.length;i++) {
               movingCircleCollision(element,particlePool.Particles[i])
             }
+            movingCircleCollision(element, mouseparticle)
             contain(element,{x: 0, y: 0, width: canvas.width, height: canvas.height})
             ctx.arc(element.x += element.vx, element.y += element.vy, element.diameter * vh, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(mouseposition.x, mouseposition.y, 0.5 * vh, 0, 2 * Math.PI);
             ctx.fill();
         })
         gradTexture.update()
