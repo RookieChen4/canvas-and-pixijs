@@ -49,7 +49,14 @@
 
 
     let particlePool = new ParticlePool();
-    var canvas, ctx, vh, gradTexture,mouseposition,mouseparticle = {};
+    var canvas, ctx, vh, gradTexture,mouseposition,mouseparticle = {
+      mass: 1,
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      diameter: 0.5
+    };
     const historyX = [];
     const historyY = [];
     function setup() {
@@ -72,10 +79,10 @@
     }
 
     function play(time) {
+        mouseparticle.vx = (mouseposition.x - mouseparticle.x)
+        mouseparticle.vy = (mouseposition.y - mouseparticle.y)
         mouseparticle.x = mouseposition.x
         mouseparticle.y = mouseposition.y
-        mouseparticle.vx = 2
-        mouseparticle.vy = -2
         mouseparticle.diameter = 0.5
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particlePool.Particles.forEach((element,index) => {
@@ -84,8 +91,15 @@
             for(let i = index + 1; i < particlePool.Particles.length;i++) {
               movingCircleCollision(element,particlePool.Particles[i])
             }
-            movingCircleCollision(element, mouseparticle)
+            movingCircleCollision2(element, mouseparticle)
             contain(element,{x: 0, y: 0, width: canvas.width, height: canvas.height})
+            if (Math.abs(element.vx) > 3) {
+              element.vx = element.vx % 2;
+            }
+
+            if (Math.abs(element.vy) > 3) {
+              element.vy = element.vy % 2;
+            }
             ctx.arc(element.x += element.vx, element.y += element.vy, element.diameter * vh, 0, 2 * Math.PI);
             ctx.fill();
             ctx.fillStyle = 'white';
@@ -339,5 +353,138 @@
     }
 
     // 拆分成 垂直切面 和 切面的 点积 在 分成 X 和 Y 轴 垂直切面的点积不相互影响  切面的 点积互相影响
+
+
+    function movingCircleCollision2(c1, c2) {
+
+var combinedRadii = undefined,
+    overlap = undefined,
+    xSide = undefined,
+    ySide = undefined,
+
+//`s` refers to the distance vector between the circles
+s = {},
+    p1A = {},
+    p1B = {},
+    p2A = {},
+    p2B = {},
+    hit = false;
+
+//Apply mass, if the circles have mass properties
+c1.mass = c1.mass || 1;
+c2.mass = c2.mass || 1;
+
+c1.radius = c1.diameter * vh
+c2.radius = c2.diameter * vh
+c1.xAnchorOffset = 0
+c2.xAnchorOffset = 0
+c1.yAnchorOffset = 0
+c2.yAnchorOffset = 0
+//Use local coordinates
+s.vx = c2.x - c1.x;
+s.vy = c2.y - c1.y;
+
+//Find the distance between the circles by calculating
+//the vector's magnitude (how long the vector is)
+s.magnitude = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
+//Add together the circles' combined half-widths
+combinedRadii = c1.radius + c2.radius;
+
+//Figure out if there's a collision
+if (s.magnitude < combinedRadii) {
+  //Yes, a collision is happening
+  hit = true;
+
+  //Find the amount of overlap between the circles
+  overlap = combinedRadii - s.magnitude;
+
+  //Add some "quantum padding" to the overlap
+  overlap += 0.3;
+
+  //Normalize the vector.
+  //These numbers tell us the direction of the collision
+  s.dx = s.vx / s.magnitude;
+  s.dy = s.vy / s.magnitude;
+
+  //Find the collision vector.
+  //Divide it in half to share between the circles, and make it absolute
+  s.vxHalf = Math.abs(s.dx * overlap / 2);
+  s.vyHalf = Math.abs(s.dy * overlap / 2);
+
+  //Find the side that the collision is occurring on
+  c1.x > c2.x ? xSide = 1 : xSide = -1;
+  c1.y > c2.y ? ySide = 1 : ySide = -1;
+
+  //Move c1 out of the collision by multiplying
+  //the overlap with the normalized vector and adding it to
+  //the circles' positions
+  c1.x = c1.x + s.vxHalf * xSide;
+  c1.y = c1.y + s.vyHalf * ySide;
+
+  //Move c2 out of the collision
+  // c2.x = c2.x + s.vxHalf * -xSide;
+  // c2.y = c2.y + s.vyHalf * -ySide;
+
+  //1. Calculate the collision surface's properties
+
+  //Find the surface vector's left normal
+  s.lx = s.vy;
+  s.ly = -s.vx;
+
+  //2. Bounce c1 off the surface (s)
+
+  //Find the dot product between c1 and the surface
+  var dp1 = c1.vx * s.dx + c1.vy * s.dy;
+
+  //Project c1's velocity onto the collision surface
+  p1A.x = dp1 * s.dx;
+  p1A.y = dp1 * s.dy;
+
+  //Find the dot product of c1 and the surface's left normal (s.lx and s.ly)
+  var dp2 = c1.vx * (s.lx / s.magnitude) + c1.vy * (s.ly / s.magnitude);
+
+  //Project the c1's velocity onto the surface's left normal
+  p1B.x = dp2 * (s.lx / s.magnitude);
+  p1B.y = dp2 * (s.ly / s.magnitude);
+
+  //3. Bounce c2 off the surface (s)
+
+  //Find the dot product between c2 and the surface
+  var dp3 = c2.vx * s.dx + c2.vy * s.dy;
+
+  //Project c2's velocity onto the collision surface
+  p2A.x = dp3 * s.dx;
+  p2A.y = dp3 * s.dy;
+
+  //Find the dot product of c2 and the surface's left normal (s.lx and s.ly)
+  var dp4 = c2.vx * (s.lx / s.magnitude) + c2.vy * (s.ly / s.magnitude);
+
+  //Project c2's velocity onto the surface's left normal
+  p2B.x = dp4 * (s.lx / s.magnitude);
+  p2B.y = dp4 * (s.ly / s.magnitude);
+
+  //4. Calculate the bounce vectors
+
+  //Bounce c1
+  //using p1B and p2A
+  c1.bounce = {};
+  c1.bounce.x = p1B.x + p2A.x;
+  c1.bounce.y = p1B.y + p2A.y;
+
+  //Bounce c2
+  //using p1A and p2B
+  c2.bounce = {};
+  c2.bounce.x = p1A.x + p2B.x;
+  c2.bounce.y = p1A.y + p2B.y;
+
+  //Add the bounce vector to the circles' velocity
+  //and add mass if the circle has a mass property
+  c1.vx = c1.bounce.x / c1.mass;
+  c1.vy = c1.bounce.y / c1.mass;
+  c2.vx = c2.bounce.x / c2.mass;
+  c2.vy = c2.bounce.y / c2.mass;
+}
+return hit;
+}
 </script>
 </html>
