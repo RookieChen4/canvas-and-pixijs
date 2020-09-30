@@ -94,11 +94,11 @@
             movingCircleCollision2(element, mouseparticle)
             contain(element,{x: 0, y: 0, width: canvas.width, height: canvas.height})
             if (Math.abs(element.vx) > 3) {
-              element.vx = element.vx % 2;
+              element.vx = element.vx > 0 ? element.vx -= element.aX :element.vx += element.aX;
             }
 
             if (Math.abs(element.vy) > 3) {
-              element.vy = element.vy % 2;
+              element.vy = element.vy > 0 ? element.vy -= element.aY :element.vy += element.aY;
             }
             ctx.arc(element.x += element.vx, element.y += element.vy, element.diameter * vh, 0, 2 * Math.PI);
             ctx.fill();
@@ -346,8 +346,8 @@
         //and add mass if the circle has a mass property
         c1.vx = c1.bounce.x / c1.mass;
         c1.vy = c1.bounce.y / c1.mass;
-        c2.vx = c2.bounce.x / c2.mass;
-        c2.vy = c2.bounce.y / c2.mass;
+        // c2.vx = c2.bounce.x / c2.mass;
+        // c2.vy = c2.bounce.y / c2.mass;
       }
       return hit;
     }
