@@ -35,7 +35,6 @@
   // ropeSize determines how smooth the trail will be.
   const ropeSize = 100;
   const points = [];
-
   // Create history array.
   for (let i = 0; i < historySize; i++) {
       historyX.push(0);
@@ -54,6 +53,7 @@
 
   app.stage.addChild(rope);
 
+  let points2 = [0],rope2 = new PIXI.SimpleRope(trailTexture, points2);
   // Listen for animate update
   app.ticker.add((delta) => {
       // Read mouse points, this could be done also in mousemove/touchmove update. For simplicity it is done here for now.
@@ -71,13 +71,17 @@
           const p = points[i];
 
           // Smooth the curve with cubic interpolation to prevent sharp edges.
-          // const ix = cubicInterpolation(historyX, i / ropeSize * historySize);
-          // const iy = cubicInterpolation(historyY, i / ropeSize * historySize);
-          ix = historyX
-          iy = historyY
+          const ix = cubicInterpolation(historyX, i / ropeSize * historySize);
+          const iy = cubicInterpolation(historyY, i / ropeSize * historySize);
+        //   ix = historyX
+        //   iy = historyY
           p.x = ix;
           p.y = iy;
       }
+        points2 = deepClone(points)
+        rope2 = new PIXI.SimpleRope(trailTexture, points2);
+        app.stage.addChild(rope2);
+        
   });
 
 /**
@@ -103,6 +107,27 @@ function cubicInterpolation(array, t, tangentFactor) {
     const t2 = t * t;
     const t3 = t * t2;
     return (2 * t3 - 3 * t2 + 1) * p[0] + (t3 - 2 * t2 + t) * m[0] + (-2 * t3 + 3 * t2) * p[1] + (t3 - t2) * m[1];
+}
+function deepClone(obj){
+    if(typeof obj !== 'object' || obj == null){
+        //obj是null，或者不是对象和数组，直接返回
+        return obj
+    }
+    let result
+    if(obj instanceof Array){
+        result = []
+    }else{
+        result = {}
+    }
+    for(let key in obj){// for in 遍历对象可枚举属性，包括其原型的属性和方法
+        if(obj.hasOwnProperty(key)){ //保证key是原型的属性
+            //递归调用
+            result[key] = deepClone(obj[key])
+        }
+    }
+    //返回结果
+
+    return result
 }
 </script>
 </html>
