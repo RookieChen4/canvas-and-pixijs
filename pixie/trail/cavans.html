@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <style>
+  </style>
+  <body>
+    <canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
+  </body>
+  <script src="../utils/smooth.js"></script>
+  <script>
+    let writePath = Array.from({length:20},() => [0,0])
+    let point = [0,0]
+    let P = Array.from({length:100},() => [0,0])
+    
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.moveTo(0,0);
+    c.addEventListener('mousemove', showMousePosition, false);
+
+    function showMousePosition(event) {
+      point = [event.offsetX,event.offsetY]
+    }
+    function draw() {
+      writePath.pop();
+      writePath.unshift(point);
+      var path = Smooth(writePath, {
+        method: Smooth.METHOD_CUBIC, 
+        clip: Smooth.CLIP_PERIODIC, 
+        cubicTension: Smooth.CUBIC_TENSION_CATMULL_ROM
+      });
+      for(let i = 0; i < 100; i++) {
+        P[i] = path(i/100*20)
+      }
+      for(let i = 1; i< P.length; i ++) {
+        ctx.lineTo(...P[i]);
+      }
+      ctx.stroke();
+      requestAnimationFrame(draw)
+    }
+    draw()
+
+    function clipInput(k, arr) {
+    if (k < 0) k = 0;
+    if (k > arr.length - 1) k = arr.length - 1;
+    return arr[k];
+}
+
+function getTangent(k, factor, array) {
+    return factor * (clipInput(k + 1, array) - clipInput(k - 1, array)) / 2;
+}
+
+function cubicInterpolation(array, t, tangentFactor) {
+    if (tangentFactor == null) tangentFactor = 1;
+
+    const k = Math.floor(t);
+    const m = [getTangent(k, tangentFactor, array), getTangent(k + 1, tangentFactor, array)];
+    const p = [clipInput(k, array), clipInput(k + 1, array)];
+    t -= k;
+    const t2 = t * t;
+    const t3 = t * t2;
+    return (2 * t3 - 3 * t2 + 1) * p[0] + (t3 - 2 * t2 + t) * m[0] + (-2 * t3 + 3 * t2) * p[1] + (t3 - t2) * m[1];
+}
+  </script>
+</html>
