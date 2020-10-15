@@ -1,0 +1,103 @@
+<html>
+<body>
+<input type="file" name="上传" id="file"> 
+<button  type = "submit" onclick="Checkfile()">提交</button>
+<button  type = "submit" onclick="execute()">提取</button>
+<p>画布：</p>
+<canvas id="myCanvas" style="border:1px solid #d3d3d3;background:#ffffff;">
+</canvas>
+<script>
+  let filename;
+  let myCanvas = document.getElementById('myCanvas')
+  let pandown = false;
+  let point = [0,0]
+  let temp = Array.from({length:2},() => [0,0])
+  let id;
+  function showMousePosition(event) {
+      point = [event.offsetX,event.offsetY]
+  }
+  let ctx= myCanvas.getContext("2d");
+  async function Checkfile() {
+		let file = document.getElementById("file"); // 获取file文件
+		filename = file.files[0].name
+		let img = await fileToImage(file) // file文件转Base64 并创建image标签 添加src
+		width = img.width;
+    height = img.height;
+    myCanvas.width = img.width;
+    myCanvas.height = img.height;
+    ctx.drawImage(img, 0, 0, width, height)
+    myCanvas.addEventListener('click', 
+      (event) => {
+        point = [event.offsetX,event.offsetY]
+        temp = [[event.offsetX,event.offsetY],[event.offsetX,event.offsetY]]
+        ctx.moveTo(...point);
+        pandown = !pandown
+        if(pandown) {
+          draw()
+          myCanvas.addEventListener('mousemove', showMousePosition, false)
+        }else {
+          myCanvas.removeEventListener('mousemove', showMousePosition, false)
+          id = cancelAnimationFrame(id);
+        }
+      }, false);
+  }
+
+    function draw() {
+      temp.pop() 
+      temp.unshift(point);
+      ctx.strokeStyle = 'white'
+      ctx.lineTo(...point);
+      ctx.stroke();
+      id = requestAnimationFrame(draw)
+    }
+
+    function execute() {
+      let data = myCanvas.toDataURL('image/jpeg', 1) // 将画布转成Base64
+      let uploadFile = dataURLtoFile(data,filename) //Base64转file
+      downLoadFile(filename,uploadFile) //下载file文件
+    }
+
+    function downLoadFile(filename,blob){
+      let aLink = document.createElement('a');
+      aLink.download = filename;
+      aLink.href = URL.createObjectURL(blob);
+      aLink.click();
+    }
+
+    function dataURLtoFile (dataurl, filename) {
+	    var arr = dataurl.split(','),
+	        mime = arr[0].match(/:(.*?);/)[1],
+	        bstr = atob(arr[1]),
+	        n = bstr.length,
+	        u8arr = new Uint8Array(n);
+	    while (n--) {
+	        u8arr[n] = bstr.charCodeAt(n);
+	    }
+	    return new File([u8arr], filename, { type: mime });
+	  }
+
+
+  async function fileToImage(file){
+		let imgsrc = await filetoDataURL(file.files[0])
+		return new Promise(resolve=>{
+			let image = new Image();
+			image.onload = function() {
+				resolve(image)
+			}
+			image.src = imgsrc;
+		})
+  }
+  
+  // file 转 Base64
+	function filetoDataURL(file){
+		return new Promise(resolve=>{
+			var reader = new FileReader();
+			reader.onloadend = function(e){
+			  resolve(e.target.result);
+			};
+			reader.readAsDataURL(file);
+		})
+	};
+</script>
+</body>
+</html>
