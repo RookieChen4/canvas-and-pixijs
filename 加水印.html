@@ -2,6 +2,7 @@
 <body>
 <input type="file" name="上传" id="file"> 
 <button  type = "submit" onclick="Checkfile()">提交</button>
+<input type="text" id="text">
 <button  type = "submit" onclick="execute()">提取</button>
 <p>画布：</p>
 <canvas id="myCanvas" style="border:1px solid #d3d3d3;background:#ffffff;">
@@ -52,6 +53,10 @@
     }
 
     function execute() {
+      let text = document.getElementById("text").value;
+      ctx.font = "30px Arial";
+      ctx.strokeStyle = "white";
+      ctx.strokeText(text, 10, 50);
       let data = myCanvas.toDataURL('image/jpeg', 1) // 将画布转成Base64
       let uploadFile = dataURLtoFile(data,filename) //Base64转file
       downLoadFile(filename,uploadFile) //下载file文件
