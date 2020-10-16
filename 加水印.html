@@ -19,6 +19,7 @@
   }
   let ctx= myCanvas.getContext("2d");
   async function Checkfile() {
+    ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 		let file = document.getElementById("file"); // 获取file文件
 		filename = file.files[0].name
 		let img = await fileToImage(file) // file文件转Base64 并创建image标签 添加src
@@ -52,11 +53,16 @@
       id = requestAnimationFrame(draw)
     }
 
+
+    let padding = 10, fontSize = 30;
     function execute() {
+      fontSize = myCanvas.height * 0.3 - myCanvas.width * 0.1
       let text = document.getElementById("text").value;
-      ctx.font = "30px Arial";
+      ctx.font = fontSize + 'px Arial';
+      console.log(ctx.font)
       ctx.strokeStyle = "white";
-      ctx.strokeText(text, 10, 50);
+      let textWidth = ctx.measureText(text).width;
+      ctx.strokeText(text, (myCanvas.width - textWidth) - padding ,  (myCanvas.height) - padding);
       let data = myCanvas.toDataURL('image/jpeg', 1) // 将画布转成Base64
       let uploadFile = dataURLtoFile(data,filename) //Base64转file
       downLoadFile(filename,uploadFile) //下载file文件
