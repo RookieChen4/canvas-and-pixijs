@@ -10,13 +10,11 @@
 <script>
   let filename;
   let myCanvas = document.getElementById('myCanvas')
-  let pandown = false;
-  let point = [0,0]
+  let isDrawing = false;
+  let x = 0, y = 0;
   let temp = Array.from({length:2},() => [0,0])
   let id;
-  function showMousePosition(event) {
-      point = [event.offsetX,event.offsetY]
-  }
+
   let ctx= myCanvas.getContext("2d");
   async function Checkfile() {
     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
@@ -28,30 +26,41 @@
     myCanvas.width = img.width;
     myCanvas.height = img.height;
     ctx.drawImage(img, 0, 0, width, height)
-    myCanvas.addEventListener('click', 
-      (event) => {
-        point = [event.offsetX,event.offsetY]
-        temp = [[event.offsetX,event.offsetY],[event.offsetX,event.offsetY]]
-        ctx.moveTo(...point);
-        pandown = !pandown
-        if(pandown) {
-          draw()
-          myCanvas.addEventListener('mousemove', showMousePosition, false)
-        }else {
-          myCanvas.removeEventListener('mousemove', showMousePosition, false)
-          id = cancelAnimationFrame(id);
-        }
-      }, false);
-  }
 
-    function draw() {
-      temp.pop() 
-      temp.unshift(point);
-      ctx.strokeStyle = 'white'
-      ctx.lineTo(...point);
-      ctx.stroke();
-      id = requestAnimationFrame(draw)
+
+    myCanvas.addEventListener('mousedown', e => {
+      x = e.offsetX;
+      y = e.offsetY;
+      isDrawing = true;
+    });
+
+    myCanvas.addEventListener('mousemove', e => {
+      if (isDrawing === true) {
+        drawLine(ctx, x, y, e.offsetX, e.offsetY);
+        x = e.offsetX;
+        y = e.offsetY;
+      }
+    });
+
+    myCanvas.addEventListener('mouseup', e => {
+      if (isDrawing === true) {
+        drawLine(ctx, x, y, e.offsetX, e.offsetY);
+        x = 0;
+        y = 0;
+        isDrawing = false;
+      }
+    });
+
+    function drawLine(context, x1, y1, x2, y2) {
+      context.beginPath();
+      context.strokeStyle = 'white';
+      context.lineWidth = 1;
+      context.moveTo(x1, y1);
+      context.lineTo(x2, y2);
+      context.stroke();
+      context.closePath();
     }
+  }
 
 
     let padding = 10, fontSize = 30;
