@@ -3,6 +3,7 @@ let query = 'japanese'
 const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${ApiKey}&orientation=landscape`
 let canvas = document.getElementById('canvas')
 let container = document.getElementsByClassName('container')[0]
+const audio = document.getElementById('audio');
 canvas.width = canvas.offsetWidth * window.devicePixelRatio;
 canvas.height = canvas.offsetHeight * window.devicePixelRatio;
 let ctx = canvas.getContext('2d');
@@ -51,12 +52,37 @@ function request(url) {
         return response.json()
     })
 }
+
+function getJsonP(url) {
+    let script = document.createElement('script');
+    script.src = `${url}?callback=gotSong`;
+    script.type = 'application'
+    document.body.append(script);
+}
 async function getImg() {
-    imgList = (await request(url)).results
-    container.style.backgroundImage = `url(${imgList[0].urls.full})`;
-    draw()
+    try {
+        imgList = (await request(url)).results
+        container.style.backgroundImage = `url(${imgList[0].urls.full})`;
+        draw()
+    }catch {
+        console.error('get no img!')
+    }
 }
 
+async function findSong(id) {
+    try {
+        let url = `https://127.0.0.1:5500/song/media/outer/url?id=${id}`
+        // request(url)
+        request('https://127.0.0.1/')
+    }catch {
+        console.error('get no song!')
+    }
+}
+
+function gotSong(data) {
+    audio.src= data
+    audio.play();
+}
 async function renderImg(imgUrl) {
     let img = new Image();
     return new Promise(resolve=>{
@@ -83,15 +109,16 @@ function renderText() {
 }
 
 let padding = 10
+let height = 10
 let pwidth = (canvas.width - padding*(playList.length-1)) / playList.length
 function renderProgress() {
     let prewidth = 0
     for(let i = 0; i < playList.length; i++) {
         ctx.fillStyle = "white";
-        ctx.fillRect(prewidth, canvas.height/2, pwidth, 20)
+        ctx.fillRect(prewidth, canvas.height/2, pwidth, height)
         if(i <= PlayIndex) {
             ctx.fillStyle = "red";
-            ctx.fillRect(prewidth, canvas.height/2, pwidth, 20)
+            ctx.fillRect(prewidth, canvas.height/2, pwidth, height)
         }
         prewidth += pwidth
         prewidth += padding
@@ -106,6 +133,7 @@ async function draw() {
 }
 
 getImg()
+findSong(1453336773)
 
 canvas.addEventListener('click',() => {
     let index = Math.floor(Math.random()*10)
