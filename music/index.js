@@ -3,45 +3,17 @@ let query = 'japanese'
 const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${ApiKey}&orientation=landscape`
 let canvas = document.getElementById('canvas')
 let container = document.getElementsByClassName('container')[0]
-const audio = document.getElementById('audio');
+const audio = new Audio();
+audio.volume=0.05;
+
+let AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
+let audioContext = new AudioContext();//实例化
+
 canvas.width = canvas.offsetWidth * window.devicePixelRatio;
 canvas.height = canvas.offsetHeight * window.devicePixelRatio;
 let ctx = canvas.getContext('2d');
 let imgList = []
-let playList = [
-    {
-        id: 1,
-        name: 'satomoka - melt bitter'
-    },
-    {
-        id: 2,
-        name: '猫戦 - 鶴'
-    },
-    {
-        id: 3,
-        name: 'crap clap - The time'
-    },
-    {
-        id: 4,
-        name: 'pont - ディスコタウン'
-    },
-    {
-        id: 5,
-        name: 'ベルマインツ - 流星タクシー'
-    },
-    {
-        id: 6,
-        name: 'Dokkoise House - Free Throw(Album mix)'
-    },
-    {
-        id: 7,
-        name: 'FENNEC FENNEC - Going Down'
-    },
-    {
-        id: 8,
-        name: 'MELLOW MELLOW - WANING MOON'
-    }
-]
+let playList = []
 function request(url) {
     return fetch(url)
     .then(response => {
@@ -53,16 +25,13 @@ function request(url) {
     })
 }
 
-function getJsonP(url) {
-    let script = document.createElement('script');
-    script.src = `${url}?callback=gotSong`;
-    script.type = 'application'
-    document.body.append(script);
-}
+let playListId = '706754706'
 async function getImg() {
     try {
-        imgList = (await request(url)).results
-        container.style.backgroundImage = `url(${imgList[0].urls.full})`;
+        // imgList = (await request(url)).results
+        // container.style.backgroundImage = `url(${imgList[0].urls.full})`;
+        await findSong(playListId)
+        findSongUrl(playList[0].id)
         draw()
     }catch {
         console.error('get no img!')
@@ -71,18 +40,26 @@ async function getImg() {
 
 async function findSong(id) {
     try {
-        let url = `https://127.0.0.1:5500/song/media/outer/url?id=${id}`
-        // request(url)
-        request('https://127.0.0.1/')
+        let url = `http://127.0.0.1:83/api/playlist/detail?id=${id}`
+        playList = (await request(url)).playlist.tracks
     }catch {
         console.error('get no song!')
     }
 }
 
-function gotSong(data) {
-    audio.src= data
-    audio.play();
+let dataArray;
+// let source = audioContext.createMediaElementSource(audio);
+async function findSongUrl(id) {
+    let url = `http://127.0.0.1:83/song/media/outer/url?id=${id}`
+    audio.src = url
+    // let gainNode = audioContext.createGain();
+    // source.connect(gainNode);
+    // gainNode.connect(audioContext.destination);
+    // audio.play();
 }
+
+
+
 async function renderImg(imgUrl) {
     let img = new Image();
     return new Promise(resolve=>{
@@ -96,51 +73,116 @@ async function renderImg(imgUrl) {
 
 
 let PlayIndex = 0
+let fontSize = 36
 function renderText() {
     playList.forEach((it,index) => {
         ctx.fillStyle = "white";
-        ctx.font = "24px Arial";
+        ctx.font = `${fontSize}px Arial`;
         ctx.textBaseline = "middle";
         if(PlayIndex == index) {
-            ctx.font = "bold 30px Arial";
+            ctx.font = `bold ${fontSize+5}px Arial`;
         }
-        ctx.fillText(`0${index}. ${it.name}`, 100, 100 + index*34);
+        ctx.fillText(`0${index}. ${it.name}`, 100, 100 + index*(fontSize+10));
     })
 }
 
 let padding = 10
 let height = 10
-let pwidth = (canvas.width - padding*(playList.length-1)) / playList.length
-function renderProgress() {
+function renderTag() {
+    let pwidth = (canvas.width - padding*(playList.length-1)) / playList.length
     let prewidth = 0
     for(let i = 0; i < playList.length; i++) {
         ctx.fillStyle = "white";
-        ctx.fillRect(prewidth, canvas.height/2, pwidth, height)
+        ctx.fillRect(prewidth, canvas.height-height-padding, pwidth, height)
         if(i <= PlayIndex) {
             ctx.fillStyle = "red";
-            ctx.fillRect(prewidth, canvas.height/2, pwidth, height)
+            ctx.fillRect(prewidth, canvas.height-height-padding, pwidth, height)
         }
         prewidth += pwidth
         prewidth += padding
     }
 }
 
+let lineWidth = 15
+let radius = canvas.width * 0.2
+const PI2 = Math.PI * 2
+let progressPercent = 0
+
+function renderProgress() {
+    ctx.beginPath();
+    ctx.strokeStyle = '#e9e9e9';
+    ctx.lineWidth = lineWidth; 
+    ctx.arc(canvas.width - radius - padding * 10, canvas.height/2, radius,0,PI2); 
+    ctx.stroke();
+
+
+    const { duration, currentTime } = audio;
+    progressPercent = (currentTime / duration) * PI2
+    ctx.beginPath();
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = lineWidth; 
+    ctx.arc(canvas.width - radius - padding * 10, canvas.height/2, radius,0,progressPercent); 
+    ctx.stroke();
+    
+    ctx.translate(0,0)
+    ctx.rotate(0)
+    ctx.save()
+    ctx.translate(canvas.width - radius - padding * 10,canvas.height/2);
+    ctx.rotate(progressPercent);
+    ctx.beginPath();
+    ctx.fillStyle = 'red';
+    ctx.arc(radius, 0, 20,0,PI2); 
+    ctx.fill();
+    ctx.beginPath();
+    ctx.fillStyle = 'white';
+    ctx.arc(radius, 0, 10,0,PI2); 
+    ctx.fill();
+    ctx.restore()
+}
+
+function updateProgress(e) {
+    const { duration, currentTime } = e.srcElement;
+    progressPercent = (currentTime / duration) * PI2
+}
+
+
+Math.ease = function (t, b, c, d) {
+	t /= d;
+	return -c * t*(t-2) + b;
+};
+
 async function draw() {
     ctx.clearRect(0, 0,canvas.width,canvas.height);
     renderText()
+    renderTag()
     renderProgress()
     requestAnimationFrame(draw)
+    // console.log(dataArray)
 }
 
 getImg()
-findSong(1453336773)
+
 
 canvas.addEventListener('click',() => {
-    let index = Math.floor(Math.random()*10)
+    // let index = Math.floor(Math.random()*10)
     PlayIndex = (PlayIndex + 1) % playList.length
+    findSongUrl(playList[PlayIndex].id)
+    audio.play();
     // let imgurl = imgList[index].urls.full
     // container.style.backgroundImage = `url(${imgurl})`;
 })
+
+// audio.addEventListener('timeupdate', updateProgress);
+
+audio.addEventListener('ended', () => {
+    PlayIndex = (PlayIndex + 1) % playList.length
+    findSongUrl(playList[PlayIndex].id)
+    audio.play();
+});
+
+function playSong() {
+    audio.play();
+}
 
 window.addEventListener('resize', () => {
     console.log(canvas.width)
