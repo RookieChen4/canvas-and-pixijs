@@ -4,6 +4,7 @@ const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${A
 let canvas = document.getElementById('canvas')
 let container = document.getElementsByClassName('container')[0]
 const audio = new Audio();
+audio.crossOrigin = 'anonymous';
 audio.volume=0.05;
 
 let AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
@@ -47,15 +48,9 @@ async function findSong(id) {
     }
 }
 
-let dataArray;
-// let source = audioContext.createMediaElementSource(audio);
 async function findSongUrl(id) {
     let url = `http://127.0.0.1:83/song/media/outer/url?id=${id}`
     audio.src = url
-    // let gainNode = audioContext.createGain();
-    // source.connect(gainNode);
-    // gainNode.connect(audioContext.destination);
-    // audio.play();
 }
 
 
@@ -190,3 +185,40 @@ window.addEventListener('resize', () => {
     // canvas.height = canvas.offsetHeight * window.devicePixelRatio;
     // ctx = canvas.getContext("2d");
 })
+
+
+let source,gainNode;
+audio.addEventListener('play', () => {
+    source.disconnect()
+    gainNode.disconnect()
+    // Create a MediaElementAudioSourceNode
+    // Feed the HTMLMediaElement into it
+    source = audioContext.createMediaElementSource(audio);
+  
+    // Create a gain node
+    gainNode = audioContext.createGain();
+  
+    // Create variables to store mouse pointer Y coordinate
+    // and HEIGHT of screen
+    let CurY;
+    let HEIGHT = window.innerHeight;
+  
+    // Get new mouse pointer coordinates when mouse is moved
+    // then set new gain value
+  
+    document.onmousemove = updatePage;
+  
+    function updatePage(e) {
+        CurY = (window.Event) ? e.pageY : event.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop);
+  
+        gainNode.gain.value = CurY/HEIGHT;
+        audio.volume = CurY/HEIGHT;
+    }
+  
+  
+    // connect the AudioBufferSourceNode to the gainNode
+    // and the gainNode to the destination, so we can play the
+    // music and adjust the volume using the mouse cursor
+    source.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+  });
