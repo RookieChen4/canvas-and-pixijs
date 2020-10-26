@@ -20,6 +20,8 @@ canvas.height = canvas.offsetHeight * window.devicePixelRatio;
 let ctx = canvas.getContext('2d');
 let imgList = []
 let playList = []
+
+let x,y;
 function request(url) {
     return fetch(url)
     .then(response => {
@@ -107,7 +109,8 @@ let lineWidth = 15
 let radius = canvas.width * 0.2
 const PI2 = Math.PI * 2
 let progressPercent = 0
-
+let progressPointX = 0;
+let progressPointY = 0;
 function renderProgress() {
     ctx.beginPath();
     ctx.strokeStyle = '#e9e9e9';
@@ -138,6 +141,8 @@ function renderProgress() {
     ctx.arc(radius, 0, 10,0,PI2); 
     ctx.fill();
     ctx.restore()
+    progressPointX = canvas.width - radius - padding * 10 + radius*Math.cos(progressPercent)
+    progressPointY = canvas.height/2 + radius*Math.sin(progressPercent)
 }
 
 function renderVisualize() {
@@ -169,8 +174,8 @@ async function draw() {
     ctx.clearRect(0, 0,canvas.width,canvas.height);
     renderText()
     renderTag()
-    renderProgress()
     renderVisualize()
+    renderProgress()
     requestAnimationFrame(draw)
     analyser.getByteFrequencyData(dataArray);
 }
@@ -205,6 +210,12 @@ window.addEventListener('resize', () => {
     // canvas.height = canvas.offsetHeight * window.devicePixelRatio;
     // ctx = canvas.getContext("2d");
 })
+
+
+canvas.addEventListener('mousemove', e => {
+    x = e.offsetX;
+    y = e.offsetY;
+});
 
 
 let source,gainNode;
@@ -242,4 +253,15 @@ audio.addEventListener('play', () => {
     if (audioContext.state === 'suspended') {
         audioContext.resume();
     }
-  });
+});
+
+
+function isInCircle(x1,y1,r,x2,y2) {
+    let xRange = [x1 - r, x1 + r]
+    let yRange = [y1 - r, y1 + r]
+    if(x2 > xRange[0]&& x2 < xRange[1]&&y2>yRange[0]&&y2<yRange[1]) {
+        return true
+    }else {
+        return false
+    }
+}
