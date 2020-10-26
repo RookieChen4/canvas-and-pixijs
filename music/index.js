@@ -10,6 +10,11 @@ audio.volume=0.05;
 let AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 let audioContext = new AudioContext();//实例化
 
+let analyser = audioContext.createAnalyser();
+analyser.fftSize = 256;
+let bufferLength = analyser.frequencyBinCount;
+let dataArray = new Uint8Array(bufferLength);
+
 canvas.width = canvas.offsetWidth * window.devicePixelRatio;
 canvas.height = canvas.offsetHeight * window.devicePixelRatio;
 let ctx = canvas.getContext('2d');
@@ -135,6 +140,20 @@ function renderProgress() {
     ctx.restore()
 }
 
+function renderVisualize() {
+    let barWidth = (canvas.width / bufferLength) * 2.5;
+    let barHeight;
+    let x =0
+    for(var i = 0; i < bufferLength; i++) {
+        // ctx.fillRect(0,100,200,300);
+        barHeight = dataArray[i];
+        ctx.beginPath();
+        ctx.fillStyle = 'rgb(' + (barHeight+100) + ',50,50)';
+        ctx.fillRect(x,canvas.height-barHeight-height-padding-padding*0.5,barWidth,barHeight);
+        x += barWidth + 1;
+    }
+}
+
 function updateProgress(e) {
     const { duration, currentTime } = e.srcElement;
     progressPercent = (currentTime / duration) * PI2
@@ -151,8 +170,9 @@ async function draw() {
     renderText()
     renderTag()
     renderProgress()
+    renderVisualize()
     requestAnimationFrame(draw)
-    // console.log(dataArray)
+    analyser.getByteFrequencyData(dataArray);
 }
 
 getImg()
@@ -188,16 +208,13 @@ window.addEventListener('resize', () => {
 
 
 let source,gainNode;
+source = audioContext.createMediaElementSource(audio);
+gainNode = audioContext.createGain();
+
 audio.addEventListener('play', () => {
-    source.disconnect()
-    gainNode.disconnect()
-    // Create a MediaElementAudioSourceNode
-    // Feed the HTMLMediaElement into it
-    source = audioContext.createMediaElementSource(audio);
-  
-    // Create a gain node
-    gainNode = audioContext.createGain();
-  
+    source&&source.disconnect()
+    gainNode&&gainNode.disconnect()
+    analyser&&analyser.disconnect()
     // Create variables to store mouse pointer Y coordinate
     // and HEIGHT of screen
     let CurY;
@@ -220,5 +237,9 @@ audio.addEventListener('play', () => {
     // and the gainNode to the destination, so we can play the
     // music and adjust the volume using the mouse cursor
     source.connect(gainNode);
+    source.connect(analyser);
     gainNode.connect(audioContext.destination);
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
   });
