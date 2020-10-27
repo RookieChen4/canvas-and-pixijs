@@ -12,11 +12,12 @@
         .container {
             width: 100%;
             height: 100vh;
-            background-color:aquamarine;
-            background-image: none;
+            background: linear-gradient(-65deg,  #F8FFAE, #43C6AC);
+            position: relative;
+            /* background-image: none;
             background-size: cover;
             background-repeat: no-repeat;
-            background-position: center center;
+            background-position: center center; */
         }
         .main-wrap {
             width: 100%;
@@ -26,6 +27,17 @@
             width: 100%;
             height: 100vh;
         }
+        .control {
+            position: absolute;
+            display: flex;
+        }
+        #pause {
+            display: none;
+        }
+        .play {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -33,6 +45,18 @@
         <main class="main-wrap">
             <canvas id="canvas"></canvas>
         </main>
+        <div class="control">
+            <div class="pre">
+                <svg id="pre" t="1603781522113" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9791" width="100" height="100"><path d="M406.016 512l361.984-256 0 512zM256 256l86.016 0 0 512-86.016 0 0-512z" p-id="9792" fill="#ffffff"></path></svg>
+            </div>
+            <div class="play">
+                <svg id="pause" t="1603781192359" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5185" width="100" height="100"><path d="M685.237 808.447h-27.988c-33.594 0-56.016-27.988-56.016-55.996V310.049c0-33.594 28.008-55.996 56.016-55.996h27.988c33.594 0 56.016 28.008 56.016 55.996v436.816c5.585 33.594-22.423 61.582-56.016 61.582zM366.037 808.447h-27.988c-33.594 0-56.016-27.988-56.016-55.996V310.049c0-33.594 28.008-55.996 56.016-55.996h27.988c33.594 0 56.016 28.008 56.016 55.996v436.816c0 33.594-22.422 61.582-56.016 61.582z" p-id="5186" fill="#ffffff"></path></svg>
+                <svg id="play" t="1603780251458" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1151" width="80" height="80"><path d="M900.864 529.728l-758.848 421.728q-13.152 7.424-22.56 1.728t-9.44-20.576l0-841.152q0-14.848 9.44-20.576t22.56 1.728l758.848 421.728q13.152 7.424 13.152 17.728t-13.152 17.728z" p-id="1152" fill="#ffffff"></path></svg>
+            </div>
+            <div class="next">
+                <svg id="next" t="1603781258929" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7168" width="100" height="100"><path d="M256 768l362.666667-256L256 256 256 768zM682.666667 256l0 512 85.333333 0L768 256 682.666667 256z" p-id="7169" fill="#ffffff"></path></svg>
+            </div>
+        </div>
     </div>
 </body>
 <script src="./index.js"></script>
