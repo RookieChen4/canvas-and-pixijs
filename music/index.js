@@ -21,6 +21,8 @@ let ctx = canvas.getContext('2d');
 let imgList = []
 let playList = []
 
+const img = new Image()
+
 let x,y;
 function request(url) {
     return fetch(url)
@@ -50,6 +52,7 @@ async function findSong(id) {
     try {
         let url = `http://127.0.0.1:83/api/playlist/detail?id=${id}`
         playList = (await request(url)).playlist.tracks
+        img.src = playList[0].al.picUrl
     }catch {
         console.error('get no song!')
     }
@@ -167,6 +170,22 @@ function renderVisualize() {
     }
 }
 
+let holeRadius = 60
+function renderCover() {
+    ctx.translate(0,0)
+    ctx.rotate(0)
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(canvas.width - radius - padding * 10, canvas.height/2, radius*0.9 ,0,PI2);
+    ctx.moveTo(canvas.width - radius - padding * 10, canvas.height/2);
+    ctx.arc(canvas.width - radius - padding * 10, canvas.height/2, holeRadius,0,PI2,true);
+    ctx.clip();
+    ctx.translate(canvas.width - radius - padding * 10,canvas.height/2);
+    ctx.rotate(progressPercent * 5);
+    ctx.drawImage(img, -radius, - radius,radius*2,radius*2);
+    ctx.restore()
+}
+
 function updateProgress(e) {
     const { duration, currentTime } = e.srcElement;
     progressPercent = (currentTime / duration) * PI2
@@ -184,6 +203,7 @@ async function draw() {
     renderTag()
     renderVisualize()
     renderProgress()
+    renderCover()
     requestAnimationFrame(draw)
     analyser.getByteFrequencyData(dataArray);
 }
@@ -351,6 +371,7 @@ window.onload = function() {
     next.addEventListener('click',() => {
         PlayIndex = (PlayIndex + 1) % playList.length
         findSongUrl(playList[PlayIndex].id)
+        img.src = playList[PlayIndex].al.picUrl
         audio.play();
         play.style.display = 'none'
         pause.style.display = 'block'
@@ -362,6 +383,7 @@ window.onload = function() {
             PlayIndex = 0
         }
         findSongUrl(playList[PlayIndex].id)
+        img.src = playList[PlayIndex].al.picUrl
         audio.play();
         play.style.display = 'none'
         pause.style.display = 'block'
