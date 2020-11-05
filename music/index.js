@@ -170,6 +170,28 @@ function renderVisualize() {
     }
 }
 
+let percent = PI2 / bufferLength / 2
+function renderCircle() {
+    ctx.translate(0,0)
+    ctx.rotate(0)
+    ctx.save()
+    ctx.translate(canvas.width - radius - padding * 10,canvas.height/2);
+    ctx.beginPath();
+    ctx.strokeStyle = 'black';
+    ctx.arc(0, 0, radius * 1.15,0,PI2); 
+    ctx.stroke();
+    for(let i = 0; i < bufferLength * 2; i++) {
+
+        ellipseHeight = dataArray[i%bufferLength] % 40;
+        ctx.rotate(percent);
+        ctx.beginPath();
+        ctx.fillStyle = 'white';
+        ctx.fillRect(radius * 1.15, 0,4 + ellipseHeight,10); 
+        ctx.fill();
+    }
+    ctx.restore()
+}
+
 let holeRadius = 60
 function renderCover() {
     ctx.translate(0,0)
@@ -203,6 +225,7 @@ async function draw() {
     renderTag()
     renderVisualize()
     renderProgress()
+    renderCircle()
     renderCover()
     requestAnimationFrame(draw)
     analyser.getByteFrequencyData(dataArray);
