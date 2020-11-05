@@ -6,23 +6,34 @@ export class Particle {
     this.y = y;
     this.size = 2;
     this.color = color;
+
+    // 处理动画帧
+    this.frameNum = 0;
+    this.frameCount = Math.ceil(3000 / 16.66);
+    // 处理启动时间
+    this.delay = this.frameCount*Math.random();
+    this.delayCount = 0;
   }
-  draw(ctx) {
+  draw(ctx,x,y,size,color) {
     ctx.beginPath();
-    ctx.fillStyle = this.color
-    ctx.arc(this.baseX,this.baseY,this.size,0,Math.PI*2)
+    ctx.fillStyle = color
+    ctx.arc(x,y,size,0,Math.PI*2)
     ctx.closePath();
     ctx.fill()
   }
   update(ctx) {
-    let distanceX = this.x - this.baseX
-    let distanceY = this.y - this.baseY
-    if(distanceX!=0) {
-      this.baseX = this.baseX + (distanceX > 0 ? 1: -1) * 5
+    if(this.frameNum < this.frameCount) {
+      let curX = this.easeInOutCubic(this.frameNum, this.baseX, this.x-this.baseX, this.frameCount);
+      let curY = this.easeInOutCubic(this.frameNum, this.baseY, this.y-this.baseY, this.frameCount);
+      this.draw(ctx,curX, curY,this.size,this.color)
+      this.frameNum += 1;
+    } else {
+      this.draw(ctx,this.x, this.y, this.size,this.color)
     }
-    if(distanceY!=0) {
-      this.baseY = this.baseY + (distanceY > 0 ? 1: -1) * 5
-    }
-    this.draw(ctx)
+  }
+
+  easeInOutCubic(t, b, c, d) {
+    if ((t/=d/2) < 1) return c/2*t*t*t + b;
+    return c/2*((t-=2)*t*t + 2) + b;
   }
 }

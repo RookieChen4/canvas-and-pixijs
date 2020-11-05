@@ -25,8 +25,8 @@ class App {
     this.data = this.ctx.getImageData(0,0,this.stageWidth,this.stageHeight)
     this.ctx.clearRect(0,0,this.stageWidth,this.stageHeight)
     this.particleArray =[]
-    for(let y = 0; y < this.data.height; y+=5) {
-      for(let x = 0; x < this.data.width; x+=5) {
+    for(let y = 0; y < this.data.height; y+=6) {
+      for(let x = 0; x < this.data.width; x+=6) {
         let i = (y * 4 * this.data.width) + (x * 4)
         if(this.data.data[i + 3] > 128 && this.data.data[i] < 100) {
           let positionX = x;
@@ -39,9 +39,16 @@ class App {
   }
   animate() {
     this.ctx.clearRect(0,0,this.stageWidth,this.stageHeight)
-    this.particleArray.forEach(it => {
-      it.update(this.ctx)
-    })
+    for(let i = 0; i < this.particleArray.length; i++) {
+      if(this.particleArray[i].delayCount < this.particleArray[i].delay){
+        this.particleArray[i].delayCount += 1;
+        continue;
+      }
+      this.particleArray[i].update(this.ctx)
+    }
+    // this.particleArray.forEach(it => {
+    //   it.update(this.ctx)
+    // })
     requestAnimationFrame(this.animate.bind(this))
   }
 }
