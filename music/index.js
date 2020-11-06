@@ -5,7 +5,7 @@ let canvas = document.getElementById('canvas')
 let container = document.getElementsByClassName('container')[0]
 const audio = new Audio();
 audio.crossOrigin = 'anonymous';
-audio.volume=0.05;
+audio.volume=0.5;
 
 let AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 let audioContext = new AudioContext();//实例化
@@ -93,15 +93,35 @@ function renderText() {
 
 let padding = 10
 let height = 10
+let isOnTagList = Array.from({ length: playList.length }, () => false)
+let tagPercent = 0
 function renderTag() {
     let pwidth = (canvas.width - padding*(playList.length-1)) / playList.length
     let prewidth = 0
     for(let i = 0; i < playList.length; i++) {
+        let add = 0
+        isOnTagList[i] = false
+        if(isInRect(prewidth,canvas.height-height-padding,pwidth,height,x,y)) {
+            isOnTagList[i] = true
+            const [mouseX,mouseY] = translateMouse(x,y)
+            tagPercent = (mouseX - prewidth)/ pwidth
+            add = 5
+        }
         ctx.fillStyle = "white";
         ctx.fillRect(prewidth, canvas.height-height-padding, pwidth, height)
-        if(i <= PlayIndex) {
+        if(i < PlayIndex) {
             ctx.fillStyle = "red";
-            ctx.fillRect(prewidth, canvas.height-height-padding, pwidth, height)
+            ctx.fillRect(prewidth, canvas.height-height-padding - add/2, pwidth, height + add)
+        }
+        if(i == PlayIndex) {
+            const { duration, currentTime } = audio;
+            Percent = (currentTime / duration) * pwidth
+            ctx.fillStyle = "red";
+            ctx.fillRect(prewidth, canvas.height-height-padding - add/2, Percent, height + add)
+            ctx.beginPath()
+            ctx.arc(prewidth + Percent, canvas.height-height-padding + (height)/2, 10 ,0, PI2)
+            ctx.fill()
+            ctx.closePath()
         }
         prewidth += pwidth
         prewidth += padding
@@ -176,18 +196,21 @@ function renderCircle() {
     ctx.rotate(0)
     ctx.save()
     ctx.translate(canvas.width - radius - padding * 10,canvas.height/2);
-    ctx.beginPath();
-    ctx.strokeStyle = 'black';
-    ctx.arc(0, 0, radius * 1.15,0,PI2); 
-    ctx.stroke();
     for(let i = 0; i < bufferLength * 2; i++) {
-
         ellipseHeight = dataArray[i%bufferLength] % 40;
         ctx.rotate(percent);
         ctx.beginPath();
-        ctx.fillStyle = 'white';
-        ctx.fillRect(radius * 1.15, 0,4 + ellipseHeight,10); 
-        ctx.fill();
+        // let lingrad = ctx.createLinearGradient(0, 0, 5, 0);
+        // lingrad.addColorStop(0,'yellow');
+        // lingrad.addColorStop(0.5,'red');
+        // lingrad.addColorStop(1,'blue');    
+        ctx.lineCap = 'round'
+        // ctx.strokeStyle = lingrad
+        ctx.strokeStyle = 'rgba(' + (255-i) + ', ' + 255 + ',' + (i) + ',0.9)';
+        ctx.lineWidth = 5
+        ctx.moveTo(radius + lineWidth, 0)
+        ctx.lineTo(radius + lineWidth + ellipseHeight, 0)
+        ctx.stroke()
     }
     ctx.restore()
 }
@@ -224,8 +247,8 @@ async function draw() {
     renderText()
     renderTag()
     renderVisualize()
-    renderProgress()
     renderCircle()
+    renderProgress()
     renderCover()
     requestAnimationFrame(draw)
     analyser.getByteFrequencyData(dataArray);
@@ -284,6 +307,15 @@ canvas.addEventListener('mousedown', e => {
     if(isOnProgressPoint) {
         moveProgressPoint = true
     }
+    isOnTagList.forEach((it,index) => {
+        if(it) {
+            PlayIndex = index
+            findSongUrl(playList[PlayIndex].id)
+            img.src = playList[PlayIndex].al.picUrl
+            audio.play()
+            // audio.currentTime = audio.duration * tagPercent
+        }
+    })
 });
 
 canvas.addEventListener('mouseup', e => {
@@ -335,6 +367,15 @@ function isInCircle(x1,y1,r,x2,y2) {
     let xRange = [x1 - r, x1 + r]
     let yRange = [y1 - r, y1 + r]
     if(x2 > xRange[0]&& x2 < xRange[1]&&y2>yRange[0]&&y2<yRange[1]) {
+        return true
+    }else {
+        return false
+    }
+}
+
+function isInRect(x,y,width,height,mouseX,mouseY) {
+    [mouseX,mouseY] = translateMouse(mouseX,mouseY)
+    if(mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
         return true
     }else {
         return false
