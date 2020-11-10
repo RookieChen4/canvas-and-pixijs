@@ -3,7 +3,7 @@ class App {
   constructor() {
     this.canvas = document.createElement('canvas')
     this.ctx =  this.canvas.getContext('2d')
-    this.fontSize = 600
+    this.fontSize = 200
     this.text = 'hello'
     document.body.appendChild(this.canvas)
     window.addEventListener('resize',this.resize.bind(this),false)
@@ -25,8 +25,8 @@ class App {
     this.data = this.ctx.getImageData(0,0,this.stageWidth,this.stageHeight)
     this.ctx.clearRect(0,0,this.stageWidth,this.stageHeight)
     this.particleArray =[]
-    for(let y = 0; y < this.data.height; y+=6) {
-      for(let x = 0; x < this.data.width; x+=6) {
+    for(let y = 0; y < this.data.height; y+=3) {
+      for(let x = 0; x < this.data.width; x+=3) {
         let i = (y * 4 * this.data.width) + (x * 4)
         if(this.data.data[i + 3] > 128 && this.data.data[i] < 100) {
           let positionX = x;

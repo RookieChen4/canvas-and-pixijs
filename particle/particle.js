@@ -1,7 +1,7 @@
 export class Particle {
   constructor(x,y,color) {
     this.baseX = window.innerWidth/2;
-    this.baseY = window.innerHeight/2;
+    this.baseY = 0
     this.x = x;
     this.y = y;
     this.size = 2;
