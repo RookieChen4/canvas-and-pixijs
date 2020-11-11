@@ -24,7 +24,28 @@ export class App {
     this.RainPool.rainPool.forEach(it => {
       this.ctx.beginPath()
       it.drop(this.ctx)
+      if (it.y > this.stageHeight) {
+        it.splash();
+      }
       this.ctx.stroke()
+      it.drop_pool.forEach(it => {
+        it.x += it.speed_x * 0.4;
+        it.y += it.speed_y * 0.4;
+        // apply gravity - magic number 0.3 represents a faked gravity constant
+        it.speed_y += 0.3 * 0.4;
+        // apply wind (but scale back the force)
+        it.speed_x += 4 / 25 * 0.4;
+        if (it.speed_x < -5) {
+          it.speed_x = -5;
+        }else if (it.speed_x > 5) {
+          it.speed_x = 5;
+        }
+        // // recycle
+        // if (it.y > height + it.radius) {
+        //   drops.splice(i, 1);
+        // }
+        this.ctx.drawImage(it.canvas, it.x-it.radius, it.y-it.radius);
+      })
     })
     requestAnimationFrame(this.animate.bind(this))
   }

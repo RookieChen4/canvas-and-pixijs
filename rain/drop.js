@@ -28,4 +28,12 @@ export class Drop {
         this.ctx.fillStyle = grd;
         this.ctx.fillRect(0, 0, diameter, diameter);
     }
+    init(x) {
+        this.x = x;
+        this.y = window.innerHeight;
+        let angle = Math.random() * Math.PI - (Math.PI * 0.5);
+        let speed = Math.random() * 5;
+        this.speed_x = Math.sin(angle) * speed;
+        this.speed_y = -Math.cos(angle) * speed;
+    }
 }
