@@ -1,11 +1,9 @@
-import { drop } from './drop.js'
+import { Drop } from './drop.js'
 export class dropPool {
     constructor() {
+      this.dropPool = []
     }
-    addDrop() {
-      
-    }
-    recycle(index) {
-      this.rainPool.splice(index, 1);
+    recycle(drop) {
+      this.dropPool.push(drop);
     }
 }

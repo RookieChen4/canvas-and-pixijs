@@ -1,17 +1,17 @@
-import { rainPool } from './rainpool.js'
+import { Rain } from './rain.js'
 import { Drop } from './drop.js'
+import { rainPool } from './rainpool.js'
+import { dropPool } from './dropPool.js'
 import { Wind } from './wind.js'
 export class App {
   constructor() {
     this.canvas = document.createElement('canvas')
     this.ctx =  this.canvas.getContext('2d')
-    this.dpr = window.devicePixelRatio || 1;
-    this.drop_pool = []
     document.body.appendChild(this.canvas)
     window.addEventListener('resize',this.resize.bind(this),false)
     this.resize()
     this.init()
-    this.animate()
+    requestAnimationFrame(this.animate.bind(this))
   }
   resize() {
     this.stageWidth = window.innerWidth
@@ -20,54 +20,91 @@ export class App {
     this.canvas.height = this.stageHeight
   }
   init() {
-    this.RainPool = new rainPool(this.stageWidth, this.stageHeight)
+    this.color = {
+      r: '255',
+      g: '255',
+      b: '255',
+      a: '0.5'
+    };
+    this.fps = 16.67;
+    this.dpr = window.devicePixelRatio || 1;
+    this.last_timestamp = 0;
+    this.multiplier = 0;
+    this.drop_time = 0;
+    this.drop_delay = 25;
+    this.speed = 1;
+    this.rain = [];
+    this.drop = [];
+    this.rain_Pool = new rainPool()
+    this.drop_pool = new dropPool()
   }
-  animate() {
+  animate(time) {
+    let frame_time = time - this.last_timestamp
+    this.last_timestamp = time
+    if (frame_time < 0) {
+			frame_time = 17;
+		}
+		else if (frame_time > 68) {
+			frame_time = 68;
+		}
+    this.multiplier = this.speed * frame_time / this.fps
+    this.drop_time += frame_time*this.speed
+    while(this.drop_time > this.drop_delay) {
+      this.drop_time -= this.drop_delay
+      let new_rain = this.rain_Pool.rainPool.pop() || new Rain();
+      let wind_expand = Math.abs(this.stageHeight / this.speed * Wind.wind);
+      let spawn_x = Math.random() * (this.stageWidth + wind_expand);
+      spawn_x -= wind_expand;
+      let color = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',' + this.color.a + ')'
+      new_rain.init(spawn_x,color)
+      this.rain.push(new_rain)
+    }
     this.ctx.clearRect(0,0,this.stageWidth,this.stageHeight)
-    this.ctx.fillRect(0,0,this.stageWidth,this.stageHeight)
-    this.RainPool.rainPool.forEach((it,index) => {
-      this.ctx.beginPath()
-      it.drop(this.ctx)
-      if (it.y >= this.stageHeight) {
-        if(!it.splashed) {
-          this.splash(it.x);
-          it.splashed = true
+    this.ctx.beginPath();
+    for (let i = this.rain.length - 1; i >= 0; i--) {
+      let r = this.rain[i];
+      r.drop(this.ctx,this.multiplier)
+      if (r.y > this.stageHeight) {
+        if(!r.splashed) {
+          this.splash(r.x);
+          r.splash = true
         }
       }
-      if (it.y > this.stageHeight + it.height * 2|| (Wind.wind < 0 && it.x < Wind.wind) || (Wind.wind > 0 && it.x > this.stageWidth + Wind.wind)) {
-        this.RainPool.recycle(index)
+      // // recycle rain
+      if (r.y > this.stageHeight + r.height * r.z || (Wind.wind < 0 && r.x < Wind.wind) || (Wind.wind > 0 && r.x > this.stageWidth + Wind.wind)) {
+        this.rain_Pool.recycle(r);
+        this.rain.splice(i, 1);
       }
-      this.ctx.stroke()
-    })
-    this.drop_pool.forEach((item,index) => {
+    }
+    this.ctx.stroke()
+    // for(let i = this.drop.length - 1; i >= 0; i--){
+    //   let drop = this.drop[i]
+    //   drop.update(this.multiplier)
+    //   let x = drop.x - this.radius;
+    //   let y = drop.y - this.radius;
+    //   this.ctx.drawImage(drop.canvas, x, y);
+    //   if (drop.y > this.stageHeight + drop.radius) {
+    //     this.drop_pool.recycle(drop);
+    //     this.drop.splice(i, 1);
+    //   }
+    // }
+    this.drop.forEach((item,index) => {
       item.x += item.speed_x * 0.4;
       item.y += item.speed_y * 0.4;
       // apply gravity - magic number 0.3 represents a faked gravity constant
       item.speed_y += 0.3 * 0.4;
       // apply wind (but scale back the force)
       item.speed_x += 4 / 25 * 0.4;
-      // if (item.speed_x < -5) {
-      //   item.speed_x = -5;
-      // }else if (item.speed_x > 5) {
-      //   item.speed_x = 5;
-      // }
-      // recycle
-      if (item.y > this.stageHeight + item.radius * 10) {
-        this.recycle(index);
-      }
       this.ctx.drawImage(item.canvas, item.x-item.radius, item.y-item.radius);
     })
     requestAnimationFrame(this.animate.bind(this))
   }
   splash(x) {
     for (var i=0; i<16; i++) {
-      let drop = new Drop()
-      drop.init(x);
-			this.drop_pool.push(drop);
+      let drop = this.drop_pool.dropPool.pop() || new Drop();
+      drop.init(x,this.stageHeight)
+      this.drop.push(drop)
 		}
-  }
-  recycle(index) {
-    this.drop_pool.splice(index, 1);
   }
 }
 
@@ -82,10 +119,4 @@ window.onload = () => {
     Wind.wind = (x - 0.5) * 50;
   }
   document.addEventListener('mousemove', mouseHandler);
-}
-
-
-
-function rand(low, high) {
-  return Math.random() * (high - low) + low;
 }
