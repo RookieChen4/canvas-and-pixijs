@@ -77,26 +77,17 @@ export class App {
       }
     }
     this.ctx.stroke()
-    // for(let i = this.drop.length - 1; i >= 0; i--){
-    //   let drop = this.drop[i]
-    //   drop.update(this.multiplier)
-    //   let x = drop.x - this.radius;
-    //   let y = drop.y - this.radius;
-    //   this.ctx.drawImage(drop.canvas, x, y);
-    //   if (drop.y > this.stageHeight + drop.radius) {
-    //     this.drop_pool.recycle(drop);
-    //     this.drop.splice(i, 1);
-    //   }
-    // }
-    this.drop.forEach((item,index) => {
-      item.x += item.speed_x * 0.4;
-      item.y += item.speed_y * 0.4;
-      // apply gravity - magic number 0.3 represents a faked gravity constant
-      item.speed_y += 0.3 * 0.4;
-      // apply wind (but scale back the force)
-      item.speed_x += 4 / 25 * 0.4;
-      this.ctx.drawImage(item.canvas, item.x-item.radius, item.y-item.radius);
-    })
+    for(let i = this.drop.length - 1; i >= 0; i--){
+      let drop = this.drop[i]
+      drop.update(this.multiplier)
+      let x = drop.x - drop.radius;
+      let y = drop.y - drop.radius;
+      this.ctx.drawImage(drop.canvas, x, y);
+      if (drop.y > this.stageHeight + drop.radius) {
+        this.drop_pool.recycle(drop);
+        this.drop.splice(i, 1);
+      }
+    }
     requestAnimationFrame(this.animate.bind(this))
   }
   splash(x) {
@@ -116,6 +107,9 @@ window.onload = () => {
   let updateCursor = function(x, y) {
     x /= app.stageWidth
     y /= app.stageHeight;
+    let y_inverse = (1 - y);
+	
+    app.drop_delay = y_inverse*y_inverse*y_inverse * 100 + 2;
     Wind.wind = (x - 0.5) * 50;
   }
   document.addEventListener('mousemove', mouseHandler);

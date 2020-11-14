@@ -38,23 +38,17 @@ export class Drop {
         this.speed_x = Math.sin(angle) * speed;
         this.speed_y = -Math.cos(angle) * speed;
     }
-    update() {
-        this.x += this.speed_x * 0.4;
-        this.y += this.speed_y * 0.4;
+    update(multiplier) {
+        this.x += this.speed_x * multiplier;
+        this.y += this.speed_y * multiplier;
         // apply gravity - magic number 0.3 represents a faked gravity constant
-        this.speed_y += 0.3 * 0.4;
+        this.speed_y += 0.3 * multiplier;
         // apply wind (but scale back the force)
-        this.speed_x += 4 / 25 * 0.4;
-        // this.x += this.speed_x * 0.4;
-        // this.y += this.speed_y * 0.4;
-        // // apply gravity - magic number 0.3 represents a faked gravity constant
-        // this.speed_y += 0.3 * 0.4;
-        // // apply wind (but scale back the force)
-        // this.speed_x += Wind.wind / 25 * 0.4;
-        // if (this.speed_x < -Drop.max_speed) {
-        //     this.speed_x = -Drop.max_speed;
-        // }else if (this.speed_x > Drop.max_speed) {
-        //     this.speed_x = Drop.max_speed;
-        // }
+        this.speed_x += Wind.wind / 25 * multiplier;
+        if (this.speed_x < -Drop.max_speed) {
+            this.speed_x = -Drop.max_speed;
+        }else if (this.speed_x > Drop.max_speed) {
+            this.speed_x = Drop.max_speed;
+        }
     }
 }
