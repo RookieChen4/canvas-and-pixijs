@@ -1,6 +1,11 @@
 import { Particle } from './particle.js'
+import { Tile } from './tile.js'
 class App {
   constructor() {
+    this.last_timestamp = 0;
+    this.drop_delay = 25;
+    this.total_time = 0;
+    this.animate_index = 0;
     this.canvas = document.createElement('canvas')
     this.ctx =  this.canvas.getContext('2d')
     document.body.appendChild(this.canvas)
@@ -17,7 +22,7 @@ class App {
   }
   init() {
     const img = new Image()
-    img.src = '../images/1.jpg'
+    img.src = './2.jpg'
     img.addEventListener('load',this.drawImage.bind(this,img),false)
   }
   drawImage(img) {
@@ -43,21 +48,51 @@ class App {
     // this.animate()
   }
   splitImg(img) {
-    let part = 15
-    let divideX = img.width / part
-    let divideY = img.height / part
-    let distance = 1
-    for(let i =0; i < part; i++) {
-      for(let j = 0; j < part;j++)
-      this.ctx.drawImage(img, divideX*i, divideY*j, divideX, divideY, (divideX + distance)*i, (divideY+distance)*j, divideX, divideY);
+    this.tileList = []
+    let Xpart = 15
+    let Ypart = 8
+    let divideX = img.width / Xpart
+    let divideY = img.height / Ypart
+    this.mutiX = this.stageWidth/ img.width
+    this.mutiY = this.stageHeight/ img.height
+    let index = 0;
+    for(let j = Ypart; j >= 0; j--) {
+      for(let i = 0; i < Xpart;i++){
+        let real_x = this.mutiX * (divideX + 10) * (i) + 1
+        let real_y = this.mutiY * (divideY+10) * (j) - 20
+        var tile = new Tile(divideX,divideY,real_x,real_y,index)
+        tile.init(img,divideX*i,divideY*j)
+        this.tileList.push(tile)
+        index++;
+      }
     }
+    requestAnimationFrame(this.animate.bind(this))
   }
-  animate() {
-    // this.ctx.clearRect(0,0,this.stageWidth,this.stageHeight)
-    for(let i = 0; i < this.particleArray.length; i++) {
-      this.particleArray[i].draw(this.ctx)
+  animate(time) {
+    let frame_time = time - this.last_timestamp
+    if (frame_time < 0) {
+			frame_time = 17;
+		}
+		else if (frame_time > 68) {
+			frame_time = 20;
     }
-    // requestAnimationFrame(this.animate.bind(this))
+    this.total_time += frame_time
+    this.ctx.clearRect(0,0,this.stageWidth,this.stageHeight)
+    // for(let i = 0; i < this.particleArray.length; i++) {
+    //   this.particleArray[i].draw(this.ctx)
+    // }
+    for(let i = 0; i < this.tileList.length; i++) {
+      let tile = this.tileList[i]
+      if((i) * (this.drop_delay + 250) <= this.total_time + 2000) {
+        tile.updatePosition()
+      }
+      this.ctx.drawImage(tile.canvas, tile.baseX, tile.baseY, this.mutiX * tile.width, this.mutiY * tile.height);
+    }
+    // this.animate_index ++
+    // if(this.animate_index > this.tileList.length) {
+    //   this.animate_index = this.tileList.length
+    // }
+    requestAnimationFrame(this.animate.bind(this))
   }
 }
 
