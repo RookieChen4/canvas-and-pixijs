@@ -51,15 +51,15 @@ class App {
     this.tileList = []
     let Xpart = 15
     let Ypart = 8
+    this.mutiX = this.stageWidth / img.width
+    this.mutiY = this.stageHeight/ img.height
     let divideX = img.width / Xpart
     let divideY = img.height / Ypart
-    this.mutiX = this.stageWidth/ img.width
-    this.mutiY = this.stageHeight/ img.height
     let index = 0;
-    for(let j = Ypart; j >= 0; j--) {
+    for(let j = 0; j < Ypart;j++) {
       for(let i = 0; i < Xpart;i++){
-        let real_x = this.mutiX * (divideX + 10) * (i) + 1
-        let real_y = this.mutiY * (divideY+10) * (j) - 20
+        let real_x = this.mutiX * (divideX) * (i)
+        let real_y = this.mutiY * (divideY) * (j)
         var tile = new Tile(divideX,divideY,real_x,real_y,index)
         tile.init(img,divideX*i,divideY*j)
         this.tileList.push(tile)
