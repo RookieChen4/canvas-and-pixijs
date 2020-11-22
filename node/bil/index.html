@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id='captchaBox'></div>
+</body>
+<script src="https://cdn.bootcss.com/jsencrypt/3.0.0-beta.1/jsencrypt.js"></script>
+<script src="./gt.js"></script>
+<script>
+    const username = '18752011108'
+    const passWord = 'fyl520'
+    function request(url) {
+        return fetch(url)
+        .then(response => {
+            if(response.status != 200) {
+                throw new Error('Whoops!')
+                return
+            }
+            return response.json()
+        })
+    }
+
+    let hash,key,encryptData,challenge,validate,seccode,selectkey;
+    async function getKashAndKey() {
+        const data = await request('http://127.0.0.1:83/bilibili/login?act=getkey')
+        hash = data.hash
+        key = data.key.replace("-----BEGIN PUBLIC KEY-----","").replace("-----END PUBLIC KEY-----","").replace(/[\r\n]/g,"").replace(/\ +/g,"");
+        getPassWord()
+    }
+
+    function getPassWord() {
+        let encrypt = new JSEncrypt();
+        encrypt.setPublicKey(key);
+        encryptData = encrypt.encrypt(hash+passWord);//加密后的字符串
+        login()
+    }
+
+    async function login() {
+        const data = await request('http://127.0.0.1:83/bilibili/web/captcha/combine?plat=6')
+        let gt = data.data.result.gt
+        challenge = data.data.result.challenge
+        selectkey = data.data.result.key
+        initGeetest({
+            // 以下 4 个配置参数为必须，不能缺少
+            gt: gt,
+            challenge: challenge,
+            offline: false, // 表示用户后台检测极验服务器是否宕机
+            new_captcha: true, // 用于宕机时表示是新验证码的宕机
+            product: "popup", // 产品形式，包括：float，popup
+            width: "300px",
+            https: true
+        }, handler);
+    }
+    getKashAndKey()
+
+
+    const handler = function (captchaObj) {
+        let captchaBox = document.getElementById('captchaBox')
+        captchaObj.appendTo(captchaBox);
+        captchaObj.onSuccess(async function () {
+            const result = captchaObj.getValidate();
+            validate = result.geetest_validate;
+            seccode = result.geetest_seccode;
+            let form = {
+                captchaType: 6,
+                username : username,
+                password: encryptData,
+                keep: true,
+                key: selectkey,
+                challenge: challenge,
+                validate: validate,
+                seccode: seccode
+            }
+            // let respones = await fetch('/test/', {
+            //     method: 'POST',
+            //     headers: {
+            //         "Content-Type" : "application/x-www-form-urlencoded"
+            //     },
+            //     body: test(form)
+            // });
+
+            let data = await fetch('/Bapi/nav', {
+                method: 'GET',
+                credentials: "include",
+            });
+        });
+    };
+
+    function test(data) {
+        let ret = ''
+        for (let it in data) {
+            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+        }
+        return ret
+    }
+</script>
+</html>
