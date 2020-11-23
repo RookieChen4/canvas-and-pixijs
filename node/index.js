@@ -8,19 +8,27 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 app.get('/', (req, res) => {
 })
 
-app.post('/test',(req, res) => {
-    let form = req.body
-    let url = `http://passport.bilibili.com/web/login/v2`
-    axios.post(url,test(form))
-    .then(res=>{
-        console.log(res.headers['set-cookie'][2].split(';')[0].split('=')[1])
-    })
+app.post('/nav',async (req, res) => {
+    try {
+        // let form = req.body
+        // let url = `http://passport.bilibili.com/web/login/v2`
+        // let respnse = await axios.post(url,transformData(form))
+        // const cookie = respnse.headers['set-cookie'][2].split(';')[0]
+        const data = await axios.get('http://api.bilibili.com/nav', 
+            {headers: {'cookie': 'SESSDATA=36a1ea9a%2C1619659635%2C1b936*a1'}
+        })
+        res.send(data.data)
+    } catch(err) {
+        res.send('Whoops !')
+        console.log(err)
+    }
+
 })
 
 app.listen(3000,()=>{
 })
 
-function test(data) {
+function transformData(data) {
     let ret = ''
     for (let it in data) {
         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
