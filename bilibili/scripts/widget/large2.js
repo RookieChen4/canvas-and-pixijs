@@ -2,7 +2,7 @@ const { info } = require("console");
 const colors = require("../constants/colors");
 const fonts = require("../constants/fonts");
 
-const logoHeight = 40
+const logoHeight = 30
 module.exports = (ctx, items) => {
   let image = $cache.get("image")
   const fdata = $cache.get("fdata")
