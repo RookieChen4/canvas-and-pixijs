@@ -35,6 +35,23 @@ app.post('/nav',async (req, res) => {
 
 })
 
+app.post('/followings',async (req, res) => {
+    try {
+        // let form = req.body
+        // let url = `http://passport.bilibili.com/web/login/v2`
+        // let respnse = await axios.post(url,transformData(form))
+        // const cookie = respnse.headers['set-cookie'][2].split(';')[0]
+        const data = await axios.get('http://api.bilibili.com/x/relation/followings?vmid=293793435', 
+            {headers: {'cookie': 'SESSDATA=36a1ea9a%2C1619659635%2C1b936*a1'}
+        })
+        res.send(data.data)
+    } catch(err) {
+        res.send('Whoops !')
+        console.log(err)
+    }
+
+})
+
 app.listen(3000,()=>{
 })
 
