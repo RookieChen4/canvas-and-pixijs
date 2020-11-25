@@ -5,7 +5,7 @@ module.exports = (ctx,items) => {
   const width = ctx.displaySize.width
   let image = $cache.get("image")
   if(!image) {
-    img = $image("../../assets/icon.png")
+    image = $image("../../assets/icon.png")
   }
   return {
     type: "vstack",
@@ -32,16 +32,13 @@ module.exports = (ctx,items) => {
         type: "image",
         props: {
           image: image,
-          cornerRadius: {
-            value: 200,
-            style: 1 // 0: circular, 1: continuous
-          },
+          cornerRadius: 50,
           resizable: true,
           scaledToFill: true,
           frame: {
             width: 100,
             height: 100,
-            alignment: $widget.alignment.center
+            // alignment: $widget.alignment.center
           },
         }
       },

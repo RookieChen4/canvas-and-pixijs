@@ -20,7 +20,7 @@ module.exports = (ctx, items) => {
           endPoint: $point(1, 1), // {"x": 0, "y": 1}
           colors: [
             $color("#B24592"),
-            $color("#F15F79"),
+            $color("#ff7979"),
           ]
         }
       },
@@ -51,10 +51,7 @@ module.exports = (ctx, items) => {
             type: "image",
             props: {
               image: image,
-              cornerRadius: {
-                value: 200,
-                style: 1 // 0: circular, 1: continuous
-              },
+              cornerRadius: 50,
               resizable: true,
               scaledToFill: true,
               frame: {

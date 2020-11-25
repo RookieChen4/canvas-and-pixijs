@@ -2,6 +2,7 @@ const api = require("./api");
 const emptyWidget = require("./widget/empty");
 const smallWidget = require("./widget/small");
 const mediumWidget = require("./widget/medium");
+const largeWidget = require("./widget/large");
 
 exports.init = async() => {
   const items = await api.fetch();
@@ -15,7 +16,7 @@ exports.init = async() => {
       case $widgetFamily.medium:
         return mediumWidget(ctx,items);
       case $widgetFamily.large:
-        return mediumWidget(ctx,items);
+        return largeWidget(ctx,items);
     }
   });
 }
