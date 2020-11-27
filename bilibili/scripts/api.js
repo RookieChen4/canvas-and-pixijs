@@ -1,4 +1,4 @@
-const endpoint = "http://192.168.0.113:3000/nav";
+const endpoint = "http://192.168.1.111:3000/nav";
 const cachePath = "assets/cache.json";
 
 function requestFailed(resp) {
@@ -28,9 +28,20 @@ async function fetch() {
   $cache.set("followers", followers.data.data.list.slice(0,6));
   const voice = await $http.get('https://api.bilibili.com/x/web-interface/search/default')
   $cache.set("voice", voice.data.data.show_name);
-  const file = await $http.download(items.face);
-  const image = file.data.image;
-  $cache.set("image", image);
+  
+  const videoList = await $http.get('https://api.bilibili.com/x/space/bangumi/follow/list?type=1&follow_status=0&pn=1&ps=15&vmid=37539830&ts=1606439330302')
+  $cache.set("videoList", videoList.data.data.list.slice(0,4));
+
+  // let temp = await Promise.all(videoList.data.data.list.slice(0,4).map(it => {
+  //   return $http.download(it.cover)
+  // }));
+  // const cover = temp.map(it => it.data.image)
+  // $cache.set("cover", cover);
+
+
+  // const file = await $http.download(items.face);
+  // const image = file.data.image;
+  // $cache.set("image", image);
   return items
 }
 

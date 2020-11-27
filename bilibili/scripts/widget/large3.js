@@ -8,6 +8,7 @@ module.exports = (ctx, items) => {
   const following = $cache.get("following")
   const followers = $cache.get("followers")
   const voice = $cache.get("voice")
+  const videoList = $cache.get("videoList")
   return {
     type: "vstack",
     props: {
@@ -96,6 +97,9 @@ module.exports = (ctx, items) => {
                     }
                 }
             ]
+        },
+        {
+            type: "spacer"
         },
         {
             type: 'hstack',
@@ -216,59 +220,58 @@ module.exports = (ctx, items) => {
             props: {
                 bold: true,
                 color: $color("white"),
-                text: '我的关注'
+                text: '我的订阅'
             },
         },
         {
-            type: 'hstack',
+          type: 'hstack',
+          views: videoList.map(it => ({
+            type: 'vstack',
             props: {
-                frame: {
-                    maxWidth: Infinity
-                }
+              alignment: $widget.verticalAlignment.top,
             },
-            views: following.map(it => ({
+            views: [
+              {
                 type: 'image',
                 props: {
-                    uri: it.face,
-                    resizable: true,
-                    scaledToFill: true,
-                    cornerRadius: 25,
-                    frame: {
-                        height: 50,
-                        width: 50
+                  uri: it.cover,
+                  resizable: true,
+                  scaledToFill: true,
+                  frame: {
+                      maxHeight: Infinity,
+                      maxWidth: Infinity
+                  }
+                }
+              },
+              {
+                type: 'hstack',
+                views: [
+                  {
+                    type: 'color',
+                    props: {
+                      color: colors.systemBlue,
+                      frame: {
+                        width: 6,
+                        maxHeight: Infinity,
+                      },
+                      cornerRadius: 3 
                     }
-                }
-            }))
-        },
-        {
-            type: 'text',
-            props: {
-                bold: true,
-                color: $color("white"),
-                text: '我的粉丝'
-            },
-        },
-        {
-            type: 'hstack',
-            props: {
-                frame: {
-                    maxWidth: Infinity
-                }
-            },
-            views: followers.map(it => ({
-                type: 'image',
-                props: {
-                    uri: it.face,
-                    resizable: true,
-                    scaledToFill: true,
-                    cornerRadius: 25,
-                    frame: {
-                        height: 50,
-                        width: 50
+                  },
+                  {
+                    type: 'text',
+                    props: {
+                      text: it.title,
+                      color: $color("white"),
+                      font: {
+                        size: 15,
+                      }
                     }
-                }
-            }))
-        }
+                  }
+                ]
+              }
+            ]
+          }))
+        },
     ]
   }
 }

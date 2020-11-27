@@ -2,10 +2,6 @@ const colors = require("../constants/colors");
 const fonts = require("../constants/fonts");
 
 module.exports = (ctx, items) => {
-  let image = $cache.get("image")
-  if(!image) {
-    img = $image("../../assets/icon.png")
-  }
   return {
     type: "hstack",
     props: {
@@ -50,7 +46,7 @@ module.exports = (ctx, items) => {
           {
             type: "image",
             props: {
-              image: image,
+              uri: items.face,
               cornerRadius: 50,
               resizable: true,
               scaledToFill: true,

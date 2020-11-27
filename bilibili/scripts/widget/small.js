@@ -2,11 +2,6 @@ const colors = require("../constants/colors");
 const fonts = require("../constants/fonts");
 
 module.exports = (ctx,items) => {
-  const width = ctx.displaySize.width
-  let image = $cache.get("image")
-  if(!image) {
-    image = $image("../../assets/icon.png")
-  }
   return {
     type: "vstack",
     props: {
@@ -31,7 +26,7 @@ module.exports = (ctx,items) => {
       {
         type: "image",
         props: {
-          image: image,
+          uri: items.face,
           cornerRadius: 50,
           resizable: true,
           scaledToFill: true,

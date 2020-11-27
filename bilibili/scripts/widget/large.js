@@ -5,7 +5,7 @@ module.exports = (ctx, items) => {
   let image = $cache.get("image")
   const rankList = $cache.get("rankList")
   if(!image) {
-    img = $image("../../assets/icon.png")
+    img = $image("assets/icon.png")
   }
   return {
     type: "vstack",
