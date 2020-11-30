@@ -13,24 +13,73 @@ export class App {
     })
     document.body.appendChild(this.app.view) 
     loader
-        .add(["./assets/DinoSpriteSheet.json","./assets/adventurerSheet.png"])
+        .add(["./assets/adventurerSheet.json"])
         .load(this.setup.bind(this))
   }
   setup() {
     this.adventure = new Adventure(this.app)
-    this.adventure.init()
     this.app.stage.addChild(this.adventure);
-    this.adventure.idle()
-    // let ticker = PIXI.Ticker.shared;
-    // ticker.minFPS  = 30
-    // ticker.maxFPS  = 60
-    // ticker.add(delta => this.gameLoop(delta));
-  }
-  gameLoop() {
-    this.adventure.idle()
+    this.adventure.init()
   }
 }
 window.onload = () => {
-  const app = new App()
+  let app = new App()
   app.init()
+  const left = keyboard(37), up = keyboard(38), right = keyboard(39), down = keyboard(40), space = keyboard(32);
+  function keycontrol() {
+      left.press = () => {
+        app.adventure.direction = 'left'
+        app.adventure.run()
+      };
+      left.release = () => {
+        app.adventure.idle()
+      };
+      right.press = () => {
+        app.adventure.direction = 'right'
+        app.adventure.run()
+      };
+      right.release = () => {
+        app.adventure.idle()
+      };
+      space.press = () => {
+      };
+      space.release = () => {
+      };
+  }
+  keycontrol()
+}
+
+function keyboard(keyCode) {
+  var key = {};
+  key.code = keyCode;
+  key.isDown = false;
+  key.isUp = true;
+  key.press = undefined;
+  key.release = undefined;
+  //The `downHandler`
+  key.downHandler = event => {
+      if (event.keyCode === key.code) {
+          if (key.isUp && key.press) key.press();
+          key.isDown = true;
+          key.isUp = false;
+      }
+      event.preventDefault();
+  };
+  //The `upHandler`
+  key.upHandler = event => {
+      if (event.keyCode === key.code) {
+          if (key.isDown && key.release) key.release();
+          key.isDown = false;
+          key.isUp = true;
+      }
+      event.preventDefault();
+  };
+  //Attach event listeners
+  window.addEventListener(
+      "keydown", key.downHandler.bind(key), false
+  );
+  window.addEventListener(
+      "keyup", key.upHandler.bind(key), false
+  );
+  return key;
 }
