@@ -1,4 +1,5 @@
 export class Adventure extends PIXI.Container {
+  static GRAVITY = 0.25
   constructor(app) {
     super()
     this.app = app;
@@ -11,6 +12,7 @@ export class Adventure extends PIXI.Container {
     this.spriteList = [];
     this.animatedSprite = null;
     this.direction = 'right';
+    this.isground = false;
     this.state = 'idle';
     this.combat = null;
   }
@@ -19,16 +21,13 @@ export class Adventure extends PIXI.Container {
       this.spriteList[it] = this.adventureSheet.animations[it]
     })
     this.animatedSprite = new PIXI.AnimatedSprite(this.spriteList['adventurer-idle'])
-    // this.animatedSprite.anchor.set(0.5)
+    this.animatedSprite.anchor.set(0.5)
+    this.animatedSprite.scale.set(1.5)
     this.animatedSprite.animationSpeed = this.animationSpeed; 
     this.addChild(this.animatedSprite);
     this.animatedSprite.play()
-    this.pivot.x = this.width/2
-    this.pivot.y = this.height/2
-    this.scale.x *= 1.5
-    this.scale.y *= 1.5
     this.x = 50;
-    this.y = 50;
+    this.y = this.app.screen.height/2;
 
     this.animatedOnComplete = null;
 
@@ -38,7 +37,20 @@ export class Adventure extends PIXI.Container {
       set(newValue) {
         if(oldValue !== newValue) {
           oldValue = newValue;
-          newValue == 'left' ? this.scale.x = -1.5 : this.scale.x = 1.5;
+          newValue == 'left' ? this.animatedSprite.scale.x = -1.5 : this.animatedSprite.scale.x = 1.5;
+        }
+      }
+    });
+
+    let isgroundoldValue = this.isground
+    Object.defineProperty(this, 'isground', {
+      get() { return isgroundoldValue; },
+      set(newValue) {
+        if(newValue) {
+          this.idle()
+        }
+        if(isgroundoldValue !== newValue) {
+          isgroundoldValue = newValue;
         }
       }
     });
@@ -54,6 +66,9 @@ export class Adventure extends PIXI.Container {
   }
   move() {
     this.x += this.vx;
+    if(!this.isground) {
+      this.y -= (this.vy -= Adventure.GRAVITY)
+    }
   }
   idle() {
     this.state = 'idle'
