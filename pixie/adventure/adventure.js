@@ -42,19 +42,6 @@ export class Adventure extends PIXI.Container {
       }
     });
 
-    let isgroundoldValue = this.isground
-    Object.defineProperty(this, 'isground', {
-      get() { return isgroundoldValue; },
-      set(newValue) {
-        if(newValue) {
-          this.idle()
-        }
-        if(isgroundoldValue !== newValue) {
-          isgroundoldValue = newValue;
-        }
-      }
-    });
-
     this.animatedSprite.onComplete = () => {
       if(this.combat){
         this.combat()
@@ -73,50 +60,97 @@ export class Adventure extends PIXI.Container {
   idle() {
     this.state = 'idle'
     this.animatedSprite.textures = this.spriteList['adventurer-idle']
+    this.animatedSprite.animationSpeed = this.animationSpeed
     this.animatedSprite.loop = true
     this.animatedSprite.play()
   }
   run() {
     this.state = 'run'
     this.animatedSprite.textures = this.spriteList['adventurer-run']
+    this.animatedSprite.animationSpeed = this.animationSpeed
     this.animatedSprite.loop = true
     this.animatedSprite.play()
   }
   attack1() {
+    this.isground&&(this.vx = 0);
     this.state = 'attack'
     this.animatedSprite.textures = this.spriteList['adventurer-attack1']
+    this.animatedSprite.animationSpeed = this.animationSpeed
     this.animatedSprite.loop = false
     this.animatedSprite.play()
     this.animatedOnComplete = () => {
-      this.idle()
+      if(this.vx !==0) {
+        this.run()
+      }else {
+        this.idle()
+      }
     }
   }
   attack2() {
+    this.isground&&(this.vx = 0);
     this.state = 'attack'
     this.animatedSprite.textures = this.spriteList['adventurer-attack2']
+    this.animatedSprite.animationSpeed = this.animationSpeed
     this.animatedSprite.loop = false
     this.animatedSprite.play()
     this.animatedOnComplete = () => {
-      this.idle()
+      if(this.vx !==0) {
+        this.run()
+      }else {
+        this.idle()
+      }
     }
   }
   attack3() {
+    this.isground&&(this.vx = 0);
     this.state = 'attack'
     this.animatedSprite.textures = this.spriteList['adventurer-attack3']
+    this.animatedSprite.animationSpeed = this.animationSpeed
     this.animatedSprite.loop = false
     this.animatedSprite.play()
     this.animatedOnComplete = () => {
-      this.idle()
+      if(this.vx !==0) {
+        this.run()
+      }else {
+        this.idle()
+      }
     }
   }
   jump() {
     this.state = 'jump'
     this.animatedSprite.textures = this.spriteList['adventurer-jump']
+    this.animatedSprite.animationSpeed = this.animationSpeed
+    this.animatedSprite.loop = false
     this.animatedSprite.play()
+    this.animatedOnComplete = () => {
+      this.fall()
+    }
   }
   fall() {
-    this.state = 'jump'
+    this.state = 'fall'
     this.animatedSprite.textures = this.spriteList['adventurer-fall']
+    this.animatedSprite.animationSpeed = 0.05
+    this.animatedSprite.loop = false
     this.animatedSprite.play()
+    this.animatedOnComplete = () => {
+      if(this.vx !==0) {
+        this.run()
+      }else {
+        this.idle()
+      }
+    }
+  }
+  hurt() {
+    this.state = 'hurt'
+    this.animatedSprite.textures = this.spriteList['adventurer-hurt']
+    this.animatedSprite.loop = false
+    this.animatedSprite.play()
+    this.animatedOnComplete = () => {
+      if(this.vx !==0) {
+        this.run()
+      }else {
+        this.idle()
+      }
+    }
   }
 }

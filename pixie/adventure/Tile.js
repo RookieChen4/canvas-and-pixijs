@@ -8,7 +8,7 @@ export class Tile {
   }
 
   generateWall() {
-    for(let i = 0; i < 10; i++) {
+    for(let i = 0; i < 20; i++) {
       let rectangle = new PIXI.Rectangle(16* 7, 16, 16 * 4, 16 * 4);
       let wallTexture = new PIXI.Texture(this.TilesetTexture, rectangle);
       let wall = new Sprite(wallTexture);

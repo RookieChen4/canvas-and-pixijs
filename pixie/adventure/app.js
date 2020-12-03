@@ -15,7 +15,9 @@ export class App {
     loader
         .add(["./assets/adventurerSheet.json","./assets/bg/Extension_blue.png",
               "./assets/bg/Extension_green.png","./assets/bg/Background.png",
-              "./assets/bg/Middleground.png","./assets/bg/Props.png","./assets/bg/Tileset.png"])
+              "./assets/bg/Middleground.png","./assets/bg/Props.png","./assets/bg/Tileset.png",
+              "./assets/Goblin/Attack.png","./assets/Goblin/Death.png","./assets/Goblin/Idle.png",
+              "./assets/Goblin/Run.png","./assets/Goblin/Take Hit.png"])
         .load(this.setup.bind(this))
   }
   setup() {
@@ -27,6 +29,12 @@ export class App {
     this.adventure = new Adventure(this.app)
     this.app.stage.addChild(this.adventure);
     this.adventure.init()
+
+    this.adventure2 = new Adventure(this.app)
+    this.app.stage.addChild(this.adventure2);
+    this.adventure2.init()
+    this.adventure2.x = this.app.screen.width/2;
+    this.adventure2.direction = 'left'
     let ticker = PIXI.Ticker.shared;
     ticker.minFPS  = 30
     ticker.maxFPS  = 60
@@ -34,9 +42,32 @@ export class App {
   }
   gameLoop() {
     this.adventure.move()
+    this.adventure2.move()
     this.scence.Tile.wallPool.forEach(element => {
       hitWallReact(this.adventure, element)
+      hitWallReact(this.adventure2, element)
     });
+    this.hitCharacter()
+  }
+
+  hitCharacter() {
+    if(this.adventure.state == 'attack') {
+      let centerX = this.adventure.x;
+      let centerY = this.adventure.y;
+      let centerX2 = this.adventure2.x;
+      let centerY2 = this.adventure2.y;
+
+      let distance = []
+      let rang = 37.5 + 15
+      if(this.adventure.direction == 'left') {
+        distance = [centerX - rang, centerX]
+      } else {
+        distance = [centerX, centerX + rang]
+      }
+      if(centerX2 < distance[1] && centerX2 > distance[0] && (centerY2 - centerY) < this.adventure.height) {
+        this.adventure2.hurt()
+      }
+    }
   }
 }
 window.onload = () => {
@@ -47,54 +78,89 @@ window.onload = () => {
   function keycontrol() {
       left.press = () => {
         app.adventure.direction = 'left'
-        app.adventure.vx = -2
-        app.adventure.run()
+        if(app.adventure.state != 'attack') {
+          app.adventure.vx = -2
+        }
+        if(app.adventure.isground && app.adventure.state != 'attack') {
+          app.adventure.run()
+        }
       };
       left.release = () => {
-        app.adventure.vx = 0
-        app.adventure.idle()
+        if(!right.isDown) {
+          app.adventure.vx = 0
+        }
+        if(app.adventure.isground && app.adventure.state != 'attack') {
+          app.adventure.idle()
+        }
       };
       right.press = () => {
         app.adventure.direction = 'right'
-        app.adventure.run()
-        app.adventure.vx = 2
+        if(app.adventure.state != 'attack') {
+          app.adventure.vx = 2
+        }
+        if(app.adventure.isground && app.adventure.state != 'attack') {
+          app.adventure.run()
+        }
       };
       right.release = () => {
-        app.adventure.vx = 0
-        app.adventure.idle()
+        if(!left.isDown) {
+          app.adventure.vx = 0
+        }
+        if(app.adventure.isground && app.adventure.state != 'attack') {
+          app.adventure.idle()
+        }
       };
       space.press = () => {
-        app.adventure.jump()
-        app.adventure.vy = 8
-        app.adventure.isground = false
+        if(app.adventure.isground) {
+          app.adventure.isground = false
+          app.adventure.jump()
+          app.adventure.vy = 8
+        }
       };
       space.release = () => {
-        app.adventure.fall()
+        // app.adventure.fall()
       };
+
+
       A.press = () => {
-        if(app.adventure.state == 'idle') {
+        if(app.adventure.state != 'attack') {
           app.adventure.attack1()
         }else {
           app.adventure.combat = app.adventure.attack1
         }
+        // if(app.adventure.state == 'idle') {
+        //   app.adventure.attack1()
+        // }else {
+        //   app.adventure.combat = app.adventure.attack1
+        // }
       };
       A.release = () => {
       };
       S.press = () => {
-        if(app.adventure.state == 'idle') {
+        if(app.adventure.state != 'attack') {
           app.adventure.attack2()
         }else {
           app.adventure.combat = app.adventure.attack2
         }
+        // if(app.adventure.state == 'idle') {
+        //   app.adventure.attack2()
+        // }else {
+        //   app.adventure.combat = app.adventure.attack2
+        // }
       };
       S.release = () => {
       };
       D.press = () => {
-        if(app.adventure.state == 'idle') {
+        if(app.adventure.state != 'attack') {
           app.adventure.attack3()
         }else {
           app.adventure.combat = app.adventure.attack3
         }
+        // if(app.adventure.state == 'idle') {
+        //   app.adventure.attack3()
+        // }else {
+        //   app.adventure.combat = app.adventure.attack3
+        // }
       };
       D.release = () => {
       };
@@ -187,7 +253,7 @@ function hitWallReact (r1, r2) {
             //Move the rectangle out of the collision
             r1.y = r1.y + overlapY;
           } else {
-            r1.isground = false
+            r1.isground = true
             collision = "bottom";
             //Move the rectangle out of the collision
             r1.y = r1.y - overlapY;
