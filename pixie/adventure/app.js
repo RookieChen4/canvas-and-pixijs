@@ -3,6 +3,7 @@ import { Scence } from './scence.js'
 import { Far } from './Far.js'
 export class App {
   constructor() {
+    this.creature = []
   }
   init() {
     this.app = new Application({                       
@@ -29,43 +30,97 @@ export class App {
     this.adventure = new Adventure(this.app)
     this.app.stage.addChild(this.adventure);
     this.adventure.init()
+    this.creature.push(this.adventure)
 
     this.adventure2 = new Adventure(this.app)
     this.app.stage.addChild(this.adventure2);
     this.adventure2.init()
+    this.adventure2.run()
     this.adventure2.x = this.app.screen.width/2;
     this.adventure2.direction = 'left'
+    this.creature.push(this.adventure2)
+
+
+    this.gameOverScene = new Container();
+    this.app.stage.addChild(this.gameOverScene);
+    this.gameOverScene.visible = false;
+    let style = new TextStyle({
+        fontFamily: "Futura",
+        fontSize: 64,
+        fill: "white"
+    });
+    this.message = new Text("The End!", style);
+    this.message.x = 120;
+    this.message.y = 0;
+    this.gameOverScene.addChild(this.message);
+
+
     let ticker = PIXI.Ticker.shared;
     ticker.minFPS  = 30
     ticker.maxFPS  = 60
     ticker.add(delta => this.gameLoop(delta));
   }
   gameLoop() {
-    this.adventure.move()
-    this.adventure2.move()
-    this.scence.Tile.wallPool.forEach(element => {
-      hitWallReact(this.adventure, element)
-      hitWallReact(this.adventure2, element)
-    });
-    this.hitCharacter()
+    if(this.adventure.healthBar.outer.width < 0) {
+      this.message.text = "You Lost!";
+      this.gameOverScene.visible = true
+    }else {
+      this.adventure.move()
+      this.adventure2.auto(this.adventure.x)
+      enemyDetect(this.adventure2,this.adventure)
+      this.scence.Tile.wallPool.forEach(element => {
+        this.creature.forEach(it => {
+          hitWallReact(it, element)
+        })
+      });
+      (this.creature.length >= 2) &&this.creature.forEach((it,index) => {
+        for(let i = index + 1; i < this.creature.length;i ++) {
+          this.hitCharacter(it, this.creature[i])
+          // this.hitCharacter(this.creature[i],it)
+          if(this.creature[i].healthBar.outer.width < 0) {
+            this.message.text = "You Win!";
+            this.gameOverScene.visible = true
+            this.app.stage.removeChild(this.creature[i])
+            this.creature.splice(i, 1);
+          }
+        }
+      })
+    }
   }
 
-  hitCharacter() {
-    if(this.adventure.state == 'attack') {
-      let centerX = this.adventure.x;
-      let centerY = this.adventure.y;
-      let centerX2 = this.adventure2.x;
-      let centerY2 = this.adventure2.y;
+  hitCharacter(c1,c2) {
+    if(c1.state == 'attack') {
+      let centerX = c1.x;
+      let centerY = c1.y;
+      let centerX2 = c2.x;
+      let centerY2 = c2.y;
 
       let distance = []
       let rang = 37.5 + 15
-      if(this.adventure.direction == 'left') {
+      if(c1.direction == 'left') {
         distance = [centerX - rang, centerX]
       } else {
         distance = [centerX, centerX + rang]
       }
-      if(centerX2 < distance[1] && centerX2 > distance[0] && (centerY2 - centerY) < this.adventure.height) {
-        this.adventure2.hurt()
+      if(centerX2 < distance[1] && centerX2 > distance[0] && (centerY2 - centerY) < c2.height) {
+        c2.hurt()
+      }
+    }
+    if(c2.state == 'attack') {
+      let centerX = c2.x;
+      let centerY = c2.y;
+      let centerX2 = c1.x;
+      let centerY2 = c1.y;
+
+      let distance = []
+      let rang = 37.5 + 15
+      if(c2.direction == 'left') {
+        distance = [centerX - rang, centerX]
+      } else {
+        distance = [centerX, centerX + rang]
+      }
+      if(centerX2 < distance[1] && centerX2 > distance[0] && Math.abs(centerY2 - centerY) < c1.height + 10) {
+        c1.hurt()
       }
     }
   }
@@ -216,7 +271,7 @@ function hitWallReact (r1, r2) {
   r1.centerY = r1.y;
   r2.centerX = r2.x + r2.width / 2;
   r2.centerY = r2.y + r2.height / 2;
-  // console.log(r1.centerX,r1.centerY)
+
   //Find the half-widths and half-heights of each sprite
   r1.halfWidth = (r1.width - 50)/ 2;
   r1.halfHeight = r1.height / 2;
@@ -233,7 +288,7 @@ function hitWallReact (r1, r2) {
 
   //Check for a collision on the x axis
   if (Math.abs(vx) < combinedHalfWidths) {
-    // console.log(combinedHalfHeights, vy)
+
     //A collision might be occurring. Check for a collision on the y axis
     if (Math.abs(vy) < combinedHalfHeights) {
         //There's definitely a collision happening
@@ -280,6 +335,76 @@ function hitWallReact (r1, r2) {
     }
   } else {
 
+    //There's no collision on the x axis
+    hit = false;
+  }
+  //`hit` will be either `true` or `false`
+  return {hit,collision};
+}
+
+function enemyDetect(r1, r2) {
+
+  //Define the variables we'll need to calculate
+  let hit, combinedHalfWidths, combinedHalfHeights, vx, vy,collision;
+
+  //hit will determine whether there's a collision
+  hit = false;
+
+  //Find the center points of each sprite
+  r1.centerX = r1.x;
+  r1.centerY = r1.y;
+  r2.centerX = r2.x;
+  r2.centerY = r2.y;
+
+  //Find the half-widths and half-heights of each sprite
+  r1.halfWidth = (r1.width - 50)/ 2;
+  r1.halfHeight = r1.height / 2;
+  r2.halfWidth = (r1.width) / 2;
+  r2.halfHeight = r2.height / 2;
+
+  //Calculate the distance vector between the sprites
+  vx = r1.centerX - r2.centerX;
+  vy = r1.centerY - r2.centerY;
+
+  //Figure out the combined half-widths and half-heights
+  combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+  combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+  //Check for a collision on the x axis
+  if (Math.abs(vx) < combinedHalfWidths) {
+    //A collision might be occurring. Check for a collision on the y axis
+    if (Math.abs(vy) < combinedHalfHeights) {
+        //There's definitely a collision happening
+        hit = true;
+        let overlapX = combinedHalfWidths - Math.abs(vx);
+        let overlapY = combinedHalfHeights - Math.abs(vy);
+        if (overlapX >= overlapY) {
+          //The collision is happening on the X axis
+          //But on which side? vy can tell us
+          if (vy > 0) {
+            collision = "top";
+          } else {
+            collision = "bottom";
+          }
+        } else {
+          if (vx > 0) {
+            if(r1.state !== 'attack') {
+              r1[`attack${parseInt(Math.random()*3 + 1)}`]()
+            }
+            r1.direction = 'left'
+            collision = "left";
+          } else {
+            if(r1.state !== 'attack') {
+              r1[`attack${parseInt(Math.random()*3 + 1)}`]()
+            }
+            r1.direction = 'right'
+            collision = "right";
+          }
+        }
+    } else {
+        hit = false;
+    }
+  } else {
     //There's no collision on the x axis
     hit = false;
   }
