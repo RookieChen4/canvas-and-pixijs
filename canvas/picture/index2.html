@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+</body>
+<script>
+let canvas,ctx,img,data;
+function init() {
+  canvas = document.getElementById('canvas')
+  canvas.width = window.innerWidth * window.devicePixelRatio;
+  canvas.height = window.innerHeight * window.devicePixelRatio;
+  ctx = canvas.getContext('2d')
+  img = new Image()
+  img.src = './2.jpg'
+  img.addEventListener('load', drawImage,false)
+}
+function drawImage() {
+  let currentPixiel = window.innerWidth * window.innerHeight
+  let widthRatio = img.width / window.innerWidth
+  let heightRatio = img.height / window.innerHeight
+  img.width /= widthRatio
+	img.height /= heightRatio
+  let tCanvas = document.createElement('canvas')
+	let tctx = tCanvas.getContext('2d')
+  let count = (img.width * img.height) / 1000000
+  count = ~~(Math.sqrt(count) + 1) //计算要分成多少块瓦片
+  // 计算每块瓦片的宽和高
+  let nw = ~~(img.width / count)
+  let nh = ~~(img.height / count)
+  tCanvas.width = nw
+  tCanvas.height = nh
+  for (let i = 0; i < count; i++) {
+    for (let j = 0; j < count; j++) {
+      tctx.drawImage(img, i * nw * widthRatio, j * nh * heightRatio, nw * widthRatio, nh * heightRatio, 0, 0, nw, nh)
+      ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh)
+    }
+  }
+  data = ctx.getImageData(0,0,img.width,img.height)
+  ctx.clearRect(0,0,canvas.width,canvas.height)
+  draw()
+}
+let size = 10,id;
+function draw() {
+  size-=2;
+  for(let y = 0; y < data.height; y+=size) {
+    for(let x = 0; x < data.width; x+=size) {
+      let cR = data.data[(y * data.width + x) * 4],
+      cG = data.data[(y * data.width + x) * 4 + 1],
+      cB = data.data[(y * data.width + x) * 4 + 2];
+      ctx.fillStyle = `rgb(${cR},${cG},${cB})`;
+      ctx.fillRect(x, y, x + size, y + size);
+    }
+  }
+  if(size <= 0) {
+    cancelAnimationFrame(id)
+  }
+  id = requestAnimationFrame(draw)
+}
+init()
+</script>
+</html>
