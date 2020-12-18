@@ -1,0 +1,114 @@
+<html>
+	<head>
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script type="module">
+      function mathRandom(num = 8) {
+        var numValue = - Math.random() * num + Math.random() * num;
+        return numValue;
+      };
+      import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r123/three.module.min.js';
+      const scene = new THREE.Scene();
+      // 近裁剪面（near clipping plane） 和 远裁剪面（far clipping plane）限定了可视的范围 (1 - 500) 内
+      const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 500);
+      
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+      // 加载图片纹理
+      // var texture = THREE.ImageUtils.loadTexture("./assets/test.gif",null,function(t){});
+      // var material = new THREE.MeshBasicMaterial({map:texture});
+
+
+			const geometry = new THREE.BoxGeometry(5,5,5);
+      const material = new THREE.MeshLambertMaterial( { color: 0x000000 } );
+			const cube = new THREE.Mesh( geometry, material );
+      scene.add( cube );
+      
+
+      // Fog lets you choose near and far settings which are distances from the camera. 
+      // Anything closer than near is unaffected by fog.
+      // Anything further than far is completely the fog color. 
+      // Parts between near and far fade from their material color to the fog color.
+
+      // 小于near的都不受fog的影响 near到further之间的会受fog的影响  大于further的就是fog
+      scene.background = new THREE.Color(0xF02050);
+      scene.fog = new THREE.Fog(0xF02050, 10, 15);
+
+      camera.position.set(0, 0, 15)
+      camera.lookAt( 0, 0, 0 );
+      
+      // 场景光
+      // let light = new THREE.AmbientLight(0xFF0000);
+      // light.position.set(0, 0, 0);
+      // scene.add(light);
+
+      // 平行光
+      // let light = new THREE.DirectionalLight(0xFF0000,1);
+      // // 位置不同，方向光作用于物体的面也不同，看到的物体各个面的颜色也不一样
+      // light.position.set(0,0,10);
+      // scene.add(light);
+
+      // 光点
+      // let light = new THREE.PointLight(0xFF0000);
+      // light.position.set(0, 0,5);
+      // scene.add(light);
+
+    //   for (var i = 1; i<100; i++) {
+    //     let geometry = new THREE.BoxGeometry(1,0,0,segments,segments,segments);
+    //     let material = new THREE.MeshStandardMaterial({
+    //       color:0x000000,
+    //       wireframe:false,
+    //       shading: THREE.SmoothShading,
+    //       side:THREE.DoubleSide});
+    //     let wmaterial = new THREE.MeshLambertMaterial({
+    //       color:0xFFFFFF,
+    //       wireframe:true,
+    //       transparent:true,
+    //       opacity: 0.03,
+    //       side:THREE.DoubleSide/*,
+    //       shading:THREE.FlatShading*/});
+
+    //     let cube = new THREE.Mesh(geometry, material);
+    //     var wire = new THREE.Mesh(geometry, wmaterial);
+    //     var floor = new THREE.Mesh(geometry, material);
+    //     var wfloor = new THREE.Mesh(geometry, wmaterial);
+        
+    //     cube.add(wfloor);
+    //     cube.castShadow = true;
+    //     cube.receiveShadow = true;
+    //     cube.rotationValue = 0.1+Math.abs(mathRandom(8));
+
+    //     floor.scale.y = 0.05;//+mathRandom(0.5);
+    //     cube.scale.y = 0.1+Math.abs(mathRandom(8));
+        
+    //     var cubeWidth = 0.9;
+    //     cube.scale.x = cube.scale.z = cubeWidth+mathRandom(1-cubeWidth);
+
+    //     cube.position.x = Math.round(mathRandom());
+    //     cube.position.z = Math.round(mathRandom());
+        
+    //     floor.position.set(cube.position.x, 0/*floor.scale.y / 2*/, cube.position.z)
+        
+    //     town.add(floor);
+    //     town.add(cube);
+    // };
+    // scene.add(town)
+
+			const animate = function () {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script>
+	</body>
+</html>
