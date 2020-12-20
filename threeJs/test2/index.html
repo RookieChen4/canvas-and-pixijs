@@ -16,13 +16,13 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
       document.body.appendChild( renderer.domElement );
 
-      scene.background = new THREE.Color(0xffffff);
+      // scene.background = new THREE.Color(0xffffff);
 
       camera.position.set(15, 15, 15)
       camera.lookAt( 0, 0, 0 );
 
-      let geometry = new THREE.BoxGeometry(100,1,100);
-      const material = new THREE.MeshStandardMaterial( { color: 0xFFFFFF,shading: THREE.SmoothShading,
+      let geometry = new THREE.BoxGeometry(10,2,10);
+      const material = new THREE.MeshStandardMaterial( { color: 0xffeaa7,shading: THREE.SmoothShading,
       side:THREE.DoubleSide } );
       let floor = new THREE.Mesh(geometry, material);
       scene.add(floor)
@@ -30,10 +30,19 @@
       floor.castShadow = true;
       floor.receiveShadow = true;
 
-      let light = new THREE.DirectionalLight(0x00b894,1);
-      // 位置不同，方向光作用于物体的面也不同，看到的物体各个面的颜色也不一样
-      light.position.set(15,15,15);
+      let light = new THREE.AmbientLight(0xffffff);
+      light.position.set(0, 0, 0);
       scene.add(light);
+
+      let lightFront = new THREE.SpotLight(0xFFFFFF, 20, 10);
+      lightFront.position.set(5, 5, 5);
+      lightFront.castShadow = true;
+      scene.add(lightFront);
+
+      // let light = new THREE.DirectionalLight(0xffffff,1);
+      // // 位置不同，方向光作用于物体的面也不同，看到的物体各个面的颜色也不一样
+      // light.position.set(15,15,15);
+      // scene.add(light);
 
 
       let points = [];
