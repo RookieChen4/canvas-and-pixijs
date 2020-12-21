@@ -92,11 +92,11 @@
 			controls.maxDistance = 100;
 			controls.addEventListener( 'change', render );
 
-      // scene.add( new THREE.AmbientLight( 0x404040 ) );
-      let light = new THREE.AmbientLight(0xffffff);
-      light.layers.enable( 0 );
-      light.layers.enable( 1 );
-      scene.add(light);
+			// scene.add( new THREE.AmbientLight( 0x404040 ) );
+			// let light = new THREE.AmbientLight(0xff0000);
+			// light.layers.enable( 0 );
+			// light.layers.enable( 1 );
+			// scene.add(light);
 
 			const renderScene = new RenderPass( scene, camera );
 
@@ -227,6 +227,8 @@
 
 				scene.traverse( disposeMaterial );
 				scene.children.length = 0;
+				let light = new THREE.AmbientLight(0x404040);
+				scene.add(light);
 
 				const geometry = new THREE.IcosahedronBufferGeometry( 1, 15 );
 
@@ -235,7 +237,7 @@
 					const color = new THREE.Color();
 					color.setHSL( Math.random(), 0.7, Math.random() * 0.2 + 0.05 );
 
-					const material = new THREE.MeshBasicMaterial( { color: color } );
+					const material = new THREE.MeshLambertMaterial( { color: color } );
 					const sphere = new THREE.Mesh( geometry, material );
 					sphere.position.x = Math.random() * 10 - 5;
 					sphere.position.y = Math.random() * 10 - 5;
@@ -253,11 +255,9 @@
 			}
 
 			function disposeMaterial( obj ) {
-        console.log(obj)
 				if ( obj.material ) {
-
+					//废置材质
 					obj.material.dispose();
-
 				}
 
 			}
@@ -274,10 +274,10 @@
 						break;
 					case 'Scene with Glow':
 					default:            
-            // render scene with bloom
-            renderBloom( true );
-            // render the entire scene, then render bloom scene on top
-            finalComposer.render();
+						// render scene with bloom
+						renderBloom( true );
+						// render the entire scene, then render bloom scene on top
+						finalComposer.render();
 						break;
 
 				}
@@ -303,14 +303,10 @@
 			}
 
 			function darkenNonBloomed( obj ) {
-
 				if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
-
 					materials[ obj.uuid ] = obj.material;
 					obj.material = darkMaterial;
-
-        }
-
+        		}
 			}
 
 			function restoreMaterial( obj ) {
