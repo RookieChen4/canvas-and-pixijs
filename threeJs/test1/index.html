@@ -51,8 +51,11 @@
       composer.addPass( renderPass );
 
       let outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
+      // outlinePass.edgeStrength = 8;
+      // outlinePass.visibleEdgeColor.set('#f71b1b');
+      // outlinePass.hiddenEdgeColor.set('#ac6b20');
       composer.addPass( outlinePass );
-      outlinePass.selectedObjects = cube;
+      outlinePass.selectedObjects = [cube];
 
       // const textureLoader = new THREE.TextureLoader();
 			// 	textureLoader.load( 'textures/tri_pattern.jpg', function ( texture ) {

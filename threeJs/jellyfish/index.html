@@ -52,8 +52,8 @@
 			import { EffectComposer } from '../jsm/postprocessing/EffectComposer.js';
 			import { RenderPass } from '../jsm/postprocessing/RenderPass.js';
 			import { ShaderPass } from '../jsm/postprocessing/ShaderPass.js';
-      import { UnrealBloomPass } from '../jsm/postprocessing/UnrealBloomPass.js';
-      import { OutlinePass } from '../jsm/postprocessing/OutlinePass.js';
+			import { UnrealBloomPass } from '../jsm/postprocessing/UnrealBloomPass.js';
+			import { OutlinePass } from '../jsm/postprocessing/OutlinePass.js';
 
 			const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
 
@@ -74,7 +74,7 @@
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
-      renderer.toneMapping = THREE.ReinhardToneMapping;
+      		renderer.toneMapping = THREE.ReinhardToneMapping;
 			document.body.appendChild( renderer.domElement );
 
 			const scene = new THREE.Scene();
@@ -106,9 +106,7 @@
 			const bloomComposer = new EffectComposer( renderer );
 			bloomComposer.renderToScreen = false;
 			bloomComposer.addPass( renderScene );
-      bloomComposer.addPass( bloomPass );
-      let outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
-      bloomComposer.addPass( outlinePass );
+			bloomComposer.addPass( bloomPass );
 
 			const finalPass = new ShaderPass(
 				new THREE.ShaderMaterial( {
@@ -125,7 +123,11 @@
 
 			const finalComposer = new EffectComposer( renderer );
 			finalComposer.addPass( renderScene );
-      finalComposer.addPass( finalPass );
+			finalComposer.addPass( finalPass );
+			let outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
+			outlinePass.edgeStrength = 10;
+			outlinePass.edgeGlow = 1;
+			finalComposer.addPass( outlinePass );
 
 			const raycaster = new THREE.Raycaster();
 
@@ -228,20 +230,21 @@
 				scene.traverse( disposeMaterial );
 				scene.children.length = 0;
 				let light = new THREE.AmbientLight(0xffffff);
-				light.position.set(0, 0, 0);
-				light.layers.enable( 0 );
-				light.layers.enable( 1 );
 				scene.add(light);
         
-        // let directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5);
-        // directionalLight.position.set(0, 0, 500)
-        // scene.add( directionalLight );
+				// let directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5);
+				// directionalLight.position.set(0, 0, 500)
+				// scene.add( directionalLight );
+				
+				let pointlight = new THREE.PointLight(0xffffff);
+				pointlight.position.set(0, 0,0);
+				scene.add(pointlight);
 
 				// scene.fog = new THREE.Fog(0xF02050, 1, 5);
 
 				const geometry = new THREE.IcosahedronBufferGeometry( 1, 15 );
 
-				for ( let i = 0; i < 50; i ++ ) {
+				for ( let i = 0; i < 100; i ++ ) {
 					const material = new THREE.MeshLambertMaterial( { color: 0xdcdde1 } );
 					const sphere = new THREE.Mesh( geometry, material );
 					sphere.position.x = rand(-100, 100) - 5;
@@ -250,8 +253,8 @@
 					// sphere.position.normalize().multiplyScalar( Math.random() * 4.0 + 2.0 );
 					// sphere.scale.setScalar( Math.random() * Math.random() + 0.5 );
 					scene.add( sphere );
-
-					if ( Math.random() < 0.25 ) sphere.layers.enable( BLOOM_SCENE );
+					sphere.layers.enable( BLOOM_SCENE );
+					// if ( Math.random() < 0.25 ) sphere.layers.enable( BLOOM_SCENE );
 
 				}
 
@@ -282,12 +285,14 @@
         scene.add( line2 );
         scene.add( line3 );
 
-        const ballgeometry = new THREE.IcosahedronBufferGeometry( 40, 15 );
-        const ballmaterial = new THREE.MeshBasicMaterial( { color: 0x024460 } );
+		const ballgeometry = new THREE.IcosahedronBufferGeometry( 40, 15 );
+		const ballmaterial = new THREE.MeshLambertMaterial( { color: 0x3498db } );
+		ballmaterial.transparent = true;
+		ballmaterial.opacity = 0.5
         const ball = new THREE.Mesh( ballgeometry, ballmaterial );
-        ball.layers.enable(1);
+        // ball.layers.enable(1);
         scene.add( ball );
-        outlinePass.selectedObjects = ball;
+        outlinePass.selectedObjects = [ball];
         renderer.toneMappingExposure = Math.pow( 0.7, 4.0 );
 				render();
 
