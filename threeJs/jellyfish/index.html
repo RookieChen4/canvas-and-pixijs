@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - postprocessing - unreal bloom selective</title>
+		<title>For jellyFish</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
@@ -12,10 +12,6 @@
     </style>
 	</head>
 	<body>
-
-		<!-- <div id="info">
-			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> Click on a sphere to toggle bloom<br>By <a href="http://github.com/Temdog007" target="_blank" rel="noopener">Temdog007</a>
-		</div> -->
 
 		<script type="x-shader/x-vertex" id="vertexshader">
 
@@ -56,7 +52,8 @@
 			import { EffectComposer } from '../jsm/postprocessing/EffectComposer.js';
 			import { RenderPass } from '../jsm/postprocessing/RenderPass.js';
 			import { ShaderPass } from '../jsm/postprocessing/ShaderPass.js';
-			import { UnrealBloomPass } from '../jsm/postprocessing/UnrealBloomPass.js';
+      import { UnrealBloomPass } from '../jsm/postprocessing/UnrealBloomPass.js';
+      import { OutlinePass } from '../jsm/postprocessing/OutlinePass.js';
 
 			const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
 
@@ -64,7 +61,7 @@
 			bloomLayer.set( BLOOM_SCENE );
 
 			const params = {
-				exposure: 1,
+				exposure: 0.8,
 				bloomStrength: 5,
 				bloomThreshold: 0,
 				bloomRadius: 0,
@@ -77,19 +74,19 @@
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
-			renderer.toneMapping = THREE.ReinhardToneMapping;
+      renderer.toneMapping = THREE.ReinhardToneMapping;
 			document.body.appendChild( renderer.domElement );
 
 			const scene = new THREE.Scene();
 
-			const camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 200 );
-			camera.position.set( 0, 0, 20 );
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 700 );
+			camera.position.set( 0, 0, 250 );
 			camera.lookAt( 0, 0, 0 );
 
 			const controls = new OrbitControls( camera, renderer.domElement );
-			controls.maxPolarAngle = Math.PI * 0.5;
-			controls.minDistance = 1;
-			controls.maxDistance = 100;
+			// controls.maxPolarAngle = Math.PI * 0.5;
+			// controls.minDistance = 1;
+			// controls.maxDistance = 100;
 			controls.addEventListener( 'change', render );
 
 			// scene.add( new THREE.AmbientLight( 0x404040 ) );
@@ -109,7 +106,9 @@
 			const bloomComposer = new EffectComposer( renderer );
 			bloomComposer.renderToScreen = false;
 			bloomComposer.addPass( renderScene );
-			bloomComposer.addPass( bloomPass );
+      bloomComposer.addPass( bloomPass );
+      let outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
+      bloomComposer.addPass( outlinePass );
 
 			const finalPass = new ShaderPass(
 				new THREE.ShaderMaterial( {
@@ -126,7 +125,7 @@
 
 			const finalComposer = new EffectComposer( renderer );
 			finalComposer.addPass( renderScene );
-			finalComposer.addPass( finalPass );
+      finalComposer.addPass( finalPass );
 
 			const raycaster = new THREE.Raycaster();
 
@@ -229,30 +228,67 @@
 				scene.traverse( disposeMaterial );
 				scene.children.length = 0;
 				let light = new THREE.AmbientLight(0xffffff);
+				light.position.set(0, 0, 0);
+				light.layers.enable( 0 );
+				light.layers.enable( 1 );
 				scene.add(light);
+        
+        // let directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5);
+        // directionalLight.position.set(0, 0, 500)
+        // scene.add( directionalLight );
 
 				// scene.fog = new THREE.Fog(0xF02050, 1, 5);
 
 				const geometry = new THREE.IcosahedronBufferGeometry( 1, 15 );
 
 				for ( let i = 0; i < 50; i ++ ) {
-
-					const color = new THREE.Color();
-					color.setHSL( Math.random(), 0.7, Math.random() * 0.2 + 0.05 );
-
-					const material = new THREE.MeshLambertMaterial( { color: color } );
+					const material = new THREE.MeshLambertMaterial( { color: 0xdcdde1 } );
 					const sphere = new THREE.Mesh( geometry, material );
-					sphere.position.x = Math.random() * 10 - 5;
-					sphere.position.y = Math.random() * 10 - 5;
-					sphere.position.z = Math.random() * 10 - 5;
-					sphere.position.normalize().multiplyScalar( Math.random() * 4.0 + 2.0 );
-					sphere.scale.setScalar( Math.random() * Math.random() + 0.5 );
+					sphere.position.x = rand(-100, 100) - 5;
+					sphere.position.y = rand(-100, 100)  - 5;
+					sphere.position.z = rand(-50, 50) ;
+					// sphere.position.normalize().multiplyScalar( Math.random() * 4.0 + 2.0 );
+					// sphere.scale.setScalar( Math.random() * Math.random() + 0.5 );
 					scene.add( sphere );
 
 					if ( Math.random() < 0.25 ) sphere.layers.enable( BLOOM_SCENE );
 
 				}
 
+        const Linematerial = new THREE.LineBasicMaterial( { color: 0xffffff } );
+        let points = [];
+        points.push( new THREE.Vector3(1000, 0, 0 ) );
+        points.push( new THREE.Vector3( 0, 0, 0 ) );
+
+        const geometry2 = new THREE.BufferGeometry().setFromPoints( points );
+
+        points = [];
+        points.push( new THREE.Vector3(0, 1000, 0 ) );
+        points.push( new THREE.Vector3( 0, 0, 0 ) );
+
+        const geometry3 = new THREE.BufferGeometry().setFromPoints( points );
+
+        points = [];
+        points.push( new THREE.Vector3(0, 0, 1000 ) );
+        points.push( new THREE.Vector3( 0, 0, 0 ) );
+
+        const geometry4 = new THREE.BufferGeometry().setFromPoints( points );
+
+
+        const line1 = new THREE.Line( geometry2, Linematerial );
+        const line2 = new THREE.Line( geometry3, Linematerial );
+        const line3 = new THREE.Line( geometry4, Linematerial );
+        scene.add( line1 );
+        scene.add( line2 );
+        scene.add( line3 );
+
+        const ballgeometry = new THREE.IcosahedronBufferGeometry( 40, 15 );
+        const ballmaterial = new THREE.MeshBasicMaterial( { color: 0x024460 } );
+        const ball = new THREE.Mesh( ballgeometry, ballmaterial );
+        ball.layers.enable(1);
+        scene.add( ball );
+        outlinePass.selectedObjects = ball;
+        renderer.toneMappingExposure = Math.pow( 0.7, 4.0 );
 				render();
 
 			}
@@ -280,7 +316,7 @@
 						// render scene with bloom
 						renderBloom( true );
 						// render the entire scene, then render bloom scene on top
-						finalComposer.render();
+            finalComposer.render();
 						break;
 
 				}
@@ -324,7 +360,11 @@
 
 				}
 
-			}
+      }
+      
+      function rand(low, high) {
+        return Math.random() * (high - low) + low;
+      }
 
 		</script>
 

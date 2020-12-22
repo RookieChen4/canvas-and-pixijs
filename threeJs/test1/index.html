@@ -11,7 +11,10 @@
         var numValue = - Math.random() * num + Math.random() * num;
         return numValue;
       };
-      import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r123/three.module.min.js';
+      import * as THREE from '../../build/three.module.js';
+      import { EffectComposer } from '../jsm/postprocessing/EffectComposer.js';
+			import { RenderPass } from '../jsm/postprocessing/RenderPass.js';
+      import { OutlinePass } from '../jsm/postprocessing/OutlinePass.js';
       const scene = new THREE.Scene();
       // 近裁剪面（near clipping plane） 和 远裁剪面（far clipping plane）限定了可视的范围 (1 - 500) 内
       const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 500);
@@ -42,6 +45,23 @@
 
       camera.position.set(0, 0, 15)
       camera.lookAt( 0, 0, 0 );
+      let composer = new EffectComposer( renderer );
+
+      const renderPass = new RenderPass( scene, camera );
+      composer.addPass( renderPass );
+
+      let outlinePass = new OutlinePass( new THREE.Vector2( window.innerWidth, window.innerHeight ), scene, camera );
+      composer.addPass( outlinePass );
+      outlinePass.selectedObjects = cube;
+
+      // const textureLoader = new THREE.TextureLoader();
+			// 	textureLoader.load( 'textures/tri_pattern.jpg', function ( texture ) {
+
+			// 		outlinePass.patternTexture = texture;
+			// 		texture.wrapS = THREE.RepeatWrapping;
+			// 		texture.wrapT = THREE.RepeatWrapping;
+
+			// 	} );
       
       // 场景光
       // let light = new THREE.AmbientLight(0xFF0000);
@@ -105,7 +125,8 @@
 
 				cube.rotation.x += 0.01;
 				cube.rotation.y += 0.01;
-				renderer.render( scene, camera );
+        // renderer.render( scene, camera );
+        composer.render();
 			};
 
 			animate();
