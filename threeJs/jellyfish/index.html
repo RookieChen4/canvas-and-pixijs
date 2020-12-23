@@ -285,15 +285,33 @@
         scene.add( line2 );
         scene.add( line3 );
 
-		const ballgeometry = new THREE.IcosahedronBufferGeometry( 40, 15 );
-		const ballmaterial = new THREE.MeshLambertMaterial( { color: 0x3498db } );
-		ballmaterial.transparent = true;
-		ballmaterial.opacity = 0.5
+				const ballgeometry = new THREE.IcosahedronBufferGeometry( 40, 15 );
+				const ballmaterial = new THREE.MeshLambertMaterial( { color: 0x3498db } );
+				ballmaterial.transparent = true;
+				ballmaterial.opacity = 0.5
         const ball = new THREE.Mesh( ballgeometry, ballmaterial );
         // ball.layers.enable(1);
         scene.add( ball );
         outlinePass.selectedObjects = [ball];
-        renderer.toneMappingExposure = Math.pow( 0.7, 4.0 );
+				renderer.toneMappingExposure = Math.pow( 0.7, 4.0 );
+				
+				let geom = new THREE.SphereGeometry(40, 32, 32, 0, 6.3, 0, 1.7);
+				// let texture = new THREE.Texture(generateTexture());
+				// let textureImage = texture.image;
+				// texture.needsUpdate = true;
+				let material = new THREE.MeshPhongMaterial({
+					// map: texture,
+					color: 0xbbbbbb,
+					shininess: 40,
+					emissive: 0x780000,
+					// wireframe: true,
+					side: THREE.DoubleSide
+				});
+				material.transparent = true;
+				plane = new THREE.Mesh(geom, material);
+				plane.rotation.z += Math.PI / 2;
+				plane.position.x -= 60;
+				scene.add(plane);
 				render();
 
 			}
