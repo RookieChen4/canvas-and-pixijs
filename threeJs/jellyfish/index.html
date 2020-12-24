@@ -56,7 +56,8 @@
 			import { OutlinePass } from '../jsm/postprocessing/OutlinePass.js';
 
 			const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
-
+			var center = new THREE.Vector3(0, 4000, 0);
+			let a = 0;
 			const bloomLayer = new THREE.Layers();
 			bloomLayer.set( BLOOM_SCENE );
 
@@ -87,7 +88,11 @@
 			// controls.maxPolarAngle = Math.PI * 0.5;
 			// controls.minDistance = 1;
 			// controls.maxDistance = 100;
-			controls.addEventListener( 'change', render );
+			controls.addEventListener( 'change', () => {
+				render()
+				jellyMovement()
+				a+=0.05
+			});
 
 			// scene.add( new THREE.AmbientLight( 0x404040 ) );
 			// let light = new THREE.AmbientLight(0xff0000);
@@ -224,7 +229,7 @@
 				render();
 
 			};
-
+			var plane;
 			function setupScene() {
 
 				scene.traverse( disposeMaterial );
@@ -244,7 +249,7 @@
 
 				const geometry = new THREE.IcosahedronBufferGeometry( 1, 15 );
 
-				for ( let i = 0; i < 100; i ++ ) {
+				for ( let i = 0; i < 0; i ++ ) {
 					const material = new THREE.MeshLambertMaterial( { color: 0xdcdde1 } );
 					const sphere = new THREE.Mesh( geometry, material );
 					sphere.position.x = rand(-100, 100) - 5;
@@ -313,7 +318,25 @@
 				plane.position.x -= 60;
 				scene.add(plane);
 				render();
+			}
 
+			function jellyMovement() {
+				let length = plane.geometry.vertices.length;
+				let amp = 2;
+				let time = Date.now() / 10;
+				for (let i = 0; i < length; i++) {
+					let v = plane.geometry.vertices[i];
+					let dist = new THREE.Vector3(v.x, v.y, v.z).sub(center);
+					let size = 12;
+					let magnitude = 7;
+					v
+						.normalize()
+						.multiplyScalar(40 + Math.sin(dist.length() / -size + a) * magnitude);
+				}
+				plane.geometry.verticesNeedUpdate = true;
+				plane.geometry.normalsNeedUpdate = true;
+				plane.geometry.computeVertexNormals();
+				plane.geometry.computeFaceNormals();
 			}
 
 			function disposeMaterial( obj ) {
@@ -335,7 +358,7 @@
 						renderBloom( false );
 						break;
 					case 'Scene with Glow':
-					default:            
+					default:          
 						// render scene with bloom
 						renderBloom( true );
 						// render the entire scene, then render bloom scene on top
