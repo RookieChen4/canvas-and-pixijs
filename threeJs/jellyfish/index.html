@@ -54,12 +54,71 @@
 			import { ShaderPass } from '../jsm/postprocessing/ShaderPass.js';
 			import { UnrealBloomPass } from '../jsm/postprocessing/UnrealBloomPass.js';
 			import { OutlinePass } from '../jsm/postprocessing/OutlinePass.js';
-
+			function getRandomInt(min, max) {
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.random() * (max - min) + min; //The maximum is exclusive and the minimum is inclusive
+			}
+			let colors = {
+				0: 0xf95f8e,
+				1: 0x976574,
+				2: 0xe5e5e5,
+				3: 0x7c2f47
+			};
 			const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
 			var center = new THREE.Vector3(0, 4000, 0);
-			let a = 0;
+			let a = 0,aline =0,num = 60;
 			const bloomLayer = new THREE.Layers();
 			bloomLayer.set( BLOOM_SCENE );
+
+			let createLine = function() {
+				this.material = new THREE.LineBasicMaterial({
+					color: colors[Math.floor(getRandomInt(0, 3))]
+				});
+				this.geometry = new THREE.Geometry();
+				this.angle = getRandomInt(0, 2);
+				this.radius = getRandomInt(28, 25);
+				this.line = null;
+				this.length = null;
+				this.numLin = getRandomInt(100, 300);
+				this.yAxis = this.radius * Math.cos(this.angle * Math.PI);
+				this.zAxis = this.radius * Math.sin(this.angle * Math.PI);
+				this.amp = getRandomInt(5, 15);
+			};
+
+			createLine.prototype.draw = function() {
+				let diff = getRandomInt(1, 4);
+				for (let i = 0; i < this.numLin; i++) {
+					if (this.radius / i <= 0) {
+						this.radius = 0.069;
+					} else {
+						this.radius = this.radius / (i + 0.5);
+					}
+					this.yAxis = this.radius * Math.cos(this.angle * Math.PI);
+					this.zAxis = this.radius * Math.sin(this.angle * Math.PI);
+					this.geometry.vertices.push(
+						new THREE.Vector3(i / diff, this.yAxis, this.zAxis)
+					);
+				}
+				this.line = new THREE.Line(this.geometry, this.material);
+				this.line.position.x -= 80;
+				this.line.rotation.x += getRandomInt(0, 2 * Math.PI);
+				scene.add(this.line);
+			};
+
+			createLine.prototype.updateLine = function() {
+				this.length = this.line.geometry.vertices.length;
+				for (let i = 0; i < this.length; i++) {
+					let v = this.line.geometry.vertices[i];
+					this.line.geometry.vertices[i].y =
+						this.yAxis + this.amp * Math.sin((i + aline) / 50);
+					this.line.geometry.vertices[i].z = this.zAxis;
+				}
+				this.line.geometry.verticesNeedUpdate = true;
+				this.line.geometry.normalsNeedUpdate = true;
+				this.line.geometry.computeVertexNormals();
+				this.line.geometry.computeFaceNormals();
+			};
 
 			const params = {
 				exposure: 0.8,
@@ -68,6 +127,7 @@
 				bloomRadius: 0,
 				scene: "Scene with Glow"
 			};
+			var lines = [],spheres = [];
 
 			const darkMaterial = new THREE.MeshBasicMaterial( { color: "black" } );
 			const materials = {};
@@ -75,7 +135,8 @@
 			const renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
-      		renderer.toneMapping = THREE.ReinhardToneMapping;
+			renderer.toneMapping = THREE.ReinhardToneMapping;
+			renderer.toneMappingExposure = Math.pow( 0.5, 4.0 );
 			document.body.appendChild( renderer.domElement );
 
 			const scene = new THREE.Scene();
@@ -85,22 +146,6 @@
 			camera.lookAt( 0, 0, 0 );
 
 			const controls = new OrbitControls( camera, renderer.domElement );
-			// controls.maxPolarAngle = Math.PI * 0.5;
-			// controls.minDistance = 1;
-			// controls.maxDistance = 100;
-			controls.addEventListener( 'change', () => {
-				render()
-				jellyMovement()
-				a+=0.05
-			});
-
-			// scene.add( new THREE.AmbientLight( 0x404040 ) );
-			// let light = new THREE.AmbientLight(0xff0000);
-			// light.layers.enable( 0 );
-			// light.layers.enable( 1 );
-			// scene.add(light);
-			// scene.background = new THREE.Color(0xF02050);
-
 			const renderScene = new RenderPass( scene, camera );
 
 			const bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
@@ -138,7 +183,7 @@
 
 			const mouse = new THREE.Vector2();
 
-			window.addEventListener( 'click', onDocumentMouseClick, false );
+			// window.addEventListener( 'click', onDocumentMouseClick, false );
 
 			const gui = new GUI();
 
@@ -158,7 +203,7 @@
 
 				}
 
-				render();
+				// render();
 
 			} );
 
@@ -167,28 +212,28 @@
 			folder.add( params, 'exposure', 0.1, 2 ).onChange( function ( value ) {
 
 				renderer.toneMappingExposure = Math.pow( value, 4.0 );
-				render();
+				// render();
 
 			} );
 
 			folder.add( params, 'bloomThreshold', 0.0, 1.0 ).onChange( function ( value ) {
 
 				bloomPass.threshold = Number( value );
-				render();
+				// render();
 
 			} );
 
 			folder.add( params, 'bloomStrength', 0.0, 10.0 ).onChange( function ( value ) {
 
 				bloomPass.strength = Number( value );
-				render();
+				// render();
 
 			} );
 
 			folder.add( params, 'bloomRadius', 0.0, 1.0 ).step( 0.01 ).onChange( function ( value ) {
 
 				bloomPass.radius = Number( value );
-				render();
+				// render();
 
 			} );
 
@@ -207,7 +252,7 @@
 
 					const object = intersects[ 0 ].object;
 					object.layers.toggle( BLOOM_SCENE );
-					render();
+					// render();
 
 				}
 
@@ -226,7 +271,7 @@
 				bloomComposer.setSize( width, height );
 				finalComposer.setSize( width, height );
 
-				render();
+				// render();
 
 			};
 			var plane;
@@ -249,7 +294,7 @@
 
 				const geometry = new THREE.IcosahedronBufferGeometry( 1, 15 );
 
-				for ( let i = 0; i < 0; i ++ ) {
+				for ( let i = 0; i < 50; i ++ ) {
 					const material = new THREE.MeshLambertMaterial( { color: 0xdcdde1 } );
 					const sphere = new THREE.Mesh( geometry, material );
 					sphere.position.x = rand(-100, 100) - 5;
@@ -258,9 +303,16 @@
 					// sphere.position.normalize().multiplyScalar( Math.random() * 4.0 + 2.0 );
 					// sphere.scale.setScalar( Math.random() * Math.random() + 0.5 );
 					scene.add( sphere );
+					spheres.push(sphere)
 					sphere.layers.enable( BLOOM_SCENE );
 					// if ( Math.random() < 0.25 ) sphere.layers.enable( BLOOM_SCENE );
 
+				}
+
+				for (let i = 0; i < num; i++) {
+					let line = new createLine();
+					lines.push(line);
+					lines[i].draw();
 				}
 
         const Linematerial = new THREE.LineBasicMaterial( { color: 0xffffff } );
@@ -289,23 +341,13 @@
         scene.add( line1 );
         scene.add( line2 );
         scene.add( line3 );
-
-				const ballgeometry = new THREE.IcosahedronBufferGeometry( 40, 15 );
-				const ballmaterial = new THREE.MeshLambertMaterial( { color: 0x3498db } );
-				ballmaterial.transparent = true;
-				ballmaterial.opacity = 0.5
-        const ball = new THREE.Mesh( ballgeometry, ballmaterial );
-        // ball.layers.enable(1);
-        scene.add( ball );
-        outlinePass.selectedObjects = [ball];
-				renderer.toneMappingExposure = Math.pow( 0.7, 4.0 );
 				
 				let geom = new THREE.SphereGeometry(40, 32, 32, 0, 6.3, 0, 1.7);
-				// let texture = new THREE.Texture(generateTexture());
-				// let textureImage = texture.image;
-				// texture.needsUpdate = true;
+				let texture = new THREE.Texture(generateTexture());
+				let textureImage = texture.image;
+				texture.needsUpdate = true;
 				let material = new THREE.MeshPhongMaterial({
-					// map: texture,
+					map: texture,
 					color: 0xbbbbbb,
 					shininess: 40,
 					emissive: 0x780000,
@@ -313,11 +355,13 @@
 					side: THREE.DoubleSide
 				});
 				material.transparent = true;
+				// material.opacity = 0.5
 				plane = new THREE.Mesh(geom, material);
 				plane.rotation.z += Math.PI / 2;
 				plane.position.x -= 60;
+				plane.layers.enable( BLOOM_SCENE );
 				scene.add(plane);
-				render();
+				animate();
 			}
 
 			function jellyMovement() {
@@ -346,6 +390,22 @@
 				}
 
 			}
+
+
+			function animate() {
+					requestAnimationFrame( animate );
+					jellyMovement()
+					for (let i = 0; i < num; i++) {
+						lines[i].updateLine();
+					}
+					spheres.forEach(it => {
+						it.position.x = it.position.x - 0.1
+					})
+					a+=0.05
+					aline += 0.3;
+					renderBloom( true );
+					finalComposer.render();
+			};
 
 			function render() {
 
@@ -412,6 +472,20 @@
         return Math.random() * (high - low) + low;
       }
 
+			function generateTexture() {
+				let size = 512;
+				let canvas = document.createElement("canvas");
+				canvas.width = size;
+				canvas.height = size;
+				let context = canvas.getContext("2d");
+				context.rect(0, 0, size, size);
+				let gradient = context.createLinearGradient(0, 0, 0, size);
+				gradient.addColorStop(0, "#B5FFFC"); // light blue
+				gradient.addColorStop(1, "#FFDEE9"); // dark blue
+				context.fillStyle = gradient;
+				context.fill();
+				return canvas;
+			}
 		</script>
 
 	</body>
